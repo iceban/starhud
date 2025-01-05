@@ -8,12 +8,14 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import fin.objhud.hud.armor;
+import fin.objhud.hud.coordinate;
 
 @Mixin(InGameHud.class)
-public class MixinInGameHUD {
+public abstract class MixinInGameHUD {
 
     @Inject(at = @At("TAIL"), method = "renderHotbar")
     private void renderHotbar(DrawContext context, RenderTickCounter tickCounter, CallbackInfo ci) {
         armor.renderArmorHUD(context);
+        coordinate.renderCoordinateHUD(context);
     }
 }
