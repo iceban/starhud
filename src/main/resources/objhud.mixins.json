@@ -1,0 +1,11 @@
+{
+	"required": true,
+	"package": "fin.objhud.mixin",
+	"compatibilityLevel": "JAVA_21",
+	"injectors": {
+		"defaultRequire": 1
+	},
+	"client": [
+		"MixinInGameHUD"
+	]
+}
