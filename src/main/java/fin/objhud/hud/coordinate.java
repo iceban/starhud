@@ -9,7 +9,7 @@ import net.minecraft.util.math.Vec3d;
 
 public abstract class coordinate {
 
-    private static final Identifier HUD_TEXTURE = Identifier.of("objhud", "hud/hud.png");
+    private static final Identifier HUD_TEXTURE = Identifier.of("objhud", "hud/coordinate.png");
 
     public static void renderCoordinateHUD(DrawContext context) {
 
