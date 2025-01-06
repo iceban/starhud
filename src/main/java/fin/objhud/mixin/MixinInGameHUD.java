@@ -18,6 +18,6 @@ public abstract class MixinInGameHUD {
     private void renderHotbar(DrawContext context, RenderTickCounter tickCounter, CallbackInfo ci) {
         armor.renderArmorHUD(context);
         coordinate.renderCoordinateHUD(context);
-        fps.renderFPSHUD(context);
+        //fps.renderFPSHUD(context);
     }
 }
