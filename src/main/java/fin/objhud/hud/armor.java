@@ -9,46 +9,43 @@ import net.minecraft.util.math.MathHelper;
 
 public class armor {
 
-    private static final Identifier ARMOR_TEXTURE = Identifier.of("objhud", "hud/armor.png");
+    private static final Identifier ARMOR_BACKGROUND_TEXTURE = Identifier.of("objhud", "hud/armor.png");
     private static final Identifier ARMOR_ICONS_TEXTURE = Identifier.of("objhud", "hud/armor_icons.png");
 
     public static void renderArmorHUD(DrawContext context) {
         MinecraftClient client = MinecraftClient.getInstance();
 
         final int x = 5;
-        final int y = 50;
+        final int y = 51;
 
         int i = 3;
         for (ItemStack armor : client.player.getArmorItems()) {
-            if (armor.isItemBarVisible()) {
-                int step = getItemBarStep(armor);
-                int color = getItemBarColor(step);
-                int gap = 14 * i;
-
-                //draw the background
-                context.drawTexture(RenderLayer::getGuiTextured, ARMOR_TEXTURE, x, y + gap, 0, gap, 67, 13, 67 ,55);
-
-                // draw the actual information
-                context.drawTexture(RenderLayer::getGuiTextured, ARMOR_ICONS_TEXTURE, x, y + gap, 0, gap, 18 + (4 * step), 13, 67, 55, color | 0xFF000000);
-            }
+            if (armor.isItemBarVisible())
+                renderArmorPieces(context, armor, x, y, 14 * i);
             --i;
         }
     }
 
+    public static void renderArmorPieces(DrawContext context, ItemStack armor, int x, int y, int gap) {
+        int step = getItemBarStep(armor);
+        int color = getItemBarColor(step);
+
+        // draw the background
+        context.drawTexture(RenderLayer::getGuiTextured, ARMOR_BACKGROUND_TEXTURE, x, y + gap, 0, gap, 63, 13, 63 ,55);
+        // draw the information
+        context.drawTexture(RenderLayer::getGuiTextured, ARMOR_ICONS_TEXTURE, x, y + gap, 0, gap, 18 + (4 * step), 13, 63, 55, color | 0xFF000000);
+    }
+
     public static int getItemBarStep(ItemStack stack) {
-        return MathHelper.clamp(Math.round(11 - (float)stack.getDamage() * 11 / (float)stack.getMaxDamage()), 0, 11);
+        return MathHelper.clamp(Math.round(10 - (float)stack.getDamage() * 10 / (float)stack.getMaxDamage()), 0, 10);
     }
 
     public static int getItemBarColor(int stackStep) {
-        // starting color: A8F4B1 (168, 244, 177)
-        // ending color: FF7972 (255, 121, 114)
-        float progress = (float)stackStep / 11.0F;
+        // Using HSV interpolation for smoother transition
+        // We'll slightly adjust saturation and value to maintain pastel quality
+        float progress = (float)stackStep / 10.0F;
 
-        int r = Math.round(168 + (255 - 168) * (1 - progress));
-        int g = Math.round(244 + (121 - 244) * (1 - progress));
-        int b = Math.round(177 + (114 - 177) * (1 - progress));
-
-        return (r << 16) | (g << 8) | b;
+        return MathHelper.hsvToRgb(0.35F * progress, 0.45F, 0.95F);
     }
 
 }

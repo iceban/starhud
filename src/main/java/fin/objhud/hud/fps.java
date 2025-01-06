@@ -14,7 +14,7 @@ public class fps {
         MinecraftClient client = MinecraftClient.getInstance();
         String fps = Integer.toString(client.getCurrentFps());
 
-        int x = 100;
+        int x = 75;
         int y = 5;
 
         context.drawTexture(RenderLayer::getGuiTextured, FPS_TEXTURE, x, y, 0.0F, 0.0F, 56, 13, 56, 13);
