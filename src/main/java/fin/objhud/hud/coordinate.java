@@ -30,6 +30,5 @@ public abstract class coordinate {
         context.drawText(textRenderer, coordX, x + 19, y + 3, 0xFFFF7972, shadow);
         context.drawText(textRenderer, coordY, x + 19, y + 17, 0xFFA8F4B1, shadow);
         context.drawText(textRenderer, coordZ, x + 19, y + 31, 0xFF6DE4FF, shadow);
-
     }
 }
