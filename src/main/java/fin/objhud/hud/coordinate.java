@@ -9,8 +9,6 @@ public abstract class coordinate {
 
         MinecraftClient client = MinecraftClient.getInstance();
 
-        assert client.player != null;
-
         Vec3d vec3d = client.player.getPos();
         String coord = new StringBuilder()
                 .append((int) vec3d.x).append(' ')
