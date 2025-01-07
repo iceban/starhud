@@ -23,7 +23,9 @@ public class fps {
         int x = Helper.defaultHUDLocationX(fps.defX, context) + fps.x;
         int y = Helper.defaultHUDLocationY(fps.defY, context) + fps.y;
 
-        context.drawTexture(RenderLayer::getGuiTextured, FPS_TEXTURE, x, y, 0.0F, 0.0F, 56, 13, 56, 13);
-        context.drawText(client.textRenderer, fpsStr, x + 28, y + 3, 0xFFFDD835, false);
+        int color = fps.color | 0xFF000000;
+
+        context.drawTexture(RenderLayer::getGuiTextured, FPS_TEXTURE, x, y, 0.0F, 0.0F, 56, 13, 56, 13, color);
+        context.drawText(client.textRenderer, fpsStr, x + 28, y + 3, color, false);
     }
 }

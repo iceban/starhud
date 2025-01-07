@@ -32,9 +32,15 @@ public class coordinate {
 
         boolean shadow = false;
 
-        context.drawTexture(RenderLayer::getGuiTextured, HUD_TEXTURE, x, y, 0.0F, 0.0F, 65, 41, 65, 41);
-        context.drawText(textRenderer, coordX, x + 19, y + 3, 0xFFFF7972, shadow);
-        context.drawText(textRenderer, coordY, x + 19, y + 17, 0xFFA8F4B1, shadow);
-        context.drawText(textRenderer, coordZ, x + 19, y + 31, 0xFF6DE4FF, shadow);
+        int colorX = coord.color.X | 0xFF000000;
+        int colorY = coord.color.Y | 0xFF000000;
+        int colorZ = coord.color.Z | 0xFF000000;
+
+        context.drawTexture(RenderLayer::getGuiTextured, HUD_TEXTURE, x, y, 0.0F, 0.0F, 65, 14, 65, 41, colorX);
+        context.drawText(textRenderer, coordX, x + 19, y + 3, colorX, shadow);
+        context.drawTexture(RenderLayer::getGuiTextured, HUD_TEXTURE, x, y + 14, 0.0F, 14.0F, 65, 14, 65, 41, colorY);
+        context.drawText(textRenderer, coordY, x + 19, y + 17, colorY, shadow);
+        context.drawTexture(RenderLayer::getGuiTextured, HUD_TEXTURE, x, y + 28, 0.0F, 28.0F, 65, 14, 65, 41, colorZ);
+        context.drawText(textRenderer, coordZ, x + 19, y + 31, colorZ, shadow);
     }
 }
