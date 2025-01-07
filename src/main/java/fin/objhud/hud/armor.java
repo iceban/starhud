@@ -1,5 +1,8 @@
 package fin.objhud.hud;
 
+import fin.objhud.Main;
+import fin.objhud.Helper;
+import fin.objhud.config.Settings;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.RenderLayer;
@@ -9,14 +12,18 @@ import net.minecraft.util.math.MathHelper;
 
 public class armor {
 
+    private static Settings.ArmorSettings armor = Main.settings.armorSettings;
+
     private static final Identifier ARMOR_BACKGROUND_TEXTURE = Identifier.of("objhud", "hud/armor.png");
     private static final Identifier ARMOR_ICONS_TEXTURE = Identifier.of("objhud", "hud/armor_icons.png");
 
     public static void renderArmorHUD(DrawContext context) {
+        if (!armor.renderArmorHUD) return;
+
         MinecraftClient client = MinecraftClient.getInstance();
 
-        final int x = 5;
-        final int y = 51;
+        int x = Helper.defaultHUDLocationX(armor.defX, context) + armor.x;
+        int y = Helper.defaultHUDLocationY(armor.defY, context) + armor.y;
 
         int i = 3;
         // for each armor pieces
