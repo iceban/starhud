@@ -75,7 +75,7 @@ public class Settings implements ConfigData {
         public int y = 17;
 
         @ConfigEntry.ColorPicker
-        public int color = 0xFDD835;
+        public int color = 0xE5ECf8;
     }
 
     @ConfigEntry.Gui.CollapsibleObject

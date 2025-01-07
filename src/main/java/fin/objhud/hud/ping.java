@@ -25,7 +25,7 @@ public class ping {
         if (!ping.renderPingHUD) return;
 
         MinecraftClient client = MinecraftClient.getInstance();
-        //if (client.isInSingleplayer()) return;
+        if (client.isInSingleplayer()) return;
 
         MultiValueDebugSampleLogImpl pingLog = client.getDebugHud().getPingLog();
 
