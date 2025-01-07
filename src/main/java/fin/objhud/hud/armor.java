@@ -19,6 +19,7 @@ public class armor {
         final int y = 51;
 
         int i = 3;
+        // for each armor pieces
         for (ItemStack armor : client.player.getArmorItems()) {
             if (armor.isItemBarVisible())
                 renderArmorPieces(context, armor, x, y, 14 * i);
@@ -32,7 +33,7 @@ public class armor {
         // draw the background
         context.drawTexture(RenderLayer::getGuiTextured, ARMOR_BACKGROUND_TEXTURE, x, y + gap, 0, gap, 63, 13, 63 ,55);
         // draw the information
-        context.drawTexture(RenderLayer::getGuiTextured, ARMOR_ICONS_TEXTURE, x + 19, y + 3 + gap, 0, 0, (4 * step), 7, 39, 7, color | 0xFF000000);
+        context.drawTexture(RenderLayer::getGuiTextured, ARMOR_ICONS_TEXTURE, x + 19, y + 3 + gap, 0, 0, (4 * step), 7, 40, 7, color | 0xFF000000);
     }
 
     // get the durability "steps" or progress.
@@ -42,7 +43,7 @@ public class armor {
 
     // color transition from pastel (red to green).
     public static int getItemBarColor(int stackStep) {
-        float progress = (float)stackStep / 10.0F;
+        float progress = (float) stackStep / 10.0F;
         return MathHelper.hsvToRgb(0.35F * progress, 0.45F, 0.95F);
     }
 

@@ -10,14 +10,16 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import fin.objhud.hud.armor;
 import fin.objhud.hud.coordinate;
 import fin.objhud.hud.fps;
+import fin.objhud.hud.ping;
 
 @Mixin(InGameHud.class)
-public abstract class MixinInGameHUD {
+public class MixinInGameHUD {
 
     @Inject(at = @At("TAIL"), method = "renderHotbar")
     private void renderHotbar(DrawContext context, RenderTickCounter tickCounter, CallbackInfo ci) {
         armor.renderArmorHUD(context);
         coordinate.renderCoordinateHUD(context);
         fps.renderFPSHUD(context);
+        ping.renderPingHUD(context);
     }
 }
