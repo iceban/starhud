@@ -3,7 +3,6 @@ package fin.objhud.hud;
 import fin.objhud.Helper;
 import fin.objhud.Main;
 import fin.objhud.config.Settings;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.network.PingMeasurer;

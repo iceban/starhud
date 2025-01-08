@@ -13,6 +13,5 @@ public class Main implements ClientModInitializer {
     public void onInitializeClient() {
         AutoConfig.register(Settings.class, GsonConfigSerializer::new);
         settings = AutoConfig.getConfigHolder(Settings.class).getConfig();
-
     }
 }

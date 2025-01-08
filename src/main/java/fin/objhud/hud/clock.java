@@ -1,8 +1,8 @@
 package fin.objhud.hud;
 
+import fin.objhud.Helper;
 import fin.objhud.Main;
 import fin.objhud.config.Settings;
-import fin.objhud.Helper;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.RenderLayer;
@@ -30,7 +30,7 @@ public class clock {
         ClientWorld world = mc.world;
 
         // update each tick
-        long time = world.getTimeOfDay();
+        long time = world.getTimeOfDay() % 24000;
 
         int minutes = (int) ((time % 1000) * 3 / 50);
         if (minutes != cachedMinecraftMinute) {
