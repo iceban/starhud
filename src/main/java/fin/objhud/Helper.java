@@ -1,6 +1,5 @@
 package fin.objhud;
 
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 
 public class Helper {

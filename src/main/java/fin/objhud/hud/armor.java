@@ -50,8 +50,7 @@ public class armor {
 
     // color transition from pastel (red to green).
     public static int getItemBarColor(int stackStep) {
-        float progress = (float) stackStep / 10.0F;
-        return MathHelper.hsvToRgb(0.35F * progress, 0.45F, 0.95F);
+        return MathHelper.hsvToRgb(0.35F * stackStep / 10.0F, 0.45F, 0.95F);
     }
 
 }

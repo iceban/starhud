@@ -36,6 +36,7 @@ public class ping {
             lastWorld = current_world;
         }
 
+        // get current user ping
         updatePingLog();
 
         int pingLogLen = pingLog.getLength();

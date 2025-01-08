@@ -30,17 +30,16 @@ public class coordinate {
         int x = Helper.defaultHUDLocationX(coord.defX, context) + coord.x;
         int y = Helper.defaultHUDLocationY(coord.defY, context) + coord.y;
 
-        boolean shadow = false;
-
         int colorX = coord.color.X | 0xFF000000;
         int colorY = coord.color.Y | 0xFF000000;
         int colorZ = coord.color.Z | 0xFF000000;
 
-        context.drawTexture(RenderLayer::getGuiTextured, HUD_TEXTURE, x, y, 0.0F, 0.0F, 65, 14, 65, 41, colorX);
-        context.drawTexture(RenderLayer::getGuiTextured, HUD_TEXTURE, x, y + 14, 0.0F, 14.0F, 65, 14, 65, 41, colorY);
-        context.drawTexture(RenderLayer::getGuiTextured, HUD_TEXTURE, x, y + 28, 0.0F, 28.0F, 65, 14, 65, 41, colorZ);
-        context.drawText(textRenderer, coordX, x + 19, y + 3, colorX, shadow);
-        context.drawText(textRenderer, coordY, x + 19, y + 17, colorY, shadow);
-        context.drawText(textRenderer, coordZ, x + 19, y + 31, colorZ, shadow);
+        renderEachCoordinate(context, textRenderer, coordX, x, y, 0.0F, colorX);
+        renderEachCoordinate(context, textRenderer, coordY, x, y + 14, 14.0F, colorY);
+        renderEachCoordinate(context, textRenderer, coordZ, x, y + 28, 28.0F, colorZ);
+    }
+    public static void renderEachCoordinate(DrawContext context, TextRenderer textRenderer, String str, int x, int y, float v, int color) {
+        context.drawTexture(RenderLayer::getGuiTextured, HUD_TEXTURE, x, y, 0.0F, v, 65, 14, 65, 41, color);
+        context.drawText(textRenderer, str, x + 19, y + 3, color, false);
     }
 }

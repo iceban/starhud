@@ -18,14 +18,14 @@ public class Settings implements ConfigData {
 
         @Comment("Armor HUD default Horizontal location")
         @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
-        public Helper.ScreenLocationX defX = Helper.ScreenLocationX.RIGHT;
+        public Helper.ScreenLocationX defX = Helper.ScreenLocationX.LEFT;
 
         @Comment("Armor HUD default Vertical location")
         @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
-        public Helper.ScreenLocationY defY = Helper.ScreenLocationY.UNDER;
+        public Helper.ScreenLocationY defY = Helper.ScreenLocationY.MIDDLE;
 
-        public int x = -73;
-        public int y = -65;
+        public int x = 10;
+        public int y = -24;
     }
 
     @ConfigEntry.Gui.CollapsibleObject
@@ -72,7 +72,7 @@ public class Settings implements ConfigData {
         public Helper.ScreenLocationY defY = Helper.ScreenLocationY.UPPER;
 
         public int x = 80;
-        public int y = 17;
+        public int y = 10;
 
         @ConfigEntry.ColorPicker
         public int color = 0xE5ECf8;
@@ -93,7 +93,7 @@ public class Settings implements ConfigData {
         public Helper.ScreenLocationY defY = Helper.ScreenLocationY.UPPER;
 
         public int x = 80;
-        public int y = 31;
+        public int y = 24;
 
         @Comment("Ping update interval, in seconds.")
         public double updateInterval = 5.0;
