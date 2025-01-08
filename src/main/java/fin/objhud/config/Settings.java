@@ -10,7 +10,8 @@ import fin.objhud.Helper;
 @Config(name = "objective-hud")
 public class Settings implements ConfigData {
 
-    @ConfigEntry.Gui.CollapsibleObject
+    @ConfigEntry.Category("armor")
+    @ConfigEntry.Gui.TransitiveObject
     public ArmorSettings armorSettings = new ArmorSettings();
     public static class ArmorSettings {
         @Comment("Toggle Armor HUD")
@@ -28,7 +29,8 @@ public class Settings implements ConfigData {
         public int y = -24;
     }
 
-    @ConfigEntry.Gui.CollapsibleObject
+    @ConfigEntry.Category("coord")
+    @ConfigEntry.Gui.TransitiveObject
     public CoordSettings coordSettings = new CoordSettings();
     public static class CoordSettings {
         @Comment("Toggle Coordinate HUD")
@@ -57,7 +59,8 @@ public class Settings implements ConfigData {
         }
     }
 
-    @ConfigEntry.Gui.CollapsibleObject
+    @ConfigEntry.Category("fps")
+    @ConfigEntry.Gui.TransitiveObject
     public FPSSettings fpsSettings = new FPSSettings();
     public static class FPSSettings {
         @Comment("Toggle FPS HUD")
@@ -78,7 +81,8 @@ public class Settings implements ConfigData {
         public int color = 0xE5ECf8;
     }
 
-    @ConfigEntry.Gui.CollapsibleObject
+    @ConfigEntry.Category("ping")
+    @ConfigEntry.Gui.TransitiveObject
     public PingSettings pingSettings = new PingSettings();
     public static class PingSettings {
         @Comment("Toggle Ping HUD")
@@ -112,7 +116,8 @@ public class Settings implements ConfigData {
         }
     }
 
-    @ConfigEntry.Gui.CollapsibleObject
+    @ConfigEntry.Category("clock")
+    @ConfigEntry.Gui.TransitiveObject
     public ClockSettings clockSettings = new ClockSettings();
     public static class ClockSettings {
         @ConfigEntry.Gui.CollapsibleObject

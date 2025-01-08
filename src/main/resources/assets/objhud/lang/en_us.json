@@ -1,14 +1,14 @@
 {
   "text.autoconfig.objective-hud.title": "Objective HUD Configuration",
 
-  "text.autoconfig.objective-hud.option.armorSettings": "Armor Settings",
+  "text.autoconfig.objective-hud.category.armor": "Armor",
   "text.autoconfig.objective-hud.option.armorSettings.renderArmorHUD": "Show Armor HUD",
   "text.autoconfig.objective-hud.option.armorSettings.defX": "Horizontal Position",
   "text.autoconfig.objective-hud.option.armorSettings.defY": "Vertical Position",
   "text.autoconfig.objective-hud.option.armorSettings.x": "X Offset",
   "text.autoconfig.objective-hud.option.armorSettings.y": "Y Offset",
 
-  "text.autoconfig.objective-hud.option.coordSettings": "Coordinate Settings",
+  "text.autoconfig.objective-hud.category.coord": "Coordinate",
   "text.autoconfig.objective-hud.option.coordSettings.renderCoordinateHUD": "Show Coordinate HUD",
   "text.autoconfig.objective-hud.option.coordSettings.defX": "Horizontal Position",
   "text.autoconfig.objective-hud.option.coordSettings.defY": "Vertical Position",
@@ -20,7 +20,7 @@
   "text.autoconfig.objective-hud.option.coordSettings.color.Y": "Y Coordinate Color",
   "text.autoconfig.objective-hud.option.coordSettings.color.Z": "Z Coordinate Color",
 
-  "text.autoconfig.objective-hud.option.fpsSettings": "FPS Settings",
+  "text.autoconfig.objective-hud.category.fps": "FPS",
   "text.autoconfig.objective-hud.option.fpsSettings.renderFPSHUD": "Show FPS HUD",
   "text.autoconfig.objective-hud.option.fpsSettings.defX": "Horizontal Position",
   "text.autoconfig.objective-hud.option.fpsSettings.defY": "Vertical Position",
@@ -28,7 +28,7 @@
   "text.autoconfig.objective-hud.option.fpsSettings.y": "Y Offset",
   "text.autoconfig.objective-hud.option.fpsSettings.color": "FPS Counter Color",
 
-  "text.autoconfig.objective-hud.option.pingSettings": "Ping Settings",
+  "text.autoconfig.objective-hud.category.ping": "Ping",
   "text.autoconfig.objective-hud.option.pingSettings.renderPingHUD": "Show Ping HUD",
   "text.autoconfig.objective-hud.option.pingSettings.defX": "Horizontal Position",
   "text.autoconfig.objective-hud.option.pingSettings.defY": "Vertical Position",
@@ -42,7 +42,7 @@
   "text.autoconfig.objective-hud.option.pingSettings.color.third": "Fair Ping Color",
   "text.autoconfig.objective-hud.option.pingSettings.color.fourth": "Poor Ping Color",
 
-  "text.autoconfig.objective-hud.option.clockSettings": "Clock Settings",
+  "text.autoconfig.objective-hud.category.clock": "Clock",
   "text.autoconfig.objective-hud.option.clockSettings.systemSettings": "System",
   "text.autoconfig.objective-hud.option.clockSettings.systemSettings.shouldRender": "Show System Clock",
   "text.autoconfig.objective-hud.option.clockSettings.systemSettings.defX": "Horizontal Position",
