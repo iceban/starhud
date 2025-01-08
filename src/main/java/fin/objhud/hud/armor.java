@@ -15,7 +15,7 @@ public class armor {
     private static Settings.ArmorSettings armor = Main.settings.armorSettings;
 
     private static final Identifier ARMOR_BACKGROUND_TEXTURE = Identifier.of("objhud", "hud/armor.png");
-    private static final Identifier ARMOR_ICONS_TEXTURE = Identifier.of("objhud", "hud/armor_icons.png");
+    private static final Identifier ARMOR_DURABILITY_TEXTURE = Identifier.of("objhud", "hud/armor_icons.png");
 
     public static void renderArmorHUD(DrawContext context) {
         if (!armor.renderArmorHUD) return;
@@ -40,7 +40,7 @@ public class armor {
         // draw the background
         context.drawTexture(RenderLayer::getGuiTextured, ARMOR_BACKGROUND_TEXTURE, x, y + gap, 0, gap, 63, 13, 63 ,55);
         // draw the information
-        context.drawTexture(RenderLayer::getGuiTextured, ARMOR_ICONS_TEXTURE, x + 19, y + 3 + gap, 0, 0, (4 * step), 7, 40, 7, color | 0xFF000000);
+        context.drawTexture(RenderLayer::getGuiTextured, ARMOR_DURABILITY_TEXTURE, x + 19, y + 3 + gap, 0, 0, (4 * step), 7, 40, 7, color | 0xFF000000);
     }
 
     // get the durability "steps" or progress.

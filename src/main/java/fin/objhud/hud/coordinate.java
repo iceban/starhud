@@ -13,7 +13,7 @@ import net.minecraft.util.math.Vec3d;
 public class coordinate {
 
     public static Settings.CoordSettings coord = Main.settings.coordSettings;
-    private static final Identifier HUD_TEXTURE = Identifier.of("objhud", "hud/coordinate.png");
+    private static final Identifier COORD_TEXTURE = Identifier.of("objhud", "hud/coordinate.png");
 
     public static void renderCoordinateHUD(DrawContext context) {
         if (!coord.renderCoordinateHUD) return;
@@ -39,7 +39,7 @@ public class coordinate {
         renderEachCoordinate(context, textRenderer, coordZ, x, y + 28, 28.0F, colorZ);
     }
     public static void renderEachCoordinate(DrawContext context, TextRenderer textRenderer, String str, int x, int y, float v, int color) {
-        context.drawTexture(RenderLayer::getGuiTextured, HUD_TEXTURE, x, y, 0.0F, v, 65, 14, 65, 41, color);
+        context.drawTexture(RenderLayer::getGuiTextured, COORD_TEXTURE, x, y, 0.0F, v, 65, 14, 65, 41, color);
         context.drawText(textRenderer, str, x + 19, y + 3, color, false);
     }
 }

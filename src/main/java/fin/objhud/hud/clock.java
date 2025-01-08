@@ -80,6 +80,7 @@ public class clock {
 
     private static final SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
     private static String systemTimeStr = buildSystemTimeString(System.currentTimeMillis());
+    private static long cachedSystemMinute = -1;
 
     public static void renderSystemTimeHUD(DrawContext context) {
         if (!clock_system.shouldRender) return;
@@ -88,7 +89,9 @@ public class clock {
 
         // update each minute
         long currentTime = System.currentTimeMillis();
-        if (currentTime % 60000 == 0) {
+        long minute = currentTime / 60000;
+        if (minute != cachedSystemMinute) {
+            cachedSystemMinute = minute;
             systemTimeStr = buildSystemTimeString(currentTime);
         }
 
