@@ -3,6 +3,7 @@ package fin.objhud.hud;
 import fin.objhud.Helper;
 import fin.objhud.Main;
 import fin.objhud.config.Settings;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.network.PingMeasurer;
@@ -36,7 +37,6 @@ public class ping {
             lastWorld = current_world;
         }
 
-        // get current user ping
         updatePingLog();
 
         int pingLogLen = pingLog.getLength();
@@ -67,7 +67,7 @@ public class ping {
         };
     }
 
-    // update pingLog every 5 seconds. Because this is quite expensive.
+    // update pingLog every n seconds. Because this is quite expensive.
     private static void updatePingLog() {
         long current_time = System.currentTimeMillis();
         if (current_time - LAST_PING_UPDATE >= 1000 * ping.updateInterval) {

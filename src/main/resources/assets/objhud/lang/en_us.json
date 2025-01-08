@@ -1,6 +1,6 @@
 {
   "text.autoconfig.objective-hud.title": "Objective HUD Configuration",
-  
+
   "text.autoconfig.objective-hud.option.armorSettings": "Armor Settings",
   "text.autoconfig.objective-hud.option.armorSettings.renderArmorHUD": "Show Armor HUD",
   "text.autoconfig.objective-hud.option.armorSettings.defX": "Horizontal Position",
@@ -14,7 +14,7 @@
   "text.autoconfig.objective-hud.option.coordSettings.defY": "Vertical Position",
   "text.autoconfig.objective-hud.option.coordSettings.x": "X Offset",
   "text.autoconfig.objective-hud.option.coordSettings.y": "Y Offset",
-  
+
   "text.autoconfig.objective-hud.option.coordSettings.color": "Coordinate Colors",
   "text.autoconfig.objective-hud.option.coordSettings.color.X": "X Coordinate Color",
   "text.autoconfig.objective-hud.option.coordSettings.color.Y": "Y Coordinate Color",
@@ -35,10 +35,32 @@
   "text.autoconfig.objective-hud.option.pingSettings.x": "X Offset",
   "text.autoconfig.objective-hud.option.pingSettings.y": "Y Offset",
   "text.autoconfig.objective-hud.option.pingSettings.updateInterval": "Update Interval (seconds)",
-  
+
   "text.autoconfig.objective-hud.option.pingSettings.color": "Ping Colors",
   "text.autoconfig.objective-hud.option.pingSettings.color.first": "Excellent Ping Color",
   "text.autoconfig.objective-hud.option.pingSettings.color.second": "Good Ping Color",
   "text.autoconfig.objective-hud.option.pingSettings.color.third": "Fair Ping Color",
-  "text.autoconfig.objective-hud.option.pingSettings.color.fourth": "Poor Ping Color"
+  "text.autoconfig.objective-hud.option.pingSettings.color.fourth": "Poor Ping Color",
+
+  "text.autoconfig.objective-hud.option.clockSettings": "Clock Settings",
+  "text.autoconfig.objective-hud.option.clockSettings.systemSettings": "System",
+  "text.autoconfig.objective-hud.option.clockSettings.systemSettings.shouldRender": "Show System Clock",
+  "text.autoconfig.objective-hud.option.clockSettings.systemSettings.defX": "Horizontal Position",
+  "text.autoconfig.objective-hud.option.clockSettings.systemSettings.defY": "Vertical Position",
+  "text.autoconfig.objective-hud.option.clockSettings.systemSettings.x": "X Offset",
+  "text.autoconfig.objective-hud.option.clockSettings.systemSettings.y": "Y Offset",
+  "text.autoconfig.objective-hud.option.clockSettings.systemSettings.color": "System Clock Color",
+
+  "text.autoconfig.objective-hud.option.clockSettings.inGameSettings": "In-Game",
+  "text.autoconfig.objective-hud.option.clockSettings.inGameSettings.shouldRender": "Show In-Game Clock",
+  "text.autoconfig.objective-hud.option.clockSettings.inGameSettings.defX": "Horizontal Position",
+  "text.autoconfig.objective-hud.option.clockSettings.inGameSettings.defY": "Vertical Position",
+  "text.autoconfig.objective-hud.option.clockSettings.inGameSettings.x": "X Offset",
+  "text.autoconfig.objective-hud.option.clockSettings.inGameSettings.y": "Y Offset",
+
+  "text.autoconfig.objective-hud.option.clockSettings.inGameSettings.color": "In-Game Clock Colors",
+  "text.autoconfig.objective-hud.option.clockSettings.inGameSettings.color.day": "Daytime Color",
+  "text.autoconfig.objective-hud.option.clockSettings.inGameSettings.color.night": "Nighttime Color",
+  "text.autoconfig.objective-hud.option.clockSettings.inGameSettings.color.rain": "Rain Color",
+  "text.autoconfig.objective-hud.option.clockSettings.inGameSettings.color.thunder": "Thunderstorm Color"
 }

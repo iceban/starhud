@@ -11,6 +11,7 @@ import fin.objhud.hud.armor;
 import fin.objhud.hud.coordinate;
 import fin.objhud.hud.fps;
 import fin.objhud.hud.ping;
+import fin.objhud.hud.clock;
 
 @Mixin(InGameHud.class)
 public class MixinInGameHUD {
@@ -21,5 +22,7 @@ public class MixinInGameHUD {
         coordinate.renderCoordinateHUD(context);
         fps.renderFPSHUD(context);
         ping.renderPingHUD(context);
+        clock.renderInGameTimeHUD(context);
+        clock.renderSystemTimeHUD(context);
     }
 }

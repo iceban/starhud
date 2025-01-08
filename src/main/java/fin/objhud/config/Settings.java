@@ -112,6 +112,56 @@ public class Settings implements ConfigData {
         }
     }
 
+    @ConfigEntry.Gui.CollapsibleObject
+    public ClockSettings clockSettings = new ClockSettings();
+    public static class ClockSettings {
+        @ConfigEntry.Gui.CollapsibleObject
+        public ClockSystemSettings systemSettings = new ClockSystemSettings();
+        public static class ClockSystemSettings {
+            public boolean shouldRender = true;
+
+            @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
+            public Helper.ScreenLocationX defX = Helper.ScreenLocationX.LEFT;
+
+            @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
+            public Helper.ScreenLocationY defY = Helper.ScreenLocationY.UNDER;
+
+            public int x = 10;
+            public int y = -23;
+
+            @ConfigEntry.ColorPicker
+            public int color = 0xFFFFFF;
+        }
+
+        @ConfigEntry.Gui.CollapsibleObject
+        public ClockInGameSettings inGameSettings = new ClockInGameSettings();
+        public static class ClockInGameSettings {
+            public boolean shouldRender = true;
+
+            @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
+            public Helper.ScreenLocationX defX = Helper.ScreenLocationX.LEFT;
+
+            @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
+            public Helper.ScreenLocationY defY = Helper.ScreenLocationY.UNDER;
+
+            public int x = 64;
+            public int y = -23;
+
+            @ConfigEntry.Gui.CollapsibleObject
+            public ClockInGameColorSettings color = new ClockInGameColorSettings();
+            public static class ClockInGameColorSettings {
+                @ConfigEntry.ColorPicker
+                public int day = 0xfff9b5;
+                @ConfigEntry.ColorPicker
+                public int night = 0xd6cbef;
+                @ConfigEntry.ColorPicker
+                public int rain = 0xb5d0e8;
+                @ConfigEntry.ColorPicker
+                public int thunder = 0x8faecb;
+            }
+        }
+    }
+
 }
 
 
