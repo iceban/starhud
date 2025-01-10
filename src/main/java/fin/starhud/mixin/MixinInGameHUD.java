@@ -1,7 +1,7 @@
-package fin.objhud.mixin;
+package fin.starhud.mixin;
 
-import fin.objhud.Main;
-import fin.objhud.hud.*;
+import fin.starhud.Main;
+import fin.starhud.hud.*;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.client.render.RenderTickCounter;

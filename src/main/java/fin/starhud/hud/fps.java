@@ -1,8 +1,8 @@
-package fin.objhud.hud;
+package fin.starhud.hud;
 
-import fin.objhud.Helper;
-import fin.objhud.Main;
-import fin.objhud.config.Settings;
+import fin.starhud.Helper;
+import fin.starhud.Main;
+import fin.starhud.config.Settings;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.RenderLayer;
@@ -12,7 +12,7 @@ public class fps {
 
     public static Settings.FPSSettings fps = Main.settings.fpsSettings;
 
-    private static final Identifier FPS_TEXTURE = Identifier.of("objhud", "hud/fps.png");
+    private static final Identifier FPS_TEXTURE = Identifier.of("starhud", "hud/fps.png");
 
     public static void renderFPSHUD(DrawContext context) {
         MinecraftClient client = MinecraftClient.getInstance();

@@ -1,8 +1,8 @@
-package fin.objhud.hud;
+package fin.starhud.hud;
 
-import fin.objhud.Helper;
-import fin.objhud.Main;
-import fin.objhud.config.Settings;
+import fin.starhud.Helper;
+import fin.starhud.Main;
+import fin.starhud.config.Settings;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.network.PingMeasurer;
@@ -15,7 +15,7 @@ public class ping {
 
     public static Settings.PingSettings ping = Main.settings.pingSettings;
 
-    private static final Identifier PING_TEXTURE = Identifier.of("objhud", "hud/ping.png");
+    private static final Identifier PING_TEXTURE = Identifier.of("starhud", "hud/ping.png");
 
     private static long LAST_PING_UPDATE = -1L;
     private static PingMeasurer pingMeasurer;

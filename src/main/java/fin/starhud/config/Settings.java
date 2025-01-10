@@ -1,6 +1,6 @@
-package fin.objhud.config;
+package fin.starhud.config;
 
-import fin.objhud.Helper;
+import fin.starhud.Helper;
 import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
@@ -26,7 +26,7 @@ public class Settings implements ConfigData {
         public Helper.ScreenLocationY originY = Helper.ScreenLocationY.MIDDLE;
 
         public int x = 10;
-        public int y = -24;
+        public int y = -20;
 
         @ConfigEntry.Gui.CollapsibleObject
         public HelmetSettings helmet = new HelmetSettings();
@@ -194,7 +194,7 @@ public class Settings implements ConfigData {
         public Helper.ScreenLocationY originY = Helper.ScreenLocationY.TOP;
 
         public int x = 80;
-        public int y = 52;
+        public int y = 38;
 
         @Comment("Ping update interval, in seconds.")
         public double updateInterval = 5.0;
@@ -263,7 +263,4 @@ public class Settings implements ConfigData {
             }
         }
     }
-
 }
-
-

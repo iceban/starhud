@@ -1,8 +1,8 @@
-package fin.objhud.hud;
+package fin.starhud.hud;
 
-import fin.objhud.Helper;
-import fin.objhud.Main;
-import fin.objhud.config.Settings;
+import fin.starhud.Helper;
+import fin.starhud.Main;
+import fin.starhud.config.Settings;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.RenderLayer;
@@ -14,8 +14,8 @@ public class armor {
 
     private static Settings.ArmorSettings armor = Main.settings.armorSettings;
 
-    private static final Identifier ARMOR_BACKGROUND_TEXTURE = Identifier.of("objhud", "hud/armor.png");
-    private static final Identifier ARMOR_DURABILITY_TEXTURE = Identifier.of("objhud", "hud/armor_icons.png");
+    private static final Identifier ARMOR_BACKGROUND_TEXTURE = Identifier.of("starhud", "hud/armor.png");
+    private static final Identifier ARMOR_DURABILITY_TEXTURE = Identifier.of("starhud", "hud/armor_icons.png");
 
     private static final int[] X_OFFSETS = new int[4];
     private static final int[] Y_OFFSETS = new int[4];

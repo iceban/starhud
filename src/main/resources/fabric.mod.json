@@ -1,9 +1,9 @@
 {
 	"schemaVersion": 1,
-	"id": "objhud",
+	"id": "starhud",
 	"version": "${version}",
-	"name": "ObjHUD",
-	"description": "A Fancy HUD.",
+	"name": "StarHUD",
+	"description": "HUD mod provides fancy and fresh information displays.",
 	"authors": [
 		"Finside"
 	],
@@ -11,23 +11,24 @@
 		"sources": "https://github.com/Finsider/objhud"
 	},
 	"license": "MIT",
-	"icon": "assets/objhud/icon.png",
+	"icon": "assets/starhud/icon.png",
 	"environment": "*",
 	"entrypoints": {
 		"client": [
-			"fin.objhud.Main"
+			"fin.starhud.Main"
 		],
 		"modmenu" : [
-			"fin.objhud.config.ModMenuIntegration"
+			"fin.starhud.config.ModMenuIntegration"
 		]
 	},
 	"mixins": [
-		"objhud.mixins.json"
+		"starhud.mixins.json"
 	],
 	"depends": {
 		"fabricloader": ">=0.16.9",
-		"minecraft": "~1.21.4",
+		"minecraft": ">=1.21.3",
 		"java": ">=21",
-		"fabric-api": "*"
+		"fabric-api": "*",
+		"cloth-config": "*"
 	}
 }

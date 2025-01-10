@@ -1,4 +1,4 @@
-package fin.objhud;
+package fin.starhud;
 
 import net.minecraft.client.gui.DrawContext;
 

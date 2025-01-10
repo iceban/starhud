@@ -1,8 +1,8 @@
-package fin.objhud.hud;
+package fin.starhud.hud;
 
-import fin.objhud.Helper;
-import fin.objhud.Main;
-import fin.objhud.config.Settings;
+import fin.starhud.Helper;
+import fin.starhud.Main;
+import fin.starhud.config.Settings;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.RenderLayer;
@@ -17,8 +17,8 @@ public class clock {
     private static Settings.ClockSettings.ClockSystemSettings clock_system = Main.settings.clockSettings.systemSettings;
     private static Settings.ClockSettings.ClockInGameSettings clock_ingame = Main.settings.clockSettings.inGameSettings;
 
-    private static final Identifier CLOCK_SYSTEM = Identifier.of("objhud", "hud/clock_system.png");
-    private static final Identifier CLOCK_INGAME = Identifier.of("objhud", "hud/clock_ingame.png");
+    private static final Identifier CLOCK_SYSTEM = Identifier.of("starhud", "hud/clock_system.png");
+    private static final Identifier CLOCK_INGAME = Identifier.of("starhud", "hud/clock_ingame.png");
 
     private static String minecraftTimeStr = "";
     private static int cachedMinecraftMinute = -1;

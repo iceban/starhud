@@ -1,8 +1,8 @@
-package fin.objhud.hud;
+package fin.starhud.hud;
 
-import fin.objhud.Helper;
-import fin.objhud.Main;
-import fin.objhud.config.Settings;
+import fin.starhud.Helper;
+import fin.starhud.Main;
+import fin.starhud.config.Settings;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.RenderLayer;
@@ -14,7 +14,7 @@ public class direction {
 
     private static Settings.DirectionSettings direction = Main.settings.directionSettings;
 
-    private static final Identifier DIRECTION_TEXTURE = Identifier.of("objhud", "hud/direction.png");
+    private static final Identifier DIRECTION_TEXTURE = Identifier.of("starhud", "hud/direction.png");
 
     public static void renderDirectionHUD(DrawContext context) {
         MinecraftClient mc = MinecraftClient.getInstance();
