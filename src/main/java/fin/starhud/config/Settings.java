@@ -7,7 +7,7 @@ import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
 
 @Config.Gui.Background("cloth-config2:transparent")
-@Config(name = "objective-hud")
+@Config(name = "starhud")
 public class Settings implements ConfigData {
 
     @ConfigEntry.Category("armor")
