@@ -22,8 +22,6 @@ public class armor {
     private static final boolean[] SHOULD_RENDER = new boolean[4];
 
     public static void renderArmorHUD(DrawContext context) {
-        if (!armor.shouldRender) return;
-
         initArmorConfiguration();
 
         MinecraftClient client = MinecraftClient.getInstance();

@@ -24,8 +24,6 @@ public class clock {
     private static int cachedMinecraftMinute = -1;
 
     public static void renderInGameTimeHUD(DrawContext context) {
-        if (!clock_ingame.shouldRender) return;
-
         MinecraftClient mc = MinecraftClient.getInstance();
         ClientWorld world = mc.world;
 

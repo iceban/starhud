@@ -17,8 +17,6 @@ public class direction {
     private static final Identifier DIRECTION_TEXTURE = Identifier.of("objhud", "hud/direction.png");
 
     public static void renderDirectionHUD(DrawContext context) {
-        if (!direction.shouldRender) return;
-
         MinecraftClient mc = MinecraftClient.getInstance();
 
         Entity playerCamera = mc.cameraEntity;

@@ -22,8 +22,6 @@ public class ping {
     private static World lastWorld = null;
 
     public static void renderPingHUD(DrawContext context) {
-        if (!ping.shouldRender) return;
-
         MinecraftClient client = MinecraftClient.getInstance();
         if (client.isInSingleplayer()) return;
 

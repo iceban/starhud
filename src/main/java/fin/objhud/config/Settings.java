@@ -138,21 +138,21 @@ public class Settings implements ConfigData {
         public DirectionColorSettings directionColor = new DirectionColorSettings();
         public static class DirectionColorSettings {
             @ConfigEntry.ColorPicker
-            public int s = 0x85F290;
+            public int s = 0xffb5b5;
             @ConfigEntry.ColorPicker
-            public int sw = 0xECF285;
+            public int sw = 0xffcbb3;
             @ConfigEntry.ColorPicker
-            public int w = 0xFEBC49;
+            public int w = 0xffd1b7;
             @ConfigEntry.ColorPicker
-            public int nw = 0xFF5C71;
+            public int nw = 0xd8cae8;
             @ConfigEntry.ColorPicker
-            public int n = 0xFF5C71;
+            public int n = 0xb7c9e9;
             @ConfigEntry.ColorPicker
-            public int ne = 0xFF5C71;
+            public int ne = 0xd4dbf0;
             @ConfigEntry.ColorPicker
-            public int e = 0xFF5C71;
+            public int e = 0xffe5b4;
             @ConfigEntry.ColorPicker
-            public int se = 0xFF5C71;
+            public int se = 0xffd0c4;
         }
     }
 
@@ -172,7 +172,7 @@ public class Settings implements ConfigData {
         public Helper.ScreenLocationY originY = Helper.ScreenLocationY.TOP;
 
         public int x = 80;
-        public int y = 10;
+        public int y = 24;
 
         @ConfigEntry.ColorPicker
         public int color = 0xE5ECf8;
@@ -194,7 +194,7 @@ public class Settings implements ConfigData {
         public Helper.ScreenLocationY originY = Helper.ScreenLocationY.TOP;
 
         public int x = 80;
-        public int y = 24;
+        public int y = 52;
 
         @Comment("Ping update interval, in seconds.")
         public double updateInterval = 5.0;
@@ -229,7 +229,7 @@ public class Settings implements ConfigData {
             public Helper.ScreenLocationY originY = Helper.ScreenLocationY.BOTTOM;
 
             public int x = 10;
-            public int y = -23;
+            public int y = -10;
 
             @ConfigEntry.ColorPicker
             public int color = 0xFFFFFF;
@@ -247,7 +247,7 @@ public class Settings implements ConfigData {
             public Helper.ScreenLocationY originY = Helper.ScreenLocationY.BOTTOM;
 
             public int x = 64;
-            public int y = -23;
+            public int y = -10;
 
             @ConfigEntry.Gui.CollapsibleObject
             public ClockInGameColorSettings color = new ClockInGameColorSettings();

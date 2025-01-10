@@ -20,8 +20,6 @@ public class coordinate {
     private static final boolean[] SHOULD_RENDER = new boolean[3];
 
     public static void renderCoordinateHUD(DrawContext context) {
-        if (!coord.shouldRender) return;
-
         initCoordinateConfiguration();
 
         MinecraftClient client = MinecraftClient.getInstance();

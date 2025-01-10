@@ -1,5 +1,6 @@
 package fin.objhud.mixin;
 
+import fin.objhud.Main;
 import fin.objhud.hud.*;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.hud.InGameHud;
@@ -14,12 +15,12 @@ public class MixinInGameHUD {
 
     @Inject(at = @At("TAIL"), method = "renderHotbar")
     private void renderHotbar(DrawContext context, RenderTickCounter tickCounter, CallbackInfo ci) {
-        armor.renderArmorHUD(context);
-        coordinate.renderCoordinateHUD(context);
-        fps.renderFPSHUD(context);
-        ping.renderPingHUD(context);
-        clock.renderInGameTimeHUD(context);
-        clock.renderSystemTimeHUD(context);
-        direction.renderDirectionHUD(context);
+        if (Main.settings.armorSettings.shouldRender) armor.renderArmorHUD(context);
+        if (Main.settings.coordSettings.shouldRender) coordinate.renderCoordinateHUD(context);
+        if (Main.settings.fpsSettings.shouldRender) fps.renderFPSHUD(context);
+        if (Main.settings.pingSettings.shouldRender) ping.renderPingHUD(context);
+        if (Main.settings.clockSettings.inGameSettings.shouldRender) clock.renderInGameTimeHUD(context);
+        if (Main.settings.clockSettings.systemSettings.shouldRender) clock.renderSystemTimeHUD(context);
+        if (Main.settings.directionSettings.shouldRender) direction.renderDirectionHUD(context);
     }
 }

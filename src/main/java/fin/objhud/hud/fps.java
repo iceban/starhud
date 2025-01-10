@@ -15,8 +15,6 @@ public class fps {
     private static final Identifier FPS_TEXTURE = Identifier.of("objhud", "hud/fps.png");
 
     public static void renderFPSHUD(DrawContext context) {
-        if (!fps.shouldRender) return;
-
         MinecraftClient client = MinecraftClient.getInstance();
         String fpsStr = Integer.toString(client.getCurrentFps());
 
