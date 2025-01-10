@@ -15,17 +15,20 @@ public class fps {
     private static final Identifier FPS_TEXTURE = Identifier.of("objhud", "hud/fps.png");
 
     public static void renderFPSHUD(DrawContext context) {
-        if (!fps.renderFPSHUD) return;
+        if (!fps.shouldRender) return;
 
         MinecraftClient client = MinecraftClient.getInstance();
         String fpsStr = Integer.toString(client.getCurrentFps());
 
-        int x = Helper.defaultHUDLocationX(fps.defX, context) + fps.x;
-        int y = Helper.defaultHUDLocationY(fps.defY, context) + fps.y;
+        int width = 59;
+        int height = 13;
+
+        int x = Helper.defaultHUDLocationX(fps.originX, context, width) + fps.x;
+        int y = Helper.defaultHUDLocationY(fps.originY, context, height) + fps.y;
 
         int color = fps.color | 0xFF000000;
 
-        context.drawTexture(RenderLayer::getGuiTextured, FPS_TEXTURE, x, y, 0.0F, 0.0F, 56, 13, 56, 13, color);
-        context.drawText(client.textRenderer, fpsStr, x + 28, y + 3, color, false);
+        context.drawTexture(RenderLayer::getGuiTextured, FPS_TEXTURE, x, y, 0.0F, 0.0F, width, height, width, height, color);
+        context.drawText(client.textRenderer, fpsStr, x + 31, y + 3, color, false);
     }
 }

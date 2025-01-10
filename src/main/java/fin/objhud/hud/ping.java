@@ -22,7 +22,7 @@ public class ping {
     private static World lastWorld = null;
 
     public static void renderPingHUD(DrawContext context) {
-        if (!ping.renderPingHUD) return;
+        if (!ping.shouldRender) return;
 
         MinecraftClient client = MinecraftClient.getInstance();
         if (client.isInSingleplayer()) return;
@@ -45,23 +45,26 @@ public class ping {
         long currentPing = pingLog.get(pingLogLen - 1);
         String pingStr = Long.toString(currentPing);
 
-        int x = Helper.defaultHUDLocationX(ping.defX, context) + ping.x;
-        int y = Helper.defaultHUDLocationY(ping.defY, context) + ping.y;
+        int width = 47;
+        int height = 13;
+
+        int x = Helper.defaultHUDLocationX(ping.originX, context, width) + ping.x;
+        int y = Helper.defaultHUDLocationY(ping.originY, context, height) + ping.y;
 
         // 0, 150, 300, 450
         int step = Math.min((int) currentPing / 150, 3);
         int color = getPingColor(step) | 0xFF000000;
 
-        context.drawTexture(RenderLayer::getGuiTextured, PING_TEXTURE, x, y, 0.0F, step * 13, 47, 13, 47, 52, color);
+        context.drawTexture(RenderLayer::getGuiTextured, PING_TEXTURE, x, y, 0.0F, step * 13, width, height, width, height * 4, color);
         context.drawText(client.textRenderer, pingStr, x + 19, y + 3, color, false);
     }
 
     public static int getPingColor(int step) {
         return switch (step) {
-            case 0 -> ping.color.first;
-            case 1 -> ping.color.second;
-            case 2 -> ping.color.third;
-            case 3 -> ping.color.fourth;
+            case 0 -> ping.pingColor.first;
+            case 1 -> ping.pingColor.second;
+            case 2 -> ping.pingColor.third;
+            case 3 -> ping.pingColor.fourth;
             default -> 0xFFFFFFFF;
         };
     }

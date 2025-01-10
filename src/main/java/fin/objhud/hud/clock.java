@@ -39,13 +39,16 @@ public class clock {
             minecraftTimeStr = buildMinecraftTimeString(hours, minutes);
         }
 
-        int x = Helper.defaultHUDLocationX(clock_ingame.defX, context) + clock_ingame.x;
-        int y = Helper.defaultHUDLocationY(clock_ingame.defY, context) + clock_ingame.y;
+        int width = 49;
+        int height = 13;
+
+        int x = Helper.defaultHUDLocationX(clock_ingame.originX, context, width) + clock_ingame.x;
+        int y = Helper.defaultHUDLocationY(clock_ingame.originY, context, height) + clock_ingame.y;
 
         int icon = getWeatherOrTime(world);
         int color = getIconColor(icon) | 0xFF000000;
 
-        context.drawTexture(RenderLayer::getGuiTextured, CLOCK_INGAME, x, y, 0.0F, icon * 13, 49, 13, 49, 52, color);
+        context.drawTexture(RenderLayer::getGuiTextured, CLOCK_INGAME, x, y, 0.0F, icon * 13, width, height, width, height * 4, color);
         context.drawText(mc.textRenderer, minecraftTimeStr, x + 19, y + 3, color, false);
     }
 
@@ -95,11 +98,14 @@ public class clock {
             systemTimeStr = buildSystemTimeString(currentTime);
         }
 
-        int x = Helper.defaultHUDLocationX(clock_system.defX, context) + clock_system.x;
-        int y = Helper.defaultHUDLocationY(clock_system.defY, context) + clock_system.y;
+        int width = 49;
+        int height = 13;
+
+        int x = Helper.defaultHUDLocationX(clock_system.originX, context, width) + clock_system.x;
+        int y = Helper.defaultHUDLocationY(clock_system.originY, context, height) + clock_system.y;
         int color = clock_system.color | 0xFF000000;
 
-        context.drawTexture(RenderLayer::getGuiTextured, CLOCK_SYSTEM, x, y, 0.0F, 0.0F, 49, 13, 49, 13, color);
+        context.drawTexture(RenderLayer::getGuiTextured, CLOCK_SYSTEM, x, y, 0.0F, 0.0F, width, height, width, height, color);
         context.drawText(mc.textRenderer, systemTimeStr, x + 19, y + 3, color, false);
     }
 

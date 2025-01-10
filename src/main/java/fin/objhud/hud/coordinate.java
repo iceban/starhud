@@ -15,8 +15,14 @@ public class coordinate {
     public static Settings.CoordSettings coord = Main.settings.coordSettings;
     private static final Identifier COORD_TEXTURE = Identifier.of("objhud", "hud/coordinate.png");
 
+    private static final int[] X_OFFSETS = new int[3];
+    private static final int[] Y_OFFSETS = new int[3];
+    private static final boolean[] SHOULD_RENDER = new boolean[3];
+
     public static void renderCoordinateHUD(DrawContext context) {
-        if (!coord.renderCoordinateHUD) return;
+        if (!coord.shouldRender) return;
+
+        initCoordinateConfiguration();
 
         MinecraftClient client = MinecraftClient.getInstance();
         TextRenderer textRenderer = client.textRenderer;
@@ -27,19 +33,33 @@ public class coordinate {
         String coordY = Integer.toString((int) vec3d.y);
         String coordZ = Integer.toString((int) vec3d.z);
 
-        int x = Helper.defaultHUDLocationX(coord.defX, context) + coord.x;
-        int y = Helper.defaultHUDLocationY(coord.defY, context) + coord.y;
+        int width = 65;
+        int height = 13;
 
-        int colorX = coord.color.X | 0xFF000000;
-        int colorY = coord.color.Y | 0xFF000000;
-        int colorZ = coord.color.Z | 0xFF000000;
+        int x = Helper.defaultHUDLocationX(coord.originX, context, width) + coord.x;
+        int y = Helper.defaultHUDLocationY(coord.originY, context, height) + coord.y;
 
-        renderEachCoordinate(context, textRenderer, coordX, x, y, 0.0F, colorX);
-        renderEachCoordinate(context, textRenderer, coordY, x, y + 14, 14.0F, colorY);
-        renderEachCoordinate(context, textRenderer, coordZ, x, y + 28, 28.0F, colorZ);
+        int colorX = coord.coordXSettings.color | 0xFF000000;
+        int colorY = coord.coordYSettings.color | 0xFF000000;
+        int colorZ = coord.coordZSettings.color | 0xFF000000;
+
+        if (SHOULD_RENDER[0]) renderEachCoordinate(context, textRenderer, coordX, x + X_OFFSETS[0], y + Y_OFFSETS[0], 0.0F, width, height, colorX);
+        if (SHOULD_RENDER[1]) renderEachCoordinate(context, textRenderer, coordY, x + X_OFFSETS[1], y + Y_OFFSETS[1], 14.0F, width, height, colorY);
+        if (SHOULD_RENDER[2]) renderEachCoordinate(context, textRenderer, coordZ, x + X_OFFSETS[2], y + Y_OFFSETS[2], 28.0F, width, height, colorZ);
     }
-    public static void renderEachCoordinate(DrawContext context, TextRenderer textRenderer, String str, int x, int y, float v, int color) {
-        context.drawTexture(RenderLayer::getGuiTextured, COORD_TEXTURE, x, y, 0.0F, v, 65, 14, 65, 41, color);
+
+    public static void renderEachCoordinate(DrawContext context, TextRenderer textRenderer, String str, int x, int y, float v, int width, int height, int color) {
+        context.drawTexture(RenderLayer::getGuiTextured, COORD_TEXTURE, x, y, 0.0F, v, width, height, width, 41, color);
         context.drawText(textRenderer, str, x + 19, y + 3, color, false);
+    }
+
+    private static void initCoordinateConfiguration() {
+        X_OFFSETS[0] = coord.coordXSettings.xOffset; Y_OFFSETS[0] = coord.coordXSettings.yOffset;
+        X_OFFSETS[1] = coord.coordYSettings.xOffset; Y_OFFSETS[1] = coord.coordYSettings.yOffset;
+        X_OFFSETS[2] = coord.coordZSettings.xOffset; Y_OFFSETS[2] = coord.coordZSettings.yOffset;
+
+        SHOULD_RENDER[0] = coord.coordXSettings.shouldRender;
+        SHOULD_RENDER[1] = coord.coordYSettings.shouldRender;
+        SHOULD_RENDER[2] = coord.coordZSettings.shouldRender;
     }
 }

@@ -20,5 +20,6 @@ public class MixinInGameHUD {
         ping.renderPingHUD(context);
         clock.renderInGameTimeHUD(context);
         clock.renderSystemTimeHUD(context);
+        direction.renderDirectionHUD(context);
     }
 }

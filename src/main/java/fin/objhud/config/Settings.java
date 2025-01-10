@@ -15,18 +15,50 @@ public class Settings implements ConfigData {
     public ArmorSettings armorSettings = new ArmorSettings();
     public static class ArmorSettings {
         @Comment("Toggle Armor HUD")
-        public boolean renderArmorHUD = true;
+        public boolean shouldRender = true;
 
         @Comment("Armor HUD default Horizontal location")
         @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
-        public Helper.ScreenLocationX defX = Helper.ScreenLocationX.LEFT;
+        public Helper.ScreenLocationX originX = Helper.ScreenLocationX.LEFT;
 
         @Comment("Armor HUD default Vertical location")
         @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
-        public Helper.ScreenLocationY defY = Helper.ScreenLocationY.MIDDLE;
+        public Helper.ScreenLocationY originY = Helper.ScreenLocationY.MIDDLE;
 
         public int x = 10;
         public int y = -24;
+
+        @ConfigEntry.Gui.CollapsibleObject
+        public HelmetSettings helmet = new HelmetSettings();
+        public static class HelmetSettings {
+            public boolean shouldRender = true;
+            public int xOffset = 0;
+            public int yOffset = 0;
+        }
+
+        @ConfigEntry.Gui.CollapsibleObject
+        public ChestplateSettings chestplate = new ChestplateSettings();
+        public static class ChestplateSettings {
+            public boolean shouldRender = true;
+            public int xOffset = 0;
+            public int yOffset = 14;
+        }
+
+        @ConfigEntry.Gui.CollapsibleObject
+        public LeggingsSettings leggings = new LeggingsSettings();
+        public static class LeggingsSettings {
+            public boolean shouldRender = true;
+            public int xOffset = 0;
+            public int yOffset = 28;
+        }
+
+        @ConfigEntry.Gui.CollapsibleObject
+        public BootsSettings boots = new BootsSettings();
+        public static class BootsSettings {
+            public boolean shouldRender = true;
+            public int xOffset = 0;
+            public int yOffset = 42;
+        }
     }
 
     @ConfigEntry.Category("coord")
@@ -34,28 +66,93 @@ public class Settings implements ConfigData {
     public CoordSettings coordSettings = new CoordSettings();
     public static class CoordSettings {
         @Comment("Toggle Coordinate HUD")
-        public boolean renderCoordinateHUD = true;
+        public boolean shouldRender = true;
 
         @Comment("Coordinate HUD default Horizontal location")
         @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
-        public Helper.ScreenLocationX defX = Helper.ScreenLocationX.LEFT;
+        public Helper.ScreenLocationX originX = Helper.ScreenLocationX.LEFT;
 
         @Comment("Coordinate HUD default Vertical location")
         @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
-        public Helper.ScreenLocationY defY = Helper.ScreenLocationY.UPPER;
+        public Helper.ScreenLocationY originY = Helper.ScreenLocationY.TOP;
 
         public int x = 10;
         public int y = 10;
 
         @ConfigEntry.Gui.CollapsibleObject
-        public CoordColorSettings color = new CoordColorSettings();
-        public static class CoordColorSettings {
+        public CoordXSettings coordXSettings = new CoordXSettings();
+        public static class CoordXSettings {
+            public boolean shouldRender = true;
+            @Comment("X Offset to origin X location")
+            public int xOffset = 0;
+            @Comment("Y Offset to origin Y location")
+            public int yOffset = 0;
             @ConfigEntry.ColorPicker
-            public int X = 0xFC7871;
+            public int color = 0xFC7871;
+        }
+
+        @ConfigEntry.Gui.CollapsibleObject
+        public CoordYSettings coordYSettings = new CoordYSettings();
+        public static class CoordYSettings {
+            public boolean shouldRender = true;
+            @Comment("X Offset to origin X location")
+            public int xOffset = 0;
+            @Comment("Y Offset to origin Y location")
+            public int yOffset = 14;
             @ConfigEntry.ColorPicker
-            public int Y = 0xA6F1AF;
+            public int color = 0xA6F1AF;
+        }
+
+        @ConfigEntry.Gui.CollapsibleObject
+        public CoordZSettings coordZSettings = new CoordZSettings();
+        public static class CoordZSettings {
+            public boolean shouldRender = true;
+            @Comment("X Offset to origin X location")
+            public int xOffset = 0;
+            @Comment("Y Offset to origin Y location")
+            public int yOffset = 28;
             @ConfigEntry.ColorPicker
-            public int Z = 0x6CE1FC;
+            public int color = 0x6CE1FC;
+        }
+    }
+
+    @ConfigEntry.Category("direction")
+    @ConfigEntry.Gui.TransitiveObject
+    public DirectionSettings directionSettings = new DirectionSettings();
+    public static class DirectionSettings {
+        @Comment("Toggle Direction HUD")
+        public boolean shouldRender = true;
+
+        @Comment("Direction HUD default Horizontal location")
+        @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
+        public Helper.ScreenLocationX originX = Helper.ScreenLocationX.LEFT;
+
+        @Comment("Direction HUD default Vertical location")
+        @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
+        public Helper.ScreenLocationY originY = Helper.ScreenLocationY.TOP;
+
+        public int x = 80;
+        public int y = 10;
+
+        @ConfigEntry.Gui.CollapsibleObject
+        public DirectionColorSettings directionColor = new DirectionColorSettings();
+        public static class DirectionColorSettings {
+            @ConfigEntry.ColorPicker
+            public int s = 0x85F290;
+            @ConfigEntry.ColorPicker
+            public int sw = 0xECF285;
+            @ConfigEntry.ColorPicker
+            public int w = 0xFEBC49;
+            @ConfigEntry.ColorPicker
+            public int nw = 0xFF5C71;
+            @ConfigEntry.ColorPicker
+            public int n = 0xFF5C71;
+            @ConfigEntry.ColorPicker
+            public int ne = 0xFF5C71;
+            @ConfigEntry.ColorPicker
+            public int e = 0xFF5C71;
+            @ConfigEntry.ColorPicker
+            public int se = 0xFF5C71;
         }
     }
 
@@ -64,15 +161,15 @@ public class Settings implements ConfigData {
     public FPSSettings fpsSettings = new FPSSettings();
     public static class FPSSettings {
         @Comment("Toggle FPS HUD")
-        public boolean renderFPSHUD = true;
+        public boolean shouldRender = true;
 
         @Comment("FPS HUD default Horizontal location")
         @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
-        public Helper.ScreenLocationX defX = Helper.ScreenLocationX.LEFT;
+        public Helper.ScreenLocationX originX = Helper.ScreenLocationX.LEFT;
 
         @Comment("FPS HUD default Vertical location")
         @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
-        public Helper.ScreenLocationY defY = Helper.ScreenLocationY.UPPER;
+        public Helper.ScreenLocationY originY = Helper.ScreenLocationY.TOP;
 
         public int x = 80;
         public int y = 10;
@@ -86,15 +183,15 @@ public class Settings implements ConfigData {
     public PingSettings pingSettings = new PingSettings();
     public static class PingSettings {
         @Comment("Toggle Ping HUD")
-        public boolean renderPingHUD = true;
+        public boolean shouldRender = true;
 
         @Comment("Ping HUD default Horizontal location")
         @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
-        public Helper.ScreenLocationX defX = Helper.ScreenLocationX.LEFT;
+        public Helper.ScreenLocationX originX = Helper.ScreenLocationX.LEFT;
 
         @Comment("Ping HUD default Vertical location")
         @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
-        public Helper.ScreenLocationY defY = Helper.ScreenLocationY.UPPER;
+        public Helper.ScreenLocationY originY = Helper.ScreenLocationY.TOP;
 
         public int x = 80;
         public int y = 24;
@@ -103,7 +200,7 @@ public class Settings implements ConfigData {
         public double updateInterval = 5.0;
 
         @ConfigEntry.Gui.CollapsibleObject
-        public PingColorSettings color = new PingColorSettings();
+        public PingColorSettings pingColor = new PingColorSettings();
         public static class PingColorSettings {
             @ConfigEntry.ColorPicker
             public int first = 0x85F290;
@@ -126,10 +223,10 @@ public class Settings implements ConfigData {
             public boolean shouldRender = true;
 
             @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
-            public Helper.ScreenLocationX defX = Helper.ScreenLocationX.LEFT;
+            public Helper.ScreenLocationX originX = Helper.ScreenLocationX.LEFT;
 
             @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
-            public Helper.ScreenLocationY defY = Helper.ScreenLocationY.UNDER;
+            public Helper.ScreenLocationY originY = Helper.ScreenLocationY.BOTTOM;
 
             public int x = 10;
             public int y = -23;
@@ -144,10 +241,10 @@ public class Settings implements ConfigData {
             public boolean shouldRender = true;
 
             @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
-            public Helper.ScreenLocationX defX = Helper.ScreenLocationX.LEFT;
+            public Helper.ScreenLocationX originX = Helper.ScreenLocationX.LEFT;
 
             @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
-            public Helper.ScreenLocationY defY = Helper.ScreenLocationY.UNDER;
+            public Helper.ScreenLocationY originY = Helper.ScreenLocationY.BOTTOM;
 
             public int x = 64;
             public int y = -23;
