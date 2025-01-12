@@ -21,8 +21,8 @@ public class fps {
         int width = 59;
         int height = 13;
 
-        int x = Helper.defaultHUDLocationX(fps.originX, context, width) + fps.x;
-        int y = Helper.defaultHUDLocationY(fps.originY, context, height) + fps.y;
+        int x = Helper.defaultHUDAlignmentX(fps.originX, context.getScaledWindowWidth(), width) + fps.x;
+        int y = Helper.defaultHUDAlignmentY(fps.originY, context.getScaledWindowHeight(), height) + fps.y;
 
         int color = fps.color | 0xFF000000;
 

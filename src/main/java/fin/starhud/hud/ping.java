@@ -46,8 +46,8 @@ public class ping {
         int width = 47;
         int height = 13;
 
-        int x = Helper.defaultHUDLocationX(ping.originX, context, width) + ping.x;
-        int y = Helper.defaultHUDLocationY(ping.originY, context, height) + ping.y;
+        int x = Helper.defaultHUDAlignmentX(ping.originX, context.getScaledWindowWidth(), width) + ping.x;
+        int y = Helper.defaultHUDAlignmentY(ping.originY, context.getScaledWindowHeight(), height) + ping.y;
 
         // 0, 150, 300, 450
         int step = Math.min((int) currentPing / 150, 3);

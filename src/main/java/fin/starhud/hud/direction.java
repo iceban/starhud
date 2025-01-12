@@ -17,9 +17,9 @@ public class direction {
     private static final Identifier DIRECTION_TEXTURE = Identifier.of("starhud", "hud/direction.png");
 
     public static void renderDirectionHUD(DrawContext context) {
-        MinecraftClient mc = MinecraftClient.getInstance();
+        MinecraftClient client = MinecraftClient.getInstance();
 
-        Entity playerCamera = mc.cameraEntity;
+        Entity playerCamera = client.cameraEntity;
 
         float yaw = Math.round(MathHelper.wrapDegrees(playerCamera.getYaw()) * 10.0F) / 10.0F;
 
@@ -29,11 +29,11 @@ public class direction {
         int width = 61;
         int height = 13;
 
-        int x = Helper.defaultHUDLocationX(direction.originX, context, width) + direction.x;
-        int y = Helper.defaultHUDLocationY(direction.originY, context, height) + direction.y;
+        int x = Helper.defaultHUDAlignmentX(direction.originX, context.getScaledWindowWidth(), width) + direction.x;
+        int y = Helper.defaultHUDAlignmentY(direction.originY, context.getScaledWindowHeight(), height) + direction.y;
 
         context.drawTexture(RenderLayer::getGuiTextured, DIRECTION_TEXTURE, x, y, 0.0F, icon * 13, width, height, width, height * 8, color);
-        context.drawText(mc.textRenderer, Float.toString(yaw), x + 25, y + 3, color, false);
+        context.drawText(client.textRenderer, Float.toString(yaw), x + 25, y + 3, color, false);
     }
 
     private static int getDirectionIcon(float yaw) {

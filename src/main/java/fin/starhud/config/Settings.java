@@ -19,11 +19,11 @@ public class Settings implements ConfigData {
 
         @Comment("Armor HUD default Horizontal location")
         @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
-        public Helper.ScreenLocationX originX = Helper.ScreenLocationX.LEFT;
+        public Helper.ScreenAlignmentX originX = Helper.ScreenAlignmentX.LEFT;
 
         @Comment("Armor HUD default Vertical location")
         @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
-        public Helper.ScreenLocationY originY = Helper.ScreenLocationY.MIDDLE;
+        public Helper.ScreenAlignmentY originY = Helper.ScreenAlignmentY.MIDDLE;
 
         public int x = 5;
         public int y = -24;
@@ -70,11 +70,11 @@ public class Settings implements ConfigData {
 
         @Comment("Coordinate HUD default Horizontal location")
         @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
-        public Helper.ScreenLocationX originX = Helper.ScreenLocationX.LEFT;
+        public Helper.ScreenAlignmentX originX = Helper.ScreenAlignmentX.LEFT;
 
         @Comment("Coordinate HUD default Vertical location")
         @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
-        public Helper.ScreenLocationY originY = Helper.ScreenLocationY.TOP;
+        public Helper.ScreenAlignmentY originY = Helper.ScreenAlignmentY.TOP;
 
         public int x = 5;
         public int y = 5;
@@ -125,11 +125,11 @@ public class Settings implements ConfigData {
 
         @Comment("Direction HUD default Horizontal location")
         @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
-        public Helper.ScreenLocationX originX = Helper.ScreenLocationX.MIDDLE;
+        public Helper.ScreenAlignmentX originX = Helper.ScreenAlignmentX.CENTER;
 
         @Comment("Direction HUD default Vertical location")
         @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
-        public Helper.ScreenLocationY originY = Helper.ScreenLocationY.TOP;
+        public Helper.ScreenAlignmentY originY = Helper.ScreenAlignmentY.TOP;
 
         public int x = 29;
         public int y = 19;
@@ -165,11 +165,11 @@ public class Settings implements ConfigData {
 
         @Comment("FPS HUD default Horizontal location")
         @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
-        public Helper.ScreenLocationX originX = Helper.ScreenLocationX.LEFT;
+        public Helper.ScreenAlignmentX originX = Helper.ScreenAlignmentX.LEFT;
 
         @Comment("FPS HUD default Vertical location")
         @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
-        public Helper.ScreenLocationY originY = Helper.ScreenLocationY.BOTTOM;
+        public Helper.ScreenAlignmentY originY = Helper.ScreenAlignmentY.BOTTOM;
 
         public int x = 5;
         public int y = -5;
@@ -187,11 +187,11 @@ public class Settings implements ConfigData {
 
         @Comment("Ping HUD default Horizontal location")
         @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
-        public Helper.ScreenLocationX originX = Helper.ScreenLocationX.RIGHT;
+        public Helper.ScreenAlignmentX originX = Helper.ScreenAlignmentX.RIGHT;
 
         @Comment("Ping HUD default Vertical location")
         @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
-        public Helper.ScreenLocationY originY = Helper.ScreenLocationY.BOTTOM;
+        public Helper.ScreenAlignmentY originY = Helper.ScreenAlignmentY.BOTTOM;
 
         public int x = -57;
         public int y = -5;
@@ -223,13 +223,15 @@ public class Settings implements ConfigData {
             public boolean shouldRender = true;
 
             @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
-            public Helper.ScreenLocationX originX = Helper.ScreenLocationX.RIGHT;
+            public Helper.ScreenAlignmentX originX = Helper.ScreenAlignmentX.RIGHT;
 
             @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
-            public Helper.ScreenLocationY originY = Helper.ScreenLocationY.BOTTOM;
+            public Helper.ScreenAlignmentY originY = Helper.ScreenAlignmentY.BOTTOM;
 
             public int x = -5;
             public int y = -5;
+
+            public boolean use12Hour = false;
 
             @ConfigEntry.ColorPicker
             public int color = 0xFFFFFF;
@@ -241,13 +243,15 @@ public class Settings implements ConfigData {
             public boolean shouldRender = true;
 
             @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
-            public Helper.ScreenLocationX originX = Helper.ScreenLocationX.MIDDLE;
+            public Helper.ScreenAlignmentX originX = Helper.ScreenAlignmentX.CENTER;
 
             @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
-            public Helper.ScreenLocationY originY = Helper.ScreenLocationY.TOP;
+            public Helper.ScreenAlignmentY originY = Helper.ScreenAlignmentY.TOP;
 
             public int x = -29;
             public int y = 19;
+
+            public boolean use12Hour = false;
 
             @ConfigEntry.Gui.CollapsibleObject
             public ClockInGameColorSettings color = new ClockInGameColorSettings();
@@ -261,6 +265,38 @@ public class Settings implements ConfigData {
                 @ConfigEntry.ColorPicker
                 public int thunder = 0x8faecb;
             }
+        }
+    }
+
+    @ConfigEntry.Category("biome")
+    @ConfigEntry.Gui.TransitiveObject
+    public BiomeSettings biomeSettings = new BiomeSettings();
+    public static class BiomeSettings {
+        public boolean shouldRender = true;
+
+        @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
+        public Helper.ScreenAlignmentX originX = Helper.ScreenAlignmentX.CENTER;
+
+        @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
+        public Helper.ScreenAlignmentY originY = Helper.ScreenAlignmentY.TOP;
+
+        public int x = 0;
+        public int y = 5;
+
+        @Comment("Should Text Width Affect HUD Position, best to use when Horizontal Alignment is set to center / left")
+        public boolean shouldTextWidthAffectPosition = true;
+
+        @ConfigEntry.Gui.CollapsibleObject
+        public DimensionColorSettings color = new DimensionColorSettings();
+        public static class DimensionColorSettings {
+            @ConfigEntry.ColorPicker
+            public int overworld = 0xFFFFFF;
+            @ConfigEntry.ColorPicker
+            public int nether = 0xFFFFFF;
+            @ConfigEntry.ColorPicker
+            public int end = 0xFFFFFF;
+            @ConfigEntry.ColorPicker
+            public int custom = 0xFFFFFF;
         }
     }
 }

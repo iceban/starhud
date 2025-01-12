@@ -29,13 +29,14 @@ public class armor {
         int width = 63;
         int height = 13;
 
-        int x = Helper.defaultHUDLocationX(armor.originX, context, width) + armor.x;
-        int y = Helper.defaultHUDLocationY(armor.originY, context, height) + armor.y;
-
+        int x = Helper.defaultHUDAlignmentX(armor.originX, context.getScaledWindowWidth(), width) + armor.x;
+        int y = Helper.defaultHUDAlignmentY(armor.originY, context.getScaledWindowHeight(), height) + armor.y;
+        
         int i = 3;
+
         // for each armor pieces
         for (ItemStack armor : client.player.getArmorItems()) {
-            if (armor.isItemBarVisible() && SHOULD_RENDER[i]) {
+            if (SHOULD_RENDER[i] && !armor.isEmpty() && armor.isDamageable()) {
                 renderArmorPieces(context, armor, x + X_OFFSETS[i], y + Y_OFFSETS[i], width, height, 14 * i);
             }
             --i;

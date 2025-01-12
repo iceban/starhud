@@ -34,8 +34,8 @@ public class coordinate {
         int width = 65;
         int height = 13;
 
-        int x = Helper.defaultHUDLocationX(coord.originX, context, width) + coord.x;
-        int y = Helper.defaultHUDLocationY(coord.originY, context, height) + coord.y;
+        int x = Helper.defaultHUDAlignmentX(coord.originX, context.getScaledWindowWidth(), width) + coord.x;
+        int y = Helper.defaultHUDAlignmentY(coord.originY, context.getScaledWindowHeight(), height) + coord.y;
 
         int colorX = coord.coordXSettings.color | 0xFF000000;
         int colorY = coord.coordYSettings.color | 0xFF000000;
