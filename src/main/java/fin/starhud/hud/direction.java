@@ -26,6 +26,8 @@ public class direction {
     private static int textX;
     private static Identifier texture;
 
+    private static Boolean LAST_UPDATED_includeOrdinal;
+
     public static void renderDirectionHUD(DrawContext context) {
         MinecraftClient client = MinecraftClient.getInstance();
 
@@ -33,20 +35,30 @@ public class direction {
 
         float yaw = Math.round(MathHelper.wrapDegrees(playerCamera.getYaw()) * 10.0F) / 10.0F;
 
-        if (direction.includeOrdinal) {
+        boolean includeOrdinal = direction.includeOrdinal;
+
+        // silly way to cache all the variables
+        if (LAST_UPDATED_includeOrdinal == null || LAST_UPDATED_includeOrdinal != includeOrdinal) {
+            LAST_UPDATED_includeOrdinal = includeOrdinal;
+            if (includeOrdinal) {
+                texture = DIRECTION_INCLUDE_ORDINAL_TEXTURE;
+                width = 61;
+                iconAmount = 8;
+                textX = 25;
+            } else {
+                texture = DIRECTION_TEXTURE;
+                width = 55;
+                iconAmount = 4;
+                textX = 19;
+            }
+        }
+
+        if (includeOrdinal) {
             icon = getOrdinalDirectionIcon(yaw);
             color = getDirectionColor(icon) | 0xFF000000;
-            texture = DIRECTION_INCLUDE_ORDINAL_TEXTURE;
-            width = 61;
-            iconAmount = 8;
-            textX = 25;
         } else {
             icon = getCardinalDirectionIcon(yaw);
             color = getDirectionColor(icon * 2) | 0xFF000000;
-            texture = DIRECTION_TEXTURE;
-            width = 55;
-            iconAmount = 4;
-            textX = 19;
         }
 
         int x = Helper.defaultHUDAlignmentX(direction.originX, context.getScaledWindowWidth(), width) + direction.x;

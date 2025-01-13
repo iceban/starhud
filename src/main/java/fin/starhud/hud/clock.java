@@ -25,9 +25,10 @@ public class clock {
     private static String minecraftTimeStr = "";
     private static int cachedMinecraftMinute = -1;
 
-    private static boolean LAST_UPDATED_use12Hour_ingame = clock_ingame.use12Hour;
     private static int width_ingame;
     private static Identifier texture_ingame;
+
+    private static Boolean LAST_UPDATED_use12Hour_ingame;
 
     public static void renderInGameTimeHUD(DrawContext context) {
         MinecraftClient client = MinecraftClient.getInstance();
@@ -39,19 +40,22 @@ public class clock {
         boolean use12Hour = clock_ingame.use12Hour;
 
         int minutes = (int) ((time % 1000) * 3 / 50);
-        if (minutes != cachedMinecraftMinute || LAST_UPDATED_use12Hour_ingame != use12Hour) {
+        if (minutes != cachedMinecraftMinute) {
             cachedMinecraftMinute = minutes;
-            LAST_UPDATED_use12Hour_ingame = use12Hour;
 
             int hours = (int) ((time / 1000) + 6) % 24;
+            minecraftTimeStr = use12Hour ?
+                    buildMinecraftCivilianTimeString(hours, minutes):
+                    buildMinecraftMilitaryTimeString(hours, minutes);
+        }
 
+        if (LAST_UPDATED_use12Hour_ingame == null || LAST_UPDATED_use12Hour_ingame != use12Hour) {
+            LAST_UPDATED_use12Hour_ingame = use12Hour;
             if (use12Hour) {
                 width_ingame = 65;
-                minecraftTimeStr = buildMinecraftCivilianTimeString(hours, minutes);
                 texture_ingame = CLOCK_12;
             } else {
                 width_ingame = 49;
-                minecraftTimeStr = buildMinecraftMilitaryTimeString(hours, minutes);
                 texture_ingame = CLOCK_24;
             }
         }
@@ -115,7 +119,7 @@ public class clock {
     private static String systemTimeStr = buildSystemMilitaryTimeString(System.currentTimeMillis());
     private static long cachedSystemMinute = -1;
 
-    private static boolean LAST_UPDATED_use12Hour_system = clock_system.use12Hour;
+    private static Boolean LAST_UPDATED_use12Hour_system;
 
     private static int width_system;
     private static Identifier texture_system;
@@ -130,17 +134,20 @@ public class clock {
         // update each minute
         long currentTime = System.currentTimeMillis();
         long minute = currentTime / 60000;
-        if (minute != cachedSystemMinute || LAST_UPDATED_use12Hour_system != use12Hour) {
+        if (minute != cachedSystemMinute) {
             cachedSystemMinute = minute;
-            LAST_UPDATED_use12Hour_system = use12Hour;
+            systemTimeStr = use12Hour ?
+                    buildSystemCivilianTimeString(currentTime):
+                    buildSystemMilitaryTimeString(currentTime);
+        }
 
+        if (LAST_UPDATED_use12Hour_system == null || LAST_UPDATED_use12Hour_system != use12Hour) {
+            LAST_UPDATED_use12Hour_system = use12Hour;
             if (use12Hour) {
                 width_system = 65;
-                systemTimeStr = buildSystemCivilianTimeString(currentTime);
                 texture_system = CLOCK_12;
             } else {
                 width_system = 49;
-                systemTimeStr = buildSystemMilitaryTimeString(currentTime);
                 texture_system = CLOCK_24;
             }
         }
