@@ -20,10 +20,14 @@ public class clock {
     private static final Identifier CLOCK_12 = Identifier.of("starhud", "hud/clock_12.png");
     private static final Identifier CLOCK_24 = Identifier.of("starhud", "hud/clock_24.png");
 
+    private static final int height = 13;
+
     private static String minecraftTimeStr = "";
     private static int cachedMinecraftMinute = -1;
 
     private static boolean LAST_UPDATED_use12Hour_ingame = clock_ingame.use12Hour;
+    private static int width_ingame;
+    private static Identifier texture_ingame;
 
     public static void renderInGameTimeHUD(DrawContext context) {
         MinecraftClient client = MinecraftClient.getInstance();
@@ -40,21 +44,25 @@ public class clock {
             LAST_UPDATED_use12Hour_ingame = use12Hour;
 
             int hours = (int) ((time / 1000) + 6) % 24;
-            minecraftTimeStr = use12Hour ?
-                    buildMinecraftCivilianTimeString(hours, minutes):
-                    buildMinecraftMilitaryTimeString(hours, minutes);
+
+            if (use12Hour) {
+                width_ingame = 65;
+                minecraftTimeStr = buildMinecraftCivilianTimeString(hours, minutes);
+                texture_ingame = CLOCK_12;
+            } else {
+                width_ingame = 49;
+                minecraftTimeStr = buildMinecraftMilitaryTimeString(hours, minutes);
+                texture_ingame = CLOCK_24;
+            }
         }
 
-        int width = use12Hour ? 65 : 49;
-        int height = 13;
-
-        int x = Helper.defaultHUDAlignmentX(clock_ingame.originX, context.getScaledWindowWidth(), width) + clock_ingame.x;
+        int x = Helper.defaultHUDAlignmentX(clock_ingame.originX, context.getScaledWindowWidth(), width_ingame) + clock_ingame.x;
         int y = Helper.defaultHUDAlignmentY(clock_ingame.originY, context.getScaledWindowHeight(), height) + clock_ingame.y;
 
         int icon = getWeatherOrTime(world);
         int color = getIconColor(icon) | 0xFF000000;
 
-        context.drawTexture(RenderLayer::getGuiTextured, use12Hour ? CLOCK_12 : CLOCK_24, x, y, 0.0F, icon * 13, width, height, width, height * 5, color);
+        context.drawTexture(RenderLayer::getGuiTextured, texture_ingame, x, y, 0.0F, icon * 13, width_ingame, height, width_ingame, height * 5, color);
         context.drawText(client.textRenderer, minecraftTimeStr, x + 19, y + 3, color, false);
     }
 
@@ -109,6 +117,9 @@ public class clock {
 
     private static boolean LAST_UPDATED_use12Hour_system = clock_system.use12Hour;
 
+    private static int width_system;
+    private static Identifier texture_system;
+
     public static void renderSystemTimeHUD(DrawContext context) {
         if (!clock_system.shouldRender) return;
 
@@ -123,24 +134,29 @@ public class clock {
             cachedSystemMinute = minute;
             LAST_UPDATED_use12Hour_system = use12Hour;
 
-            systemTimeStr = use12Hour ?
-                    buildSystemCivilianTimeString(currentTime):
-                    buildSystemMilitaryTimeString(currentTime);
+            if (use12Hour) {
+                width_system = 65;
+                systemTimeStr = buildSystemCivilianTimeString(currentTime);
+                texture_system = CLOCK_12;
+            } else {
+                width_system = 49;
+                systemTimeStr = buildSystemMilitaryTimeString(currentTime);
+                texture_system = CLOCK_24;
+            }
         }
 
-        int width = use12Hour ? 65 : 49;
-        int height = 13;
-
-        int x = Helper.defaultHUDAlignmentX(clock_system.originX, context.getScaledWindowWidth(), width) + clock_system.x;
+        int x = Helper.defaultHUDAlignmentX(clock_system.originX, context.getScaledWindowWidth(), width_system) + clock_system.x;
         int y = Helper.defaultHUDAlignmentY(clock_system.originY, context.getScaledWindowHeight(), height) + clock_system.y;
         int color = clock_system.color | 0xFF000000;
 
-        context.drawTexture(RenderLayer::getGuiTextured, clock_system.use12Hour ? CLOCK_12 : CLOCK_24, x, y, 0.0F, 0.0F, width, height, width, height * 5, color);
+        context.drawTexture(RenderLayer::getGuiTextured, texture_system, x, y, 0.0F, 0.0F, width_system, height, width_system, height * 5, color);
         context.drawText(client.textRenderer, systemTimeStr, x + 19, y + 3, color, false);
     }
 
     private static String buildSystemMilitaryTimeString(long time) {
         return militaryTimeFormat.format(new Date(time));
     }
-    private static String buildSystemCivilianTimeString(long time) { return civilianTimeFormat.format(new Date(time)); }
+    private static String buildSystemCivilianTimeString(long time) {
+        return civilianTimeFormat.format(new Date(time));
+    }
 }

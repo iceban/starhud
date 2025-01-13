@@ -21,13 +21,13 @@ public class armor {
     private static final int[] Y_OFFSETS = new int[4];
     private static final boolean[] SHOULD_RENDER = new boolean[4];
 
+    private static final int width = 63;
+    private static final int height = 13;
+
     public static void renderArmorHUD(DrawContext context) {
         initArmorConfiguration();
 
         MinecraftClient client = MinecraftClient.getInstance();
-
-        int width = 63;
-        int height = 13;
 
         int x = Helper.defaultHUDAlignmentX(armor.originX, context.getScaledWindowWidth(), width) + armor.x;
         int y = Helper.defaultHUDAlignmentY(armor.originY, context.getScaledWindowHeight(), height) + armor.y;

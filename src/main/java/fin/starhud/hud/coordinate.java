@@ -19,6 +19,9 @@ public class coordinate {
     private static final int[] Y_OFFSETS = new int[3];
     private static final boolean[] SHOULD_RENDER = new boolean[3];
 
+    private static final int width = 65;
+    private static final int height = 13;
+
     public static void renderCoordinateHUD(DrawContext context) {
         initCoordinateConfiguration();
 
@@ -30,9 +33,6 @@ public class coordinate {
         String coordX = Integer.toString((int) vec3d.x);
         String coordY = Integer.toString((int) vec3d.y);
         String coordZ = Integer.toString((int) vec3d.z);
-
-        int width = 65;
-        int height = 13;
 
         int x = Helper.defaultHUDAlignmentX(coord.originX, context.getScaledWindowWidth(), width) + coord.x;
         int y = Helper.defaultHUDAlignmentY(coord.originY, context.getScaledWindowHeight(), height) + coord.y;

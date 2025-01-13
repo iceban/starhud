@@ -24,11 +24,10 @@ public class biome {
 
     public static void renderBiomeIndicatorHUD(DrawContext context) {
         MinecraftClient client = MinecraftClient.getInstance();
+        TextRenderer textRenderer = client.textRenderer;
 
         BlockPos blockPos = client.player.getBlockPos();
         String currentBiomeStr = client.world.getBiome(blockPos).getIdAsString();
-
-        TextRenderer textRenderer = client.textRenderer;
 
         if (!cachedBiomeStr.equals(currentBiomeStr)) {
             cachedFormattedBiomeStr = biomeNameFormatter(currentBiomeStr);

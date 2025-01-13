@@ -131,8 +131,10 @@ public class Settings implements ConfigData {
         @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
         public Helper.ScreenAlignmentY originY = Helper.ScreenAlignmentY.TOP;
 
-        public int x = 29;
+        public int x = 26;
         public int y = 19;
+
+        public boolean includeOrdinal = false;
 
         @ConfigEntry.Gui.CollapsibleObject
         public DirectionColorSettings directionColor = new DirectionColorSettings();
@@ -283,7 +285,7 @@ public class Settings implements ConfigData {
         public int x = 0;
         public int y = 5;
 
-        @Comment("Should Text Width Affect HUD Position, best to use when Horizontal Alignment is set to center / left")
+        @Comment("Best to use when Horizontal Alignment is set to center / left")
         public boolean shouldTextWidthAffectPosition = true;
 
         @ConfigEntry.Gui.CollapsibleObject
@@ -292,9 +294,9 @@ public class Settings implements ConfigData {
             @ConfigEntry.ColorPicker
             public int overworld = 0xFFFFFF;
             @ConfigEntry.ColorPicker
-            public int nether = 0xFFFFFF;
+            public int nether = 0xfc7871;
             @ConfigEntry.ColorPicker
-            public int end = 0xFFFFFF;
+            public int end = 0xc9c7e3;
             @ConfigEntry.ColorPicker
             public int custom = 0xFFFFFF;
         }
