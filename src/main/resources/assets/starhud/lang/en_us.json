@@ -123,7 +123,7 @@
   "text.autoconfig.starhud.option.biomeSettings.originY": "Vertical Alignment",
   "text.autoconfig.starhud.option.biomeSettings.x": "X Offset",
   "text.autoconfig.starhud.option.biomeSettings.y": "Y Offset",
-  "text.autoconfig.starhud.option.biomeSettings.shouldTextWidthAffectPosition": "Should Text Width Affect HUD Position",
+  "text.autoconfig.starhud.option.biomeSettings.textGrowth": "Text Growth Direction",
 
   "text.autoconfig.starhud.option.biomeSettings.color": "Dimension Colors",
   "text.autoconfig.starhud.option.biomeSettings.color.overworld": "Overworld",
