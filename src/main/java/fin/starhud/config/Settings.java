@@ -28,6 +28,9 @@ public class Settings implements ConfigData {
         public int x = 5;
         public int y = -24;
 
+        @ConfigEntry.BoundedDiscrete(max = 10)
+        public int scale = 0;
+
         @ConfigEntry.Gui.CollapsibleObject
         public HelmetSettings helmet = new HelmetSettings();
         public static class HelmetSettings {
@@ -78,6 +81,9 @@ public class Settings implements ConfigData {
 
         public int x = 5;
         public int y = 5;
+
+        @ConfigEntry.BoundedDiscrete(max = 10)
+        public int scale = 0;
 
         @ConfigEntry.Gui.CollapsibleObject
         public CoordXSettings coordXSettings = new CoordXSettings();
@@ -134,6 +140,9 @@ public class Settings implements ConfigData {
         public int x = 26;
         public int y = 19;
 
+        @ConfigEntry.BoundedDiscrete(max = 10)
+        public int scale = 0;
+
         public boolean includeOrdinal = false;
 
         @ConfigEntry.Gui.CollapsibleObject
@@ -176,6 +185,9 @@ public class Settings implements ConfigData {
         public int x = 5;
         public int y = -5;
 
+        @ConfigEntry.BoundedDiscrete(max = 10)
+        public int scale = 0;
+
         @ConfigEntry.ColorPicker
         public int color = 0xE5ECf8;
     }
@@ -197,6 +209,9 @@ public class Settings implements ConfigData {
 
         public int x = -57;
         public int y = -5;
+
+        @ConfigEntry.BoundedDiscrete(max = 10)
+        public int scale = 0;
 
         @Comment("Ping update interval, in seconds.")
         public double updateInterval = 5.0;
@@ -233,6 +248,9 @@ public class Settings implements ConfigData {
             public int x = -5;
             public int y = -5;
 
+            @ConfigEntry.BoundedDiscrete(max = 10)
+            public int scale = 0;
+
             public boolean use12Hour = false;
 
             @ConfigEntry.ColorPicker
@@ -252,6 +270,9 @@ public class Settings implements ConfigData {
 
             public int x = -29;
             public int y = 19;
+
+            @ConfigEntry.BoundedDiscrete(max = 10)
+            public int scale = 0;
 
             public boolean use12Hour = false;
 
@@ -285,6 +306,9 @@ public class Settings implements ConfigData {
         public int x = 0;
         public int y = 5;
 
+        @ConfigEntry.BoundedDiscrete(max = 10)
+        public int scale = 0;
+
         @Comment("Which way should the HUD goes as the text increases?")
         @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
         public Helper.TextGrowthDirection textGrowth = Helper.TextGrowthDirection.CENTER;
@@ -301,5 +325,24 @@ public class Settings implements ConfigData {
             @ConfigEntry.ColorPicker
             public int custom = 0xFFFFFF;
         }
+    }
+
+    @ConfigEntry.Category("inventory")
+    @ConfigEntry.Gui.TransitiveObject
+    public InventorySettings inventorySettings = new InventorySettings();
+    public static class InventorySettings {
+        public boolean shouldRender = true;
+
+        @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
+        public Helper.ScreenAlignmentX originX = Helper.ScreenAlignmentX.CENTER;
+
+        @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
+        public Helper.ScreenAlignmentY originY = Helper.ScreenAlignmentY.BOTTOM;
+
+        public int x = 0;
+        public int y = -30;
+
+        @ConfigEntry.BoundedDiscrete(max = 10)
+        public int scale = 0;
     }
 }

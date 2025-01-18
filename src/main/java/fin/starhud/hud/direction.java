@@ -50,11 +50,14 @@ public class direction {
             color = getDirectionColor(icon * 2) | 0xFF000000;
         }
 
-        int x = Helper.defaultHUDAlignmentX(direction.originX, context.getScaledWindowWidth(), width) + direction.x;
-        int y = Helper.defaultHUDAlignmentY(direction.originY, context.getScaledWindowHeight(), height) + direction.y;
+        int x = Helper.calculatePositionX(direction.x, direction.originX, client.getWindow(), width, direction.scale);
+        int y = Helper.calculatePositionY(direction.y, direction.originY, client.getWindow(), height, direction.scale);
 
+        context.getMatrices().push();
+        Helper.setHUDScale(context, client.getWindow(), direction.scale);
         context.drawTexture(RenderLayer::getGuiTextured, texture, x, y, 0.0F, icon * 13, width, height, width, height * iconAmount, color);
         context.drawText(client.textRenderer, Float.toString(yaw), x + textX, y + 3, color, false);
+        context.getMatrices().pop();
     }
 
     private static int getOrdinalDirectionIcon(float yaw) {

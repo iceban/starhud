@@ -1,5 +1,8 @@
 package fin.starhud.hud;
 
+import fin.starhud.Helper;
+import fin.starhud.Main;
+import fin.starhud.config.Settings;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.RenderLayer;
@@ -11,19 +14,22 @@ public class inventory {
 
     private static final Identifier INVENTORY_TEXTURE = Identifier.of("starhud", "hud/inventory.png");
 
+    private static Settings.InventorySettings inventory = Main.settings.inventorySettings;
+
+    private static final int width = 206;
+    private static final int height = 68;
+
     public static void renderInventoryHUD(DrawContext context) {
         MinecraftClient client = MinecraftClient.getInstance();
 
-        int x = 200 * client.getWindow().getWidth() / context.getScaledWindowWidth();
-        int y = 200 * client.getWindow().getWidth() / context.getScaledWindowWidth();
+        int x = Helper.calculatePositionX(inventory.x, inventory.originX, client.getWindow(), width, inventory.scale);
+        int y = Helper.calculatePositionY(inventory.y, inventory.originY, client.getWindow(), height, inventory.scale);
 
         PlayerInventory playerInventory = client.player.getInventory();
 
-        float uhh = context.getScaledWindowWidth() * 1.0F / client.getWindow().getWidth();
-
         context.getMatrices().push();
-        context.getMatrices().scale(uhh, uhh, uhh);
-        context.drawTexture(RenderLayer::getGuiTextured, INVENTORY_TEXTURE, x, y, 0.0F, 0.0F, 206, 68, 206, 68);
+        Helper.setHUDScale(context, client.getWindow(), inventory.scale);
+        context.drawTexture(RenderLayer::getGuiTextured, INVENTORY_TEXTURE, x, y, 0.0F, 0.0F, width, height, width, height);
 
         int lx = x + 3;
         int ly = y + 3;

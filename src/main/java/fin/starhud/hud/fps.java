@@ -21,12 +21,15 @@ public class fps {
         MinecraftClient client = MinecraftClient.getInstance();
         String fpsStr = client.getCurrentFps() + " FPS";
 
-        int x = Helper.defaultHUDAlignmentX(fps.originX, context.getScaledWindowWidth(), width) + fps.x;
-        int y = Helper.defaultHUDAlignmentY(fps.originY, context.getScaledWindowHeight(), height) + fps.y;
+        int x = Helper.calculatePositionX(fps.x, fps.originX, client.getWindow(), width, fps.scale);
+        int y = Helper.calculatePositionY(fps.y, fps.originY, client.getWindow(), height, fps.scale);
 
         int color = fps.color | 0xFF000000;
 
+        context.getMatrices().push();
+        Helper.setHUDScale(context, client.getWindow(), fps.scale);
         context.drawTexture(RenderLayer::getGuiTextured, FPS_TEXTURE, x, y, 0.0F, 0.0F, width, height, width, height, color);
         context.drawText(client.textRenderer, fpsStr, x + 19, y + 3, color, false);
+        context.getMatrices().pop();
     }
 }

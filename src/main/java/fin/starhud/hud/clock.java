@@ -52,14 +52,17 @@ public class clock {
             modifyInGameClockVariables(hours, minutes);
         }
 
-        int x = Helper.defaultHUDAlignmentX(clock_ingame.originX, context.getScaledWindowWidth(), width_ingame) + clock_ingame.x;
-        int y = Helper.defaultHUDAlignmentY(clock_ingame.originY, context.getScaledWindowHeight(), height) + clock_ingame.y;
+        int x = Helper.calculatePositionX(clock_ingame.x, clock_ingame.originX, client.getWindow(), width_ingame, clock_ingame.scale);
+        int y = Helper.calculatePositionY(clock_ingame.y, clock_ingame.originY, client.getWindow(), height, clock_ingame.scale);
 
         int icon = getWeatherOrTime(world);
         int color = getIconColor(icon) | 0xFF000000;
 
+        context.getMatrices().push();
+        Helper.setHUDScale(context, client.getWindow(), clock_ingame.scale);
         context.drawTexture(RenderLayer::getGuiTextured, texture_ingame, x, y, 0.0F, icon * 13, width_ingame, height, width_ingame, height * 5, color);
         context.drawText(client.textRenderer, minecraftTimeStr, x + 19, y + 3, color, false);
+        context.getMatrices().pop();
     }
 
     private static int getIconColor(int icon) {
@@ -152,12 +155,15 @@ public class clock {
             modifySystemClockVariables(currentTime);
         }
 
-        int x = Helper.defaultHUDAlignmentX(clock_system.originX, context.getScaledWindowWidth(), width_system) + clock_system.x;
-        int y = Helper.defaultHUDAlignmentY(clock_system.originY, context.getScaledWindowHeight(), height) + clock_system.y;
+        int x = Helper.calculatePositionX(clock_system.x, clock_system.originX, client.getWindow(), width_system, clock_system.scale);
+        int y = Helper.calculatePositionY(clock_system.y, clock_system.originY, client.getWindow(), height, clock_system.scale);
         int color = clock_system.color | 0xFF000000;
 
+        context.getMatrices().push();
+        Helper.setHUDScale(context, client.getWindow(), clock_system.scale);
         context.drawTexture(RenderLayer::getGuiTextured, texture_system, x, y, 0.0F, 0.0F, width_system, height, width_system, height * 5, color);
         context.drawText(client.textRenderer, systemTimeStr, x + 19, y + 3, color, false);
+        context.getMatrices().pop();
     }
 
     private static String buildSystemMilitaryTimeString(long time) {

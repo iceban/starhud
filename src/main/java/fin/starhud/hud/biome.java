@@ -37,15 +37,23 @@ public class biome {
 
         int dimensionIcon = getDimensionIcon(client.world.getRegistryKey());
 
-        int x = Helper.defaultHUDAlignmentX(biome.originX, context.getScaledWindowWidth(), 14 + 10) + biome.x
+//        int x = Helper.defaultHUDAlignmentX(biome.originX, context.getScaledWindowWidth(), 14 + 10) + biome.x
+//                - Helper.getTextGrowthDirection(biome.textGrowth, cachedTextWidth);
+//        int y = Helper.defaultHUDAlignmentY(biome.originY, context.getScaledWindowHeight(), 13) + biome.y;
+
+        int x = Helper.calculatePositionX(biome.x, biome.originX, client.getWindow(), 24, biome.scale)
                 - Helper.getTextGrowthDirection(biome.textGrowth, cachedTextWidth);
-        int y = Helper.defaultHUDAlignmentY(biome.originY, context.getScaledWindowHeight(), 13) + biome.y;
+        int y = Helper.calculatePositionY(biome.y, biome.originY, client.getWindow(), 13, biome.scale);
 
         int color = getTextColorFromDimension(dimensionIcon) | 0xFF000000;
 
+
+        context.getMatrices().push();
+        Helper.setHUDScale(context, client.getWindow(), biome.scale);
         context.drawTexture(RenderLayer::getGuiTextured, DIMENSION_TEXTURE, x, y, 0.0F, dimensionIcon * 13, 13, 13, 13 ,52);
         Helper.fillRoundedRightSide(context, x + 14, y, x + 14 + cachedTextWidth + 9, y + 13, 0x80000000);
         context.drawText(client.textRenderer, cachedFormattedBiomeStr, x + 19, y + 3, color, false);
+        context.getMatrices().pop();
     }
 
     private static int getDimensionIcon(RegistryKey<World> registryKey) {

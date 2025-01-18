@@ -46,15 +46,18 @@ public class ping {
         long currentPing = pingLog.get(pingLogLen - 1);
         String pingStr = currentPing + " ms";
 
-        int x = Helper.defaultHUDAlignmentX(ping.originX, context.getScaledWindowWidth(), width) + ping.x;
-        int y = Helper.defaultHUDAlignmentY(ping.originY, context.getScaledWindowHeight(), height) + ping.y;
+        int x = Helper.calculatePositionX(ping.x, ping.originX, client.getWindow(), width, ping.scale);
+        int y = Helper.calculatePositionY(ping.y, ping.originY, client.getWindow(), height, ping.scale);
 
         // 0, 150, 300, 450
         int step = Math.min((int) currentPing / 150, 3);
         int color = getPingColor(step) | 0xFF000000;
 
+        context.getMatrices().push();
+        Helper.setHUDScale(context, client.getWindow(), ping.scale);
         context.drawTexture(RenderLayer::getGuiTextured, PING_TEXTURE, x, y, 0.0F, step * 13, width, height, width, height * 4, color);
         context.drawText(client.textRenderer, pingStr, x + 19, y + 3, color, false);
+        context.getMatrices().pop();
     }
 
     public static int getPingColor(int step) {

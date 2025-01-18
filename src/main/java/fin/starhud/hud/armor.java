@@ -29,11 +29,13 @@ public class armor {
 
         MinecraftClient client = MinecraftClient.getInstance();
 
-        int x = Helper.defaultHUDAlignmentX(armor.originX, context.getScaledWindowWidth(), width) + armor.x;
-        int y = Helper.defaultHUDAlignmentY(armor.originY, context.getScaledWindowHeight(), height) + armor.y;
+        int x = Helper.calculatePositionX(armor.x, armor.originX, client.getWindow(), width, armor.scale);
+        int y = Helper.calculatePositionY(armor.y, armor.originY, client.getWindow(), height, armor.scale);
         
         int i = 3;
 
+        context.getMatrices().push();
+        Helper.setHUDScale(context, client.getWindow(), armor.scale);
         // for each armor pieces
         for (ItemStack armor : client.player.getArmorItems()) {
             if (SHOULD_RENDER[i] && !armor.isEmpty() && armor.isDamageable()) {
@@ -41,6 +43,7 @@ public class armor {
             }
             --i;
         }
+        context.getMatrices().pop();
     }
 
     public static void renderArmorPieces(DrawContext context, ItemStack armor, int x, int y, int width, int height, int gap) {

@@ -34,16 +34,19 @@ public class coordinate {
         String coordY = Integer.toString((int) vec3d.y);
         String coordZ = Integer.toString((int) vec3d.z);
 
-        int x = Helper.defaultHUDAlignmentX(coord.originX, context.getScaledWindowWidth(), width) + coord.x;
-        int y = Helper.defaultHUDAlignmentY(coord.originY, context.getScaledWindowHeight(), height) + coord.y;
+        int x = Helper.calculatePositionX(coord.x, coord.originX, client.getWindow(), width, coord.scale);
+        int y = Helper.calculatePositionY(coord.y, coord.originY, client.getWindow(), height, coord.scale);
 
         int colorX = coord.coordXSettings.color | 0xFF000000;
         int colorY = coord.coordYSettings.color | 0xFF000000;
         int colorZ = coord.coordZSettings.color | 0xFF000000;
 
+        context.getMatrices().push();
+        Helper.setHUDScale(context, client.getWindow(), coord.scale);
         if (SHOULD_RENDER[0]) renderEachCoordinate(context, textRenderer, coordX, x + X_OFFSETS[0], y + Y_OFFSETS[0], 0.0F, width, height, colorX);
         if (SHOULD_RENDER[1]) renderEachCoordinate(context, textRenderer, coordY, x + X_OFFSETS[1], y + Y_OFFSETS[1], 14.0F, width, height, colorY);
         if (SHOULD_RENDER[2]) renderEachCoordinate(context, textRenderer, coordZ, x + X_OFFSETS[2], y + Y_OFFSETS[2], 28.0F, width, height, colorZ);
+        context.getMatrices().pop();
     }
 
     public static void renderEachCoordinate(DrawContext context, TextRenderer textRenderer, String str, int x, int y, float v, int width, int height, int color) {

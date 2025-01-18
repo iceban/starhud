@@ -23,6 +23,6 @@ public class MixinInGameHUD {
         if (Main.settings.clockSettings.systemSettings.shouldRender) clock.renderSystemTimeHUD(context);
         if (Main.settings.directionSettings.shouldRender) direction.renderDirectionHUD(context);
         if (Main.settings.biomeSettings.shouldRender) biome.renderBiomeIndicatorHUD(context);
-        inventory.renderInventoryHUD(context);
+        if (Main.settings.inventorySettings.shouldRender) inventory.renderInventoryHUD(context);
     }
 }
