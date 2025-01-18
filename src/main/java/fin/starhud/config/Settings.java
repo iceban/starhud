@@ -62,6 +62,13 @@ public class Settings implements ConfigData {
             public int xOffset = 0;
             public int yOffset = 42;
         }
+
+        @ConfigEntry.Gui.CollapsibleObject
+        public ArmorHideSettings hideOn = new ArmorHideSettings();
+        public static class ArmorHideSettings {
+            public boolean f3 = false;
+            public boolean chat = false;
+        }
     }
 
     @ConfigEntry.Category("coord")
@@ -120,6 +127,13 @@ public class Settings implements ConfigData {
             @ConfigEntry.ColorPicker
             public int color = 0x6CE1FC;
         }
+
+        @ConfigEntry.Gui.CollapsibleObject
+        public CoordHideSettings hideOn = new CoordHideSettings();
+        public static class CoordHideSettings {
+            public boolean f3 = false;
+            public boolean chat = false;
+        }
     }
 
     @ConfigEntry.Category("direction")
@@ -165,6 +179,13 @@ public class Settings implements ConfigData {
             @ConfigEntry.ColorPicker
             public int se = 0xffd0c4;
         }
+
+        @ConfigEntry.Gui.CollapsibleObject
+        public DirectionHideSettings hideOn = new DirectionHideSettings();
+        public static class DirectionHideSettings {
+            public boolean f3 = false;
+            public boolean chat = false;
+        }
     }
 
     @ConfigEntry.Category("fps")
@@ -190,6 +211,13 @@ public class Settings implements ConfigData {
 
         @ConfigEntry.ColorPicker
         public int color = 0xE5ECf8;
+
+        @ConfigEntry.Gui.CollapsibleObject
+        public FPSHideSettings hideOn = new FPSHideSettings();
+        public static class FPSHideSettings {
+            public boolean f3 = false;
+            public boolean chat = false;
+        }
     }
 
     @ConfigEntry.Category("ping")
@@ -228,6 +256,13 @@ public class Settings implements ConfigData {
             @ConfigEntry.ColorPicker
             public int fourth = 0xFF5C71;
         }
+
+        @ConfigEntry.Gui.CollapsibleObject
+        public PingHideSettings hideOn = new PingHideSettings();
+        public static class PingHideSettings {
+            public boolean f3 = false;
+            public boolean chat = false;
+        }
     }
 
     @ConfigEntry.Category("clock")
@@ -255,6 +290,13 @@ public class Settings implements ConfigData {
 
             @ConfigEntry.ColorPicker
             public int color = 0xFFFFFF;
+
+            @ConfigEntry.Gui.CollapsibleObject
+            public ClockSystemHideSettings hideOn = new ClockSystemHideSettings();
+            public static class ClockSystemHideSettings {
+                public boolean f3 = false;
+                public boolean chat = false;
+            }
         }
 
         @ConfigEntry.Gui.CollapsibleObject
@@ -287,6 +329,13 @@ public class Settings implements ConfigData {
                 public int rain = 0xb5d0e8;
                 @ConfigEntry.ColorPicker
                 public int thunder = 0x8faecb;
+            }
+
+            @ConfigEntry.Gui.CollapsibleObject
+            public ClockInGameHideSettings hideOn = new ClockInGameHideSettings();
+            public static class ClockInGameHideSettings {
+                public boolean f3 = false;
+                public boolean chat = false;
             }
         }
     }
@@ -325,6 +374,13 @@ public class Settings implements ConfigData {
             @ConfigEntry.ColorPicker
             public int custom = 0xFFFFFF;
         }
+
+        @ConfigEntry.Gui.CollapsibleObject
+        public BiomeHideSettings hideOn = new BiomeHideSettings();
+        public static class BiomeHideSettings {
+            public boolean f3 = false;
+            public boolean chat = false;
+        }
     }
 
     @ConfigEntry.Category("inventory")
@@ -344,5 +400,12 @@ public class Settings implements ConfigData {
 
         @ConfigEntry.BoundedDiscrete(max = 10)
         public int scale = 0;
+
+        @ConfigEntry.Gui.CollapsibleObject
+        public InventoryHideSettings hideOn = new InventoryHideSettings();
+        public static class InventoryHideSettings {
+            public boolean f3 = false;
+            public boolean chat = false;
+        }
     }
 }

@@ -1,5 +1,6 @@
 package fin.starhud;
 
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.util.Window;
 
@@ -82,13 +83,21 @@ public class Helper {
     public static void setHUDScale(DrawContext context, Window window, int scale) {
         if (scale == 0) return;
 
-        float scaleFloat = (float) window.getScaledWidth() * scale / window.getWidth();
-        context.getMatrices().scale(scaleFloat, scaleFloat, scaleFloat);
+        float scaleFactor = (float) window.getScaledWidth() * scale / window.getWidth();
+        context.getMatrices().scale(scaleFactor, scaleFactor, scaleFactor);
     }
 
     public static void fillRoundedRightSide(DrawContext context, int x1, int y1, int x2, int y2, int color) {
         context.fill(x1, y1, x2 - 1, y2, color);
         context.fill(x2 - 1, y1 + 1, x2, y2 - 1, color);
+    }
+
+    public static boolean isChatFocused() {
+        return MinecraftClient.getInstance().inGameHud.getChatHud().isChatFocused();
+    }
+
+    public static boolean isDebugHUDOpen() {
+        return MinecraftClient.getInstance().getDebugHud().shouldShowDebugHud();
     }
 
 }

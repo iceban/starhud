@@ -31,6 +31,9 @@ public class clock {
 
     public static void renderInGameTimeHUD(DrawContext context) {
         MinecraftClient client = MinecraftClient.getInstance();
+
+        if ((clock_ingame.hideOn.f3 && Helper.isDebugHUDOpen()) || (clock_ingame.hideOn.chat && Helper.isChatFocused())) return;
+
         ClientWorld world = client.world;
 
         long time = world.getTimeOfDay() % 24000;
@@ -134,9 +137,9 @@ public class clock {
     private static Identifier texture_system = LAST_UPDATED_use12Hour_system ? CLOCK_12 : CLOCK_24;
 
     public static void renderSystemTimeHUD(DrawContext context) {
-        if (!clock_system.shouldRender) return;
-
         MinecraftClient client = MinecraftClient.getInstance();
+
+        if ((clock_system.hideOn.f3 && Helper.isDebugHUDOpen()) || (clock_system.hideOn.chat && Helper.isChatFocused())) return;
 
         boolean use12Hour = clock_system.use12Hour;
 

@@ -23,9 +23,10 @@ public class coordinate {
     private static final int height = 13;
 
     public static void renderCoordinateHUD(DrawContext context) {
-        initCoordinateConfiguration();
-
         MinecraftClient client = MinecraftClient.getInstance();
+        if ((coord.hideOn.f3 && Helper.isDebugHUDOpen()) || (coord.hideOn.chat && Helper.isChatFocused())) return;
+
+        initCoordinateConfiguration();
         TextRenderer textRenderer = client.textRenderer;
 
         Vec3d vec3d = client.player.getPos();

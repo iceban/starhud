@@ -19,6 +19,9 @@ public class fps {
 
     public static void renderFPSHUD(DrawContext context) {
         MinecraftClient client = MinecraftClient.getInstance();
+
+        if ((fps.hideOn.f3 && Helper.isDebugHUDOpen()) || (fps.hideOn.chat && Helper.isChatFocused())) return;
+
         String fpsStr = client.getCurrentFps() + " FPS";
 
         int x = Helper.calculatePositionX(fps.x, fps.originX, client.getWindow(), width, fps.scale);

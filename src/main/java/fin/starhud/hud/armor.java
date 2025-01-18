@@ -25,9 +25,10 @@ public class armor {
     private static final int height = 13;
 
     public static void renderArmorHUD(DrawContext context) {
-        initArmorConfiguration();
-
         MinecraftClient client = MinecraftClient.getInstance();
+        if ((armor.hideOn.f3 && Helper.isDebugHUDOpen()) || (armor.hideOn.chat && Helper.isChatFocused())) return;
+
+        initArmorConfiguration();
 
         int x = Helper.calculatePositionX(armor.x, armor.originX, client.getWindow(), width, armor.scale);
         int y = Helper.calculatePositionY(armor.y, armor.originY, client.getWindow(), height, armor.scale);

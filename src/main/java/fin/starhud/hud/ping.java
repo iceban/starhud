@@ -26,6 +26,8 @@ public class ping {
 
     public static void renderPingHUD(DrawContext context) {
         MinecraftClient client = MinecraftClient.getInstance();
+
+        if ((ping.hideOn.f3 && Helper.isDebugHUDOpen()) || (ping.hideOn.chat && Helper.isChatFocused())) return;
         if (client.isInSingleplayer()) return;
 
         MultiValueDebugSampleLogImpl pingLog = client.getDebugHud().getPingLog();

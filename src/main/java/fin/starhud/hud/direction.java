@@ -29,6 +29,8 @@ public class direction {
     public static void renderDirectionHUD(DrawContext context) {
         MinecraftClient client = MinecraftClient.getInstance();
 
+        if ((direction.hideOn.f3 && Helper.isDebugHUDOpen()) || (direction.hideOn.chat && Helper.isChatFocused())) return;
+
         Entity playerCamera = client.cameraEntity;
 
         float yaw = Math.round(MathHelper.wrapDegrees(playerCamera.getYaw()) * 10.0F) / 10.0F;

@@ -24,6 +24,8 @@ public class biome {
 
     public static void renderBiomeIndicatorHUD(DrawContext context) {
         MinecraftClient client = MinecraftClient.getInstance();
+        if ((biome.hideOn.f3 && Helper.isDebugHUDOpen()) || (biome.hideOn.chat && Helper.isChatFocused())) return;
+
         TextRenderer textRenderer = client.textRenderer;
 
         BlockPos blockPos = client.player.getBlockPos();
@@ -35,18 +37,12 @@ public class biome {
             cachedTextWidth = textRenderer.getWidth(cachedFormattedBiomeStr);
         }
 
-        int dimensionIcon = getDimensionIcon(client.world.getRegistryKey());
-
-//        int x = Helper.defaultHUDAlignmentX(biome.originX, context.getScaledWindowWidth(), 14 + 10) + biome.x
-//                - Helper.getTextGrowthDirection(biome.textGrowth, cachedTextWidth);
-//        int y = Helper.defaultHUDAlignmentY(biome.originY, context.getScaledWindowHeight(), 13) + biome.y;
-
         int x = Helper.calculatePositionX(biome.x, biome.originX, client.getWindow(), 24, biome.scale)
                 - Helper.getTextGrowthDirection(biome.textGrowth, cachedTextWidth);
         int y = Helper.calculatePositionY(biome.y, biome.originY, client.getWindow(), 13, biome.scale);
 
+        int dimensionIcon = getDimensionIcon(client.world.getRegistryKey());
         int color = getTextColorFromDimension(dimensionIcon) | 0xFF000000;
-
 
         context.getMatrices().push();
         Helper.setHUDScale(context, client.getWindow(), biome.scale);

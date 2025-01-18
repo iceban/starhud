@@ -22,6 +22,8 @@ public class inventory {
     public static void renderInventoryHUD(DrawContext context) {
         MinecraftClient client = MinecraftClient.getInstance();
 
+        if ((inventory.hideOn.f3 && Helper.isDebugHUDOpen()) || (inventory.hideOn.chat && Helper.isChatFocused())) return;
+
         int x = Helper.calculatePositionX(inventory.x, inventory.originX, client.getWindow(), width, inventory.scale);
         int y = Helper.calculatePositionY(inventory.y, inventory.originY, client.getWindow(), height, inventory.scale);
 
