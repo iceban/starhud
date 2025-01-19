@@ -28,7 +28,7 @@ public class Settings implements ConfigData {
         public int x = 5;
         public int y = -24;
 
-        @ConfigEntry.BoundedDiscrete(max = 10)
+        @ConfigEntry.BoundedDiscrete(max = 6)
         public int scale = 0;
 
         @ConfigEntry.Gui.CollapsibleObject
@@ -89,7 +89,7 @@ public class Settings implements ConfigData {
         public int x = 5;
         public int y = 5;
 
-        @ConfigEntry.BoundedDiscrete(max = 10)
+        @ConfigEntry.BoundedDiscrete(max = 6)
         public int scale = 0;
 
         @ConfigEntry.Gui.CollapsibleObject
@@ -154,7 +154,7 @@ public class Settings implements ConfigData {
         public int x = 26;
         public int y = 19;
 
-        @ConfigEntry.BoundedDiscrete(max = 10)
+        @ConfigEntry.BoundedDiscrete(max = 6)
         public int scale = 0;
 
         public boolean includeOrdinal = false;
@@ -206,7 +206,7 @@ public class Settings implements ConfigData {
         public int x = 5;
         public int y = -5;
 
-        @ConfigEntry.BoundedDiscrete(max = 10)
+        @ConfigEntry.BoundedDiscrete(max = 6)
         public int scale = 0;
 
         @ConfigEntry.ColorPicker
@@ -238,7 +238,7 @@ public class Settings implements ConfigData {
         public int x = -57;
         public int y = -5;
 
-        @ConfigEntry.BoundedDiscrete(max = 10)
+        @ConfigEntry.BoundedDiscrete(max = 6)
         public int scale = 0;
 
         @Comment("Ping update interval, in seconds.")
@@ -283,7 +283,7 @@ public class Settings implements ConfigData {
             public int x = -5;
             public int y = -5;
 
-            @ConfigEntry.BoundedDiscrete(max = 10)
+            @ConfigEntry.BoundedDiscrete(max = 6)
             public int scale = 0;
 
             public boolean use12Hour = false;
@@ -313,7 +313,7 @@ public class Settings implements ConfigData {
             public int x = -29;
             public int y = 19;
 
-            @ConfigEntry.BoundedDiscrete(max = 10)
+            @ConfigEntry.BoundedDiscrete(max = 6)
             public int scale = 0;
 
             public boolean use12Hour = false;
@@ -355,7 +355,7 @@ public class Settings implements ConfigData {
         public int x = 0;
         public int y = 5;
 
-        @ConfigEntry.BoundedDiscrete(max = 10)
+        @ConfigEntry.BoundedDiscrete(max = 6)
         public int scale = 0;
 
         @Comment("Which way should the HUD goes as the text increases?")
@@ -398,7 +398,7 @@ public class Settings implements ConfigData {
         public int x = 0;
         public int y = 100;
 
-        @ConfigEntry.BoundedDiscrete(max = 10)
+        @ConfigEntry.BoundedDiscrete(max = 6)
         public int scale = 1;
 
         public boolean drawVertical = false;
