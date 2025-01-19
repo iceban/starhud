@@ -37,6 +37,7 @@ public class armor {
 
         context.getMatrices().push();
         Helper.setHUDScale(context, client.getWindow(), armor.scale);
+
         // for each armor pieces
         for (ItemStack armor : client.player.getArmorItems()) {
             if (SHOULD_RENDER[i] && !armor.isEmpty() && armor.isDamageable()) {
@@ -44,6 +45,7 @@ public class armor {
             }
             --i;
         }
+
         context.getMatrices().pop();
     }
 

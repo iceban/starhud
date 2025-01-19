@@ -57,8 +57,10 @@ public class direction {
 
         context.getMatrices().push();
         Helper.setHUDScale(context, client.getWindow(), direction.scale);
+
         context.drawTexture(RenderLayer::getGuiTextured, texture, x, y, 0.0F, icon * 13, width, height, width, height * iconAmount, color);
         context.drawText(client.textRenderer, Float.toString(yaw), x + textX, y + 3, color, false);
+
         context.getMatrices().pop();
     }
 

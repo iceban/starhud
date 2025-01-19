@@ -31,8 +31,10 @@ public class fps {
 
         context.getMatrices().push();
         Helper.setHUDScale(context, client.getWindow(), fps.scale);
+
         context.drawTexture(RenderLayer::getGuiTextured, FPS_TEXTURE, x, y, 0.0F, 0.0F, width, height, width, height, color);
         context.drawText(client.textRenderer, fpsStr, x + 19, y + 3, color, false);
+
         context.getMatrices().pop();
     }
 }

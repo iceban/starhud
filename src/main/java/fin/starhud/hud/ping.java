@@ -57,8 +57,10 @@ public class ping {
 
         context.getMatrices().push();
         Helper.setHUDScale(context, client.getWindow(), ping.scale);
+
         context.drawTexture(RenderLayer::getGuiTextured, PING_TEXTURE, x, y, 0.0F, step * 13, width, height, width, height * 4, color);
         context.drawText(client.textRenderer, pingStr, x + 19, y + 3, color, false);
+
         context.getMatrices().pop();
     }
 

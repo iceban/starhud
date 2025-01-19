@@ -44,9 +44,11 @@ public class coordinate {
 
         context.getMatrices().push();
         Helper.setHUDScale(context, client.getWindow(), coord.scale);
+
         if (SHOULD_RENDER[0]) renderEachCoordinate(context, textRenderer, coordX, x + X_OFFSETS[0], y + Y_OFFSETS[0], 0.0F, width, height, colorX);
         if (SHOULD_RENDER[1]) renderEachCoordinate(context, textRenderer, coordY, x + X_OFFSETS[1], y + Y_OFFSETS[1], 14.0F, width, height, colorY);
         if (SHOULD_RENDER[2]) renderEachCoordinate(context, textRenderer, coordZ, x + X_OFFSETS[2], y + Y_OFFSETS[2], 28.0F, width, height, colorZ);
+
         context.getMatrices().pop();
     }
 

@@ -164,8 +164,10 @@ public class clock {
 
         context.getMatrices().push();
         Helper.setHUDScale(context, client.getWindow(), clock_system.scale);
+
         context.drawTexture(RenderLayer::getGuiTextured, texture_system, x, y, 0.0F, 0.0F, width_system, height, width_system, height * 5, color);
         context.drawText(client.textRenderer, systemTimeStr, x + 19, y + 3, color, false);
+
         context.getMatrices().pop();
     }
 

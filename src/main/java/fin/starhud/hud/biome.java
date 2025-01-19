@@ -46,9 +46,11 @@ public class biome {
 
         context.getMatrices().push();
         Helper.setHUDScale(context, client.getWindow(), biome.scale);
+
         context.drawTexture(RenderLayer::getGuiTextured, DIMENSION_TEXTURE, x, y, 0.0F, dimensionIcon * 13, 13, 13, 13 ,52);
         Helper.fillRoundedRightSide(context, x + 14, y, x + 14 + cachedTextWidth + 9, y + 13, 0x80000000);
         context.drawText(client.textRenderer, cachedFormattedBiomeStr, x + 19, y + 3, color, false);
+
         context.getMatrices().pop();
     }
 

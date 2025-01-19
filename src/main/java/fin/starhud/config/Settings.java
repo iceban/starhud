@@ -387,19 +387,21 @@ public class Settings implements ConfigData {
     @ConfigEntry.Gui.TransitiveObject
     public InventorySettings inventorySettings = new InventorySettings();
     public static class InventorySettings {
-        public boolean shouldRender = true;
+        public boolean shouldRender = false;
 
         @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
         public Helper.ScreenAlignmentX originX = Helper.ScreenAlignmentX.CENTER;
 
         @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
-        public Helper.ScreenAlignmentY originY = Helper.ScreenAlignmentY.BOTTOM;
+        public Helper.ScreenAlignmentY originY = Helper.ScreenAlignmentY.MIDDLE;
 
         public int x = 0;
-        public int y = -30;
+        public int y = 100;
 
         @ConfigEntry.BoundedDiscrete(max = 10)
-        public int scale = 0;
+        public int scale = 1;
+
+        public boolean drawVertical = false;
 
         @ConfigEntry.Gui.CollapsibleObject
         public InventoryHideSettings hideOn = new InventoryHideSettings();
