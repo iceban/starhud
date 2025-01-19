@@ -182,5 +182,34 @@
 
   "text.autoconfig.starhud.option.inventorySettings.hideOn": "Hide The HUD On",
   "text.autoconfig.starhud.option.inventorySettings.hideOn.f3": "Hide on F3",
-  "text.autoconfig.starhud.option.inventorySettings.hideOn.chat": "Hide on Chat"
+  "text.autoconfig.starhud.option.inventorySettings.hideOn.chat": "Hide on Chat",
+
+  "text.autoconfig.starhud.category.hand": "Hand",
+  "text.autoconfig.starhud.option.handSettings.leftHandSettings": "Left Hand",
+  "text.autoconfig.starhud.option.handSettings.leftHandSettings.shouldRender": "Show Left Hand HUD",
+  "text.autoconfig.starhud.option.handSettings.leftHandSettings.originX": "Horizontal Alignment",
+  "text.autoconfig.starhud.option.handSettings.leftHandSettings.originY": "Vertical Alignment",
+  "text.autoconfig.starhud.option.handSettings.leftHandSettings.x": "X Offset",
+  "text.autoconfig.starhud.option.handSettings.leftHandSettings.y": "Y Offset",
+  "text.autoconfig.starhud.option.handSettings.leftHandSettings.scale": "HUD Scale",
+  "text.autoconfig.starhud.option.handSettings.leftHandSettings.showCountOnly": "Show Item Count Only",
+  "text.autoconfig.starhud.option.handSettings.leftHandSettings.color": "HUD Color",
+
+  "text.autoconfig.starhud.option.handSettings.leftHandSettings.hideOn": "Hide The HUD On",
+  "text.autoconfig.starhud.option.handSettings.leftHandSettings.hideOn.f3": "Hide on F3",
+  "text.autoconfig.starhud.option.handSettings.leftHandSettings.hideOn.chat": "Hide on Chat",
+
+  "text.autoconfig.starhud.option.handSettings.rightHandSettings": "Right Hand",
+  "text.autoconfig.starhud.option.handSettings.rightHandSettings.shouldRender": "Show Right Hand HUD",
+  "text.autoconfig.starhud.option.handSettings.rightHandSettings.originX": "Horizontal Alignment",
+  "text.autoconfig.starhud.option.handSettings.rightHandSettings.originY": "Vertical Alignment",
+  "text.autoconfig.starhud.option.handSettings.rightHandSettings.x": "X Offset",
+  "text.autoconfig.starhud.option.handSettings.rightHandSettings.y": "Y Offset",
+  "text.autoconfig.starhud.option.handSettings.rightHandSettings.scale": "HUD Scale",
+  "text.autoconfig.starhud.option.handSettings.rightHandSettings.showCountOnly": "Show Item Count Only",
+  "text.autoconfig.starhud.option.handSettings.rightHandSettings.color": "HUD Color",
+
+  "text.autoconfig.starhud.option.handSettings.rightHandSettings.hideOn": "Hide The HUD On",
+  "text.autoconfig.starhud.option.handSettings.rightHandSettings.hideOn.f3": "Hide on F3",
+  "text.autoconfig.starhud.option.handSettings.rightHandSettings.hideOn.chat": "Hide on Chat"
 }
