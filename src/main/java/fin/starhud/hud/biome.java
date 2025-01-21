@@ -14,7 +14,7 @@ import net.minecraft.world.World;
 
 public class biome {
 
-    private static Settings.BiomeSettings biome = Main.settings.biomeSettings;
+    private static final Settings.BiomeSettings biome = Main.settings.biomeSettings;
 
     private static final Identifier DIMENSION_TEXTURE = Identifier.of("starhud", "hud/biome.png");
 
@@ -22,8 +22,9 @@ public class biome {
     private static String cachedBiomeStr = "";
     private static int cachedTextWidth;
 
+    private static final MinecraftClient client = MinecraftClient.getInstance();
+
     public static void renderBiomeIndicatorHUD(DrawContext context) {
-        MinecraftClient client = MinecraftClient.getInstance();
         if ((biome.hideOn.f3 && Helper.isDebugHUDOpen()) || (biome.hideOn.chat && Helper.isChatFocused())) return;
 
         TextRenderer textRenderer = client.textRenderer;
@@ -37,15 +38,15 @@ public class biome {
             cachedTextWidth = textRenderer.getWidth(cachedFormattedBiomeStr);
         }
 
-        int x = Helper.calculatePositionX(biome.x, biome.originX, client.getWindow(), 24, biome.scale)
-                - Helper.getTextGrowthDirection(biome.textGrowth, cachedTextWidth);
-        int y = Helper.calculatePositionY(biome.y, biome.originY, client.getWindow(), 13, biome.scale);
+        int x = Helper.calculatePositionX(biome.x, biome.originX, 24, biome.scale)
+                - Helper.getGrowthDirection(biome.textGrowth, cachedTextWidth);
+        int y = Helper.calculatePositionY(biome.y, biome.originY, 13, biome.scale);
 
         int dimensionIcon = getDimensionIcon(client.world.getRegistryKey());
         int color = getTextColorFromDimension(dimensionIcon) | 0xFF000000;
 
         context.getMatrices().push();
-        Helper.setHUDScale(context, client.getWindow(), biome.scale);
+        Helper.setHUDScale(context, biome.scale);
 
         context.drawTexture(RenderLayer::getGuiTextured, DIMENSION_TEXTURE, x, y, 0.0F, dimensionIcon * 13, 13, 13, 13 ,52);
         Helper.fillRoundedRightSide(context, x + 14, y, x + 14 + cachedTextWidth + 9, y + 13, 0x80000000);

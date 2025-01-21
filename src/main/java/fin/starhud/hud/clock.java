@@ -14,7 +14,7 @@ import java.util.Date;
 
 public class clock {
 
-    private static Settings.ClockSettings.ClockInGameSettings clock_ingame = Main.settings.clockSettings.inGameSettings;
+    private static final Settings.ClockSettings.ClockInGameSettings clock_ingame = Main.settings.clockSettings.inGameSettings;
 
     private static final Identifier CLOCK_12 = Identifier.of("starhud", "hud/clock_12.png");
     private static final Identifier CLOCK_24 = Identifier.of("starhud", "hud/clock_24.png");
@@ -24,14 +24,14 @@ public class clock {
     private static String minecraftTimeStr = "";
     private static int cachedMinecraftMinute = -1;
 
-    private static boolean LAST_UPDATED_use12Hour_ingame = clock_ingame.use12Hour;
+    private static final int width_ingame_use12 = 65;
+    private static final int width_ingame_use24 = 49;
 
-    private static int width_ingame = LAST_UPDATED_use12Hour_ingame ? 65 : 49;
-    private static Identifier texture_ingame = LAST_UPDATED_use12Hour_ingame ? CLOCK_12 : CLOCK_24;
+    private static boolean LAST_UPDATED_INGAME_USE12 = clock_ingame.use12Hour;
+
+    private static final MinecraftClient client = MinecraftClient.getInstance();
 
     public static void renderInGameTimeHUD(DrawContext context) {
-        MinecraftClient client = MinecraftClient.getInstance();
-
         if ((clock_ingame.hideOn.f3 && Helper.isDebugHUDOpen()) || (clock_ingame.hideOn.chat && Helper.isChatFocused())) return;
 
         ClientWorld world = client.world;
@@ -42,29 +42,34 @@ public class clock {
 
         int minutes = (int) ((time % 1000) * 3 / 50);
         int hours = (int) ((time / 1000) + 6) % 24;
-        if (minutes != cachedMinecraftMinute) {
+        if (minutes != cachedMinecraftMinute || use12Hour != LAST_UPDATED_INGAME_USE12) {
             cachedMinecraftMinute = minutes;
+            LAST_UPDATED_INGAME_USE12 = use12Hour;
 
             minecraftTimeStr = use12Hour ?
                     buildMinecraftCivilianTimeString(hours, minutes):
                     buildMinecraftMilitaryTimeString(hours, minutes);
         }
 
-        if (LAST_UPDATED_use12Hour_ingame != use12Hour) {
-            LAST_UPDATED_use12Hour_ingame = use12Hour;
-            modifyInGameClockVariables(hours, minutes);
-        }
-
-        int x = Helper.calculatePositionX(clock_ingame.x, clock_ingame.originX, client.getWindow(), width_ingame, clock_ingame.scale);
-        int y = Helper.calculatePositionY(clock_ingame.y, clock_ingame.originY, client.getWindow(), height, clock_ingame.scale);
-
         int icon = getWeatherOrTime(world);
         int color = getIconColor(icon) | 0xFF000000;
 
         context.getMatrices().push();
-        Helper.setHUDScale(context, client.getWindow(), clock_ingame.scale);
-        context.drawTexture(RenderLayer::getGuiTextured, texture_ingame, x, y, 0.0F, icon * 13, width_ingame, height, width_ingame, height * 5, color);
-        context.drawText(client.textRenderer, minecraftTimeStr, x + 19, y + 3, color, false);
+        Helper.setHUDScale(context, clock_ingame.scale);
+
+        if (use12Hour) {
+            int x = Helper.calculatePositionX(clock_ingame.x, clock_ingame.originX, width_ingame_use12, clock_ingame.scale);
+            int y = Helper.calculatePositionY(clock_ingame.y, clock_ingame.originY, height, clock_ingame.scale);
+
+            context.drawTexture(RenderLayer::getGuiTextured, CLOCK_12, x, y, 0.0F, icon * 13, width_ingame_use12, height, width_ingame_use12, height * 5, color);
+            context.drawText(client.textRenderer, minecraftTimeStr, x + 19, y + 3, color, false);
+        } else {
+            int x = Helper.calculatePositionX(clock_ingame.x, clock_ingame.originX, width_ingame_use24, clock_ingame.scale);
+            int y = Helper.calculatePositionY(clock_ingame.y, clock_ingame.originY, height, clock_ingame.scale);
+
+            context.drawTexture(RenderLayer::getGuiTextured, CLOCK_24, x, y, 0.0F, icon * 13, width_ingame_use24, height, width_ingame_use24, height * 5, color);
+            context.drawText(client.textRenderer, minecraftTimeStr, x + 19, y + 3, color, false);
+        }
         context.getMatrices().pop();
     }
 
@@ -111,19 +116,7 @@ public class clock {
         return timeBuilder.toString();
     }
 
-    private static void modifyInGameClockVariables(int hours, int minutes) {
-        if (LAST_UPDATED_use12Hour_ingame) {
-            width_ingame = 65;
-            texture_ingame = CLOCK_12;
-            minecraftTimeStr = buildMinecraftCivilianTimeString(hours, minutes);
-        } else {
-            width_ingame = 49;
-            texture_ingame = CLOCK_24;
-            minecraftTimeStr = buildMinecraftMilitaryTimeString(hours, minutes);
-        }
-    }
-
-    private static Settings.ClockSettings.ClockSystemSettings clock_system = Main.settings.clockSettings.systemSettings;
+    private static final Settings.ClockSettings.ClockSystemSettings clock_system = Main.settings.clockSettings.systemSettings;
 
     private static final SimpleDateFormat militaryTimeFormat = new SimpleDateFormat("HH:mm");
     private static final SimpleDateFormat civilianTimeFormat = new SimpleDateFormat("hh:mm a");
@@ -131,42 +124,48 @@ public class clock {
     private static String systemTimeStr = buildSystemMilitaryTimeString(System.currentTimeMillis());
     private static long cachedSystemMinute = -1;
 
-    private static Boolean LAST_UPDATED_use12Hour_system = clock_system.use12Hour;
+    private static final int width_system_use12 = 65;
+    private static final int width_system_use24 = 49;
 
-    private static int width_system = LAST_UPDATED_use12Hour_system ? 65 : 49;
-    private static Identifier texture_system = LAST_UPDATED_use12Hour_system ? CLOCK_12 : CLOCK_24;
+    private static boolean LAST_UPDATED_SYSTEM_USE12 = clock_system.use12Hour;
 
     public static void renderSystemTimeHUD(DrawContext context) {
-        MinecraftClient client = MinecraftClient.getInstance();
-
         if ((clock_system.hideOn.f3 && Helper.isDebugHUDOpen()) || (clock_system.hideOn.chat && Helper.isChatFocused())) return;
-
-        boolean use12Hour = clock_system.use12Hour;
 
         // update each minute
         long currentTime = System.currentTimeMillis();
         long minute = currentTime / 60000;
-        if (minute != cachedSystemMinute) {
+
+        boolean use12Hour = clock_system.use12Hour;
+
+        // update on either a new minute or user updated the config
+        if (minute != cachedSystemMinute || use12Hour != LAST_UPDATED_SYSTEM_USE12) {
             cachedSystemMinute = minute;
+            LAST_UPDATED_SYSTEM_USE12 = use12Hour;
+
             systemTimeStr = use12Hour ?
                     buildSystemCivilianTimeString(currentTime):
                     buildSystemMilitaryTimeString(currentTime);
         }
 
-        if (LAST_UPDATED_use12Hour_system != use12Hour) {
-            LAST_UPDATED_use12Hour_system = use12Hour;
-            modifySystemClockVariables(currentTime);
-        }
-
-        int x = Helper.calculatePositionX(clock_system.x, clock_system.originX, client.getWindow(), width_system, clock_system.scale);
-        int y = Helper.calculatePositionY(clock_system.y, clock_system.originY, client.getWindow(), height, clock_system.scale);
         int color = clock_system.color | 0xFF000000;
 
         context.getMatrices().push();
-        Helper.setHUDScale(context, client.getWindow(), clock_system.scale);
+        Helper.setHUDScale(context, clock_system.scale);
 
-        context.drawTexture(RenderLayer::getGuiTextured, texture_system, x, y, 0.0F, 0.0F, width_system, height, width_system, height * 5, color);
-        context.drawText(client.textRenderer, systemTimeStr, x + 19, y + 3, color, false);
+        if (use12Hour) {
+            int x = Helper.calculatePositionX(clock_system.x, clock_system.originX, width_system_use12, clock_system.scale);
+            int y = Helper.calculatePositionY(clock_system.y, clock_system.originY, height, clock_system.scale);
+
+            context.drawTexture(RenderLayer::getGuiTextured, CLOCK_12, x, y, 0.0F, 0.0F, width_system_use12, height, width_system_use12, height * 5, color);
+            context.drawText(client.textRenderer, systemTimeStr, x + 19, y + 3, color, false);
+        } else {
+            int x = Helper.calculatePositionX(clock_system.x, clock_system.originX, width_system_use24, clock_system.scale);
+            int y = Helper.calculatePositionY(clock_system.y, clock_system.originY, height, clock_system.scale);
+
+            context.drawTexture(RenderLayer::getGuiTextured, CLOCK_24, x, y, 0.0F, 0.0F, width_system_use24, height, width_system_use24, height * 5, color);
+            context.drawText(client.textRenderer, systemTimeStr, x + 19, y + 3, color, false);
+        }
 
         context.getMatrices().pop();
     }
@@ -176,17 +175,5 @@ public class clock {
     }
     private static String buildSystemCivilianTimeString(long time) {
         return civilianTimeFormat.format(new Date(time));
-    }
-
-    private static void modifySystemClockVariables(long time) {
-        if (LAST_UPDATED_use12Hour_system) {
-            width_system = 65;
-            texture_system = CLOCK_12;
-            systemTimeStr = buildSystemCivilianTimeString(time);
-        } else {
-            width_system = 49;
-            texture_system = CLOCK_24;
-            systemTimeStr = buildSystemMilitaryTimeString(time);
-        }
     }
 }

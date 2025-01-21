@@ -20,10 +20,11 @@ public class hand {
     private static final int width_count = 47;
     private static final int height = 13;
 
-    private static Settings.HandSettings.LeftHandSettings leftHand = Main.settings.handSettings.leftHandSettings;
+    private static final Settings.HandSettings.LeftHandSettings leftHand = Main.settings.handSettings.leftHandSettings;
+
+    private static final MinecraftClient client = MinecraftClient.getInstance();
 
     public static void renderLeftHandHUD(DrawContext context) {
-        MinecraftClient client = MinecraftClient.getInstance();
         if ((leftHand.hideOn.f3 && Helper.isDebugHUDOpen()) || (leftHand.hideOn.chat && Helper.isChatFocused())) return;
 
         PlayerInventory playerInventory = client.player.getInventory();
@@ -38,25 +39,24 @@ public class hand {
 
         // either draw the durability or the amount of item in the inventory.
         context.getMatrices().push();
-        Helper.setHUDScale(context, client.getWindow(), leftHand.scale);
+        Helper.setHUDScale(context, leftHand.scale);
 
         if (!leftHand.showCountOnly && item.isDamageable()) {
-            int x = Helper.calculatePositionX(leftHand.x, leftHand.originX, client.getWindow(), width_durability, leftHand.scale);
-            int y = Helper.calculatePositionY(leftHand.y, leftHand.originY, client.getWindow(), height, leftHand.scale);
-            Helper.renderItemDurabiltyHUD(context, HAND_TEXTURE, item, x, y, 0, width_count, 27, leftHand.color | 0xFF000000);
+            int x = Helper.calculatePositionX(leftHand.x, leftHand.originX, width_durability, leftHand.scale);
+            int y = Helper.calculatePositionY(leftHand.y, leftHand.originY, height, leftHand.scale);
+            Helper.renderItemDurabilityHUD(context, HAND_TEXTURE, item, x, y, 0, width_count, 27, leftHand.color | 0xFF000000);
         } else {
-            int x = Helper.calculatePositionX(leftHand.x, leftHand.originX, client.getWindow(), width_count, leftHand.scale);
-            int y = Helper.calculatePositionY(leftHand.y, leftHand.originY, client.getWindow(), height, leftHand.scale);
+            int x = Helper.calculatePositionX(leftHand.x, leftHand.originX, width_count, leftHand.scale);
+            int y = Helper.calculatePositionY(leftHand.y, leftHand.originY, height, leftHand.scale);
             renderItemCountHUD(context, client.textRenderer, playerInventory, item, x, y, 0, leftHand.color | 0xFF000000);
         }
 
         context.getMatrices().pop();
     }
 
-    private static Settings.HandSettings.RightHandSettings rightHand = Main.settings.handSettings.rightHandSettings;
+    private static final Settings.HandSettings.RightHandSettings rightHand = Main.settings.handSettings.rightHandSettings;
 
     public static void renderRightHandHUD(DrawContext context) {
-        MinecraftClient client = MinecraftClient.getInstance();
         if ((rightHand.hideOn.f3 && Helper.isDebugHUDOpen()) || (rightHand.hideOn.chat && Helper.isChatFocused())) return;
 
         PlayerInventory playerInventory = client.player.getInventory();
@@ -69,17 +69,17 @@ public class hand {
 
         if (item.isEmpty()) return;
 
-        // either draw the durability or the amount of item in the inventory.
         context.getMatrices().push();
-        Helper.setHUDScale(context, client.getWindow(), rightHand.scale);
+        Helper.setHUDScale(context, rightHand.scale);
 
+        // either draw the durability or the amount of item in the inventory.
         if (!rightHand.showCountOnly && item.isDamageable()) {
-            int x = Helper.calculatePositionX(rightHand.x, rightHand.originX, client.getWindow(), width_durability, rightHand.scale);
-            int y = Helper.calculatePositionY(rightHand.y, rightHand.originY, client.getWindow(), height, rightHand.scale);
-            Helper.renderItemDurabiltyHUD(context, HAND_TEXTURE, item, x, y, 14, width_count, 27, rightHand.color | 0xFF000000);
+            int x = Helper.calculatePositionX(rightHand.x, rightHand.originX, width_durability, rightHand.scale);
+            int y = Helper.calculatePositionY(rightHand.y, rightHand.originY, height, rightHand.scale);
+            Helper.renderItemDurabilityHUD(context, HAND_TEXTURE, item, x, y, 14, width_count, 27, rightHand.color | 0xFF000000);
         } else {
-            int x = Helper.calculatePositionX(rightHand.x, rightHand.originX, client.getWindow(), width_count, rightHand.scale);
-            int y = Helper.calculatePositionY(rightHand.y, rightHand.originY, client.getWindow(), height, rightHand.scale);
+            int x = Helper.calculatePositionX(rightHand.x, rightHand.originX, width_count, rightHand.scale);
+            int y = Helper.calculatePositionY(rightHand.y, rightHand.originY, height, rightHand.scale);
             renderItemCountHUD(context, client.textRenderer, playerInventory, item, x, y, 14, rightHand.color | 0xFF000000);
         }
 

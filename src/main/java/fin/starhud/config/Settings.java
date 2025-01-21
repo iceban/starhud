@@ -268,6 +268,7 @@ public class Settings implements ConfigData {
             public boolean f3 = false;
             public boolean chat = false;
         }
+
     }
 
     @ConfigEntry.Category("clock")
@@ -368,7 +369,7 @@ public class Settings implements ConfigData {
 
         @Comment("Which way should the HUD goes as the text increases?")
         @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
-        public Helper.TextGrowthDirection textGrowth = Helper.TextGrowthDirection.CENTER;
+        public Helper.GrowthDirection textGrowth = Helper.GrowthDirection.CENTER;
 
         @ConfigEntry.Gui.CollapsibleObject
         public DimensionColorSettings color = new DimensionColorSettings();
@@ -398,19 +399,19 @@ public class Settings implements ConfigData {
         public boolean shouldRender = false;
 
         @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
-        public Helper.ScreenAlignmentX originX = Helper.ScreenAlignmentX.CENTER;
+        public Helper.ScreenAlignmentX originX = Helper.ScreenAlignmentX.RIGHT;
 
         @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
         public Helper.ScreenAlignmentY originY = Helper.ScreenAlignmentY.MIDDLE;
 
-        public int x = 0;
-        public int y = 100;
+        public int x = -5;
+        public int y = 0;
 
         @ConfigEntry.BoundedDiscrete(max = 6)
         @Comment("Set to 0 for default GUI Scale")
         public int scale = 1;
 
-        public boolean drawVertical = false;
+        public boolean drawVertical = true;
 
         @ConfigEntry.Gui.CollapsibleObject
         public InventoryHideSettings hideOn = new InventoryHideSettings();

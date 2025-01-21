@@ -12,7 +12,7 @@ import net.minecraft.util.math.Vec3d;
 
 public class coordinate {
 
-    public static Settings.CoordSettings coord = Main.settings.coordSettings;
+    private static final Settings.CoordSettings coord = Main.settings.coordSettings;
     private static final Identifier COORD_TEXTURE = Identifier.of("starhud", "hud/coordinate.png");
 
     private static final int[] X_OFFSETS = new int[3];
@@ -22,8 +22,9 @@ public class coordinate {
     private static final int width = 65;
     private static final int height = 13;
 
+    private static final MinecraftClient client = MinecraftClient.getInstance();
+
     public static void renderCoordinateHUD(DrawContext context) {
-        MinecraftClient client = MinecraftClient.getInstance();
         if ((coord.hideOn.f3 && Helper.isDebugHUDOpen()) || (coord.hideOn.chat && Helper.isChatFocused())) return;
 
         initCoordinateConfiguration();
@@ -35,15 +36,15 @@ public class coordinate {
         String coordY = Integer.toString((int) vec3d.y);
         String coordZ = Integer.toString((int) vec3d.z);
 
-        int x = Helper.calculatePositionX(coord.x, coord.originX, client.getWindow(), width, coord.scale);
-        int y = Helper.calculatePositionY(coord.y, coord.originY, client.getWindow(), height, coord.scale);
+        int x = Helper.calculatePositionX(coord.x, coord.originX, width, coord.scale);
+        int y = Helper.calculatePositionY(coord.y, coord.originY, height, coord.scale);
 
         int colorX = coord.coordXSettings.color | 0xFF000000;
         int colorY = coord.coordYSettings.color | 0xFF000000;
         int colorZ = coord.coordZSettings.color | 0xFF000000;
 
         context.getMatrices().push();
-        Helper.setHUDScale(context, client.getWindow(), coord.scale);
+        Helper.setHUDScale(context, coord.scale);
 
         if (SHOULD_RENDER[0]) renderEachCoordinate(context, textRenderer, coordX, x + X_OFFSETS[0], y + Y_OFFSETS[0], 0.0F, width, height, colorX);
         if (SHOULD_RENDER[1]) renderEachCoordinate(context, textRenderer, coordY, x + X_OFFSETS[1], y + Y_OFFSETS[1], 14.0F, width, height, colorY);

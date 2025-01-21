@@ -13,6 +13,8 @@ public class Helper {
 
     private static final Identifier DURABILITY_TEXTURE = Identifier.of("starhud", "hud/durability.png");
     private static final Identifier DURABILITY_BACKGROUND_TEXTURE = Identifier.of("starhud", "hud/durability_background.png");
+    private static final MinecraftClient client = MinecraftClient.getInstance();
+    private static final Window window = client.getWindow();
 
     public enum ScreenAlignmentX {
         LEFT,
@@ -26,7 +28,7 @@ public class Helper {
         BOTTOM,
     }
 
-    public enum TextGrowthDirection {
+    public enum GrowthDirection {
         LEFT,
         CENTER,
         RIGHT,
@@ -63,34 +65,36 @@ public class Helper {
         };
     }
 
-    public static int getTextGrowthDirection(TextGrowthDirection textGrowthDirection, int textWidth) {
-        return switch (textGrowthDirection) {
-            case LEFT -> textWidth;
-            case CENTER -> textWidth / 2;
+    public static int getGrowthDirection(GrowthDirection growthDirection, int growableWidth) {
+        return switch (growthDirection) {
+            case LEFT -> growableWidth;
+            case CENTER -> growableWidth / 2;
             case RIGHT -> 0;
         };
     }
 
-    public static float scaledX(Window window, int scale) {
-        return scale == 0 ? 1 : (float) window.getWidth() / (window.getScaledWidth() * scale);
+    public static float scaledX(int scale) {
+        return scale == 0 ? 1 : (float) window.getScaleFactor() / scale;
     }
 
-    public static float scaledY(Window window, int scale) {
-        return scale == 0 ? 1 : (float) window.getWidth() / (window.getScaledWidth() * scale);
+    public static float scaledY(int scale) {
+        return scale == 0 ? 1 : (float) window.getScaleFactor() / scale;
     }
 
-    public static int calculatePositionX(int x, ScreenAlignmentX alignmentX, Window window, int HUDWidth, int HUDScale) {
-        return x + (int) (defaultHUDAlignmentX(alignmentX, window.getScaledWidth()) * scaledX(window, HUDScale)) - calculateTextureOffsetX(alignmentX, HUDWidth);
+    public static int calculatePositionX(int x, ScreenAlignmentX alignmentX, int HUDWidth, int HUDScale) {
+        return x + (int) (defaultHUDAlignmentX(alignmentX, window.getScaledWidth()) * scaledX(HUDScale)) - calculateTextureOffsetX(alignmentX, HUDWidth);
     }
 
-    public static int calculatePositionY(int y, ScreenAlignmentY alignmentY, Window window, int HUDHeight, int HUDScale) {
-        return y + (int) (defaultHUDAlignmentY(alignmentY, window.getScaledHeight()) * scaledY(window, HUDScale)) - calculateTextureOffsetY(alignmentY, HUDHeight);
+    public static int calculatePositionY(int y, ScreenAlignmentY alignmentY, int HUDHeight, int HUDScale) {
+        return y + (int) (defaultHUDAlignmentY(alignmentY, window.getScaledHeight()) * scaledY(HUDScale)) - calculateTextureOffsetY(alignmentY, HUDHeight);
     }
 
-    public static void setHUDScale(DrawContext context, Window window, int scale) {
+    public static void setHUDScale(DrawContext context, int scale) {
         if (scale == 0) return;
 
-        float scaleFactor = (float) window.getScaledWidth() * scale / window.getWidth();
+        float scaleFactor = scale / (float) window.getScaleFactor();
+
+        if (scaleFactor == 1) return;
         context.getMatrices().scale(scaleFactor, scaleFactor, scaleFactor);
     }
 
@@ -109,7 +113,7 @@ public class Helper {
         return MathHelper.hsvToRgb(0.35F * stackStep / 10.0F, 0.45F, 0.95F);
     }
 
-    public static void renderItemDurabiltyHUD(DrawContext context, Identifier ICON, ItemStack stack, int x, int y, float v, int textureWidth, int textureHeight, int color) {
+    public static void renderItemDurabilityHUD(DrawContext context, Identifier ICON, ItemStack stack, int x, int y, float v, int textureWidth, int textureHeight, int color) {
         int step = getItemBarStep(stack);
         int color_dura = getItemBarColor(step) | 0xFF000000;
 
@@ -122,11 +126,10 @@ public class Helper {
     }
 
     public static boolean isChatFocused() {
-        return MinecraftClient.getInstance().inGameHud.getChatHud().isChatFocused();
+        return client.inGameHud.getChatHud().isChatFocused();
     }
 
     public static boolean isDebugHUDOpen() {
-        return MinecraftClient.getInstance().getDebugHud().shouldShowDebugHud();
+        return client.getDebugHud().shouldShowDebugHud();
     }
-
 }
