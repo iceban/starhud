@@ -192,6 +192,7 @@
   "text.autoconfig.starhud.option.handSettings.leftHandSettings.x": "X Offset",
   "text.autoconfig.starhud.option.handSettings.leftHandSettings.y": "Y Offset",
   "text.autoconfig.starhud.option.handSettings.leftHandSettings.scale": "HUD Scale",
+  "text.autoconfig.starhud.option.handSettings.leftHandSettings.textureGrowth": "HUD Growth Direction",
   "text.autoconfig.starhud.option.handSettings.leftHandSettings.showCountOnly": "Show Item Count Only",
   "text.autoconfig.starhud.option.handSettings.leftHandSettings.color": "HUD Color",
 
@@ -206,6 +207,7 @@
   "text.autoconfig.starhud.option.handSettings.rightHandSettings.x": "X Offset",
   "text.autoconfig.starhud.option.handSettings.rightHandSettings.y": "Y Offset",
   "text.autoconfig.starhud.option.handSettings.rightHandSettings.scale": "HUD Scale",
+  "text.autoconfig.starhud.option.handSettings.rightHandSettings.textureGrowth": "HUD Growth Direction",
   "text.autoconfig.starhud.option.handSettings.rightHandSettings.showCountOnly": "Show Item Count Only",
   "text.autoconfig.starhud.option.handSettings.rightHandSettings.color": "HUD Color",
 

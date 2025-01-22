@@ -431,22 +431,26 @@ public class Settings implements ConfigData {
             public boolean shouldRender = true;
 
             @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
-            public Helper.ScreenAlignmentX originX = Helper.ScreenAlignmentX.LEFT;
+            public Helper.ScreenAlignmentX originX = Helper.ScreenAlignmentX.CENTER;
 
             @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
-            public Helper.ScreenAlignmentY originY = Helper.ScreenAlignmentY.MIDDLE;
+            public Helper.ScreenAlignmentY originY = Helper.ScreenAlignmentY.BOTTOM;
 
-            public int x = 5;
-            public int y = -34;
+            public int x = -108;
+            public int y = -25;
 
             @ConfigEntry.BoundedDiscrete(max = 6)
             @Comment("Set to 0 for default GUI Scale")
             public int scale = 0;
 
+            @Comment("Which way should the HUD goes when a the texture increases?")
+            @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
+            public Helper.GrowthDirection textureGrowth = Helper.GrowthDirection.LEFT;
+
             public boolean showCountOnly = false;
 
             @ConfigEntry.ColorPicker
-            public int color = 0xfc7871;
+            public int color = 0xffb3b3;
 
             @ConfigEntry.Gui.CollapsibleObject
             public LeftHandHideSettings hideOn = new LeftHandHideSettings();
@@ -462,22 +466,26 @@ public class Settings implements ConfigData {
             public boolean shouldRender = true;
 
             @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
-            public Helper.ScreenAlignmentX originX = Helper.ScreenAlignmentX.LEFT;
+            public Helper.ScreenAlignmentX originX = Helper.ScreenAlignmentX.CENTER;
 
             @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
-            public Helper.ScreenAlignmentY originY = Helper.ScreenAlignmentY.MIDDLE;
+            public Helper.ScreenAlignmentY originY = Helper.ScreenAlignmentY.BOTTOM;
 
-            public int x = 5;
-            public int y = 36;
+            public int x = 108;
+            public int y = -25;
 
             @ConfigEntry.BoundedDiscrete(max = 6)
             @Comment("Set to 0 for default GUI Scale")
             public int scale = 0;
 
+            @Comment("Which way should the HUD goes when a the texture increases?")
+            @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
+            public Helper.GrowthDirection textureGrowth = Helper.GrowthDirection.RIGHT;
+
             public boolean showCountOnly = false;
 
             @ConfigEntry.ColorPicker
-            public int color = 0x6ce1fc;
+            public int color = 0x87ceeb;
 
             @ConfigEntry.Gui.CollapsibleObject
             public RightHandHideSettings hideOn = new RightHandHideSettings();
