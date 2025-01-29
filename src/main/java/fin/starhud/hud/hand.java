@@ -12,8 +12,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.Arm;
 import net.minecraft.util.Identifier;
 
-import java.util.Objects;
-
 public class hand {
 
     private static final Identifier HAND_TEXTURE = Identifier.of("starhud", "hud/hand.png");
@@ -110,14 +108,17 @@ public class hand {
     private static int getItemCount(PlayerInventory inventory, ItemStack stack) {
         int stackAmount = 0;
 
-        ItemStack offhand = inventory.offHand.get(0);
-
-        if (ItemStack.areItemsAndComponentsEqual(offhand, stack)) stackAmount += offhand.getCount();
-        for (ItemStack item : inventory.main) {
-            if (!item.isEmpty() && ItemStack.areItemsAndComponentsEqual(item, stack)) {
+        for (ItemStack item : inventory.offHand)
+            if (!item.isEmpty() && ItemStack.areItemsAndComponentsEqual(item, stack))
                 stackAmount += item.getCount();
-            }
-        }
+
+        for (ItemStack item : inventory.main)
+            if (!item.isEmpty() && ItemStack.areItemsAndComponentsEqual(item, stack))
+                stackAmount += item.getCount();
+
+        for (ItemStack item : inventory.armor)
+            if (!item.isEmpty() && ItemStack.areItemsAndComponentsEqual(item, stack))
+                stackAmount += item.getCount();
 
         return stackAmount;
     }

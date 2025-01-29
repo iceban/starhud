@@ -8,9 +8,11 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.Biome;
 
 public class biome {
 
@@ -19,8 +21,11 @@ public class biome {
     private static final Identifier DIMENSION_TEXTURE = Identifier.of("starhud", "hud/biome.png");
 
     private static String cachedFormattedBiomeStr = "";
-    private static String cachedBiomeStr = "";
+    private static RegistryEntry<Biome> cachedBiome;
     private static int cachedTextWidth;
+
+    private static final int width = 24;
+    private static final int height = 13;
 
     private static final MinecraftClient client = MinecraftClient.getInstance();
 
@@ -30,17 +35,17 @@ public class biome {
         TextRenderer textRenderer = client.textRenderer;
 
         BlockPos blockPos = client.player.getBlockPos();
-        String currentBiomeStr = client.world.getBiome(blockPos).getIdAsString();
+        RegistryEntry<Biome> currentBiome = client.world.getBiome(blockPos);
 
-        if (!cachedBiomeStr.equals(currentBiomeStr)) {
-            cachedFormattedBiomeStr = biomeNameFormatter(currentBiomeStr);
-            cachedBiomeStr = currentBiomeStr;
+        if (cachedBiome != currentBiome) {
+            cachedFormattedBiomeStr = biomeNameFormatter(currentBiome.getIdAsString());
+            cachedBiome = currentBiome;
             cachedTextWidth = textRenderer.getWidth(cachedFormattedBiomeStr);
         }
 
-        int x = Helper.calculatePositionX(biome.x, biome.originX, 24, biome.scale)
+        int x = Helper.calculatePositionX(biome.x, biome.originX, width, biome.scale)
                 - Helper.getGrowthDirection(biome.textGrowth, cachedTextWidth);
-        int y = Helper.calculatePositionY(biome.y, biome.originY, 13, biome.scale);
+        int y = Helper.calculatePositionY(biome.y, biome.originY, height, biome.scale);
 
         int dimensionIcon = getDimensionIcon(client.world.getRegistryKey());
         int color = getTextColorFromDimension(dimensionIcon) | 0xFF000000;
@@ -48,8 +53,8 @@ public class biome {
         context.getMatrices().push();
         Helper.setHUDScale(context, biome.scale);
 
-        context.drawTexture(RenderLayer::getGuiTextured, DIMENSION_TEXTURE, x, y, 0.0F, dimensionIcon * 13, 13, 13, 13 ,52);
-        Helper.fillRoundedRightSide(context, x + 14, y, x + 14 + cachedTextWidth + 9, y + 13, 0x80000000);
+        context.drawTexture(RenderLayer::getGuiTextured, DIMENSION_TEXTURE, x, y, 0.0F, dimensionIcon * height, 13, height, 13 ,52);
+        Helper.fillRoundedRightSide(context, x + 14, y, x + 14 + cachedTextWidth + 9, y + height, 0x80000000);
         context.drawText(client.textRenderer, cachedFormattedBiomeStr, x + 19, y + 3, color, false);
 
         context.getMatrices().pop();
