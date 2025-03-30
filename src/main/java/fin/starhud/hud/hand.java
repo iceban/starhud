@@ -7,6 +7,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.RenderLayer;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Arm;
@@ -38,9 +39,9 @@ public class hand {
 
         ItemStack item;
         if (client.player.getMainArm() == Arm.LEFT)
-            item = playerInventory.getMainHandStack();
+            item = client.player.getEquippedStack(EquipmentSlot.MAINHAND);
         else
-            item = playerInventory.offHand.get(0);
+            item = client.player.getEquippedStack(EquipmentSlot.OFFHAND);
 
         if (item.isEmpty()) return;
 
@@ -73,9 +74,9 @@ public class hand {
 
         ItemStack item;
         if (client.player.getMainArm() == Arm.LEFT)
-            item = playerInventory.offHand.get(0);
+            item = client.player.getEquippedStack(EquipmentSlot.OFFHAND);
         else
-            item = playerInventory.getMainHandStack();
+            item = client.player.getEquippedStack(EquipmentSlot.MAINHAND);
 
         if (item.isEmpty()) return;
 
@@ -108,17 +109,12 @@ public class hand {
     private static int getItemCount(PlayerInventory inventory, ItemStack stack) {
         int stackAmount = 0;
 
-        for (ItemStack item : inventory.offHand)
+        for (int i = 0; i < inventory.size(); ++i)
+        {
+            ItemStack item = inventory.getStack(i);
             if (!item.isEmpty() && ItemStack.areItemsAndComponentsEqual(item, stack))
                 stackAmount += item.getCount();
-
-        for (ItemStack item : inventory.main)
-            if (!item.isEmpty() && ItemStack.areItemsAndComponentsEqual(item, stack))
-                stackAmount += item.getCount();
-
-        for (ItemStack item : inventory.armor)
-            if (!item.isEmpty() && ItemStack.areItemsAndComponentsEqual(item, stack))
-                stackAmount += item.getCount();
+        }
 
         return stackAmount;
     }

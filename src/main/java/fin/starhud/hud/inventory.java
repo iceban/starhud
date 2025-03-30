@@ -60,7 +60,7 @@ public class inventory {
 
         for (int i = 0; i < 27; ++i) {
 
-            ItemStack stack = inventory.main.get(i + 9);
+            ItemStack stack = inventory.getMainStacks().get(i + 9);
 
             if (!stack.isEmpty()) {
 
@@ -82,7 +82,7 @@ public class inventory {
         boolean foundItem = false;
         for (int i = 0; i < 27; ++i) {
 
-            ItemStack stack = inventory.main.get(i + 9);
+            ItemStack stack = inventory.getMainStacks().get(i + 9);
 
             if (!stack.isEmpty()) {
 

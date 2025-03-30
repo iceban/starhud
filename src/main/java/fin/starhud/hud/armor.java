@@ -5,6 +5,8 @@ import fin.starhud.Main;
 import fin.starhud.config.Settings;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.component.type.AttributeModifierSlot;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 
@@ -37,9 +39,15 @@ public class armor {
         Helper.setHUDScale(context, armor.scale);
 
         // for each armor pieces
-        for (ItemStack armor : client.player.getArmorItems()) {
-            if (SHOULD_RENDER[i] && !armor.isEmpty() && armor.isDamageable()) {
-                Helper.renderItemDurabilityHUD(context, ARMOR_BACKGROUND_TEXTURE, armor, x + X_OFFSETS[i], y + Y_OFFSETS[i], 14 * i,13,  55, 0xFFFFFFFF);
+        for (EquipmentSlot equipmentSlot : AttributeModifierSlot.ARMOR)
+        {
+            if (equipmentSlot.getType() == EquipmentSlot.Type.HUMANOID_ARMOR)
+            {
+                ItemStack armor = client.player.getEquippedStack(equipmentSlot);
+                if (SHOULD_RENDER[i] && !armor.isEmpty() && armor.isDamageable())
+                {
+                    Helper.renderItemDurabilityHUD(context, ARMOR_BACKGROUND_TEXTURE, armor, x + X_OFFSETS[i], y + Y_OFFSETS[i], 14 * i,13,  55, 0xFFFFFFFF);
+                }
             }
             --i;
         }
