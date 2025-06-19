@@ -5,8 +5,8 @@ import fin.starhud.Main;
 import fin.starhud.config.Settings;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.render.RenderLayer;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
@@ -35,11 +35,12 @@ public class inventory {
     }
 
     public static void renderInventoryHUD(DrawContext context) {
-        if ((inventory.hideOn.f3 && Helper.isDebugHUDOpen()) || (inventory.hideOn.chat && Helper.isChatFocused())) return;
+        if ((inventory.hideOn.f3 && Helper.isDebugHUDOpen()) || (inventory.hideOn.chat && Helper.isChatFocused()))
+            return;
 
         PlayerInventory playerInventory = client.player.getInventory();
 
-        context.getMatrices().push();
+        context.getMatrices().pushMatrix();
         Helper.setHUDScale(context, inventory.scale);
 
         if (inventory.drawVertical) {
@@ -52,7 +53,7 @@ public class inventory {
             drawInventoryHorizontal(playerInventory, client.textRenderer, context, x, y);
         }
 
-        context.getMatrices().pop();
+        context.getMatrices().popMatrix();
     }
 
     private static void drawInventoryVertical(PlayerInventory inventory, TextRenderer textRenderer, DrawContext context, int x, int y) {
@@ -66,7 +67,7 @@ public class inventory {
 
                 if (!foundItem) {
                     foundItem = true;
-                    context.drawTexture(RenderLayer::getGuiTextured, INVENTORY_TEXTURE_VERTICAL, x, y, 0.0F, 0.0F, height, width, height, width);
+                    context.drawTexture(RenderPipelines.GUI_TEXTURED, INVENTORY_TEXTURE_VERTICAL, x, y, 0.0F, 0.0F, height, width, height, width);
                 }
 
                 int x1 = x + SLOT_X_VERTICAL[i];
@@ -88,7 +89,7 @@ public class inventory {
 
                 if (!foundItem) {
                     foundItem = true;
-                    context.drawTexture(RenderLayer::getGuiTextured, INVENTORY_TEXTURE, x, y, 0.0F, 0.0F, width, height, width, height);
+                    context.drawTexture(RenderPipelines.GUI_TEXTURED, INVENTORY_TEXTURE, x, y, 0.0F, 0.0F, width, height, width, height);
                 }
 
                 int x1 = x + SLOT_X_HORIZONTAL[i];

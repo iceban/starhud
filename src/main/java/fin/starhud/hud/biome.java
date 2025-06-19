@@ -5,8 +5,8 @@ import fin.starhud.Main;
 import fin.starhud.config.Settings;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.render.RenderLayer;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.util.Identifier;
@@ -50,14 +50,14 @@ public class biome {
         int dimensionIcon = getDimensionIcon(client.world.getRegistryKey());
         int color = getTextColorFromDimension(dimensionIcon) | 0xFF000000;
 
-        context.getMatrices().push();
+        context.getMatrices().pushMatrix();
         Helper.setHUDScale(context, biome.scale);
 
-        context.drawTexture(RenderLayer::getGuiTextured, DIMENSION_TEXTURE, x, y, 0.0F, dimensionIcon * height, 13, height, 13 ,52);
+        context.drawTexture(RenderPipelines.GUI_TEXTURED, DIMENSION_TEXTURE, x, y, 0.0F, dimensionIcon * height, 13, height, 13, 52);
         Helper.fillRoundedRightSide(context, x + 14, y, x + 14 + cachedTextWidth + 9, y + height, 0x80000000);
         context.drawText(client.textRenderer, cachedFormattedBiomeStr, x + 19, y + 3, color, false);
 
-        context.getMatrices().pop();
+        context.getMatrices().popMatrix();
     }
 
     private static int getDimensionIcon(RegistryKey<World> registryKey) {
@@ -69,10 +69,10 @@ public class biome {
 
     private static int getTextColorFromDimension(int dimension) {
         return switch (dimension) {
-          case 0 -> biome.color.overworld;
-          case 1 -> biome.color.nether;
-          case 2 -> biome.color.end;
-          default -> biome.color.custom;
+            case 0 -> biome.color.overworld;
+            case 1 -> biome.color.nether;
+            case 2 -> biome.color.end;
+            default -> biome.color.custom;
         };
     }
 

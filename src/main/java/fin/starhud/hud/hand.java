@@ -5,8 +5,8 @@ import fin.starhud.Main;
 import fin.starhud.config.Settings;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.render.RenderLayer;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
@@ -45,7 +45,7 @@ public class hand {
 
         if (item.isEmpty()) return;
 
-        context.getMatrices().push();
+        context.getMatrices().pushMatrix();
         Helper.setHUDScale(context, leftHand.scale);
 
         // either draw the durability or the amount of item in the inventory.
@@ -62,13 +62,14 @@ public class hand {
             renderItemCountHUD(context, client.textRenderer, playerInventory, item, x, y, 0, leftHand.color | 0xFF000000);
         }
 
-        context.getMatrices().pop();
+        context.getMatrices().popMatrix();
     }
 
     private static final Settings.HandSettings.RightHandSettings rightHand = Main.settings.handSettings.rightHandSettings;
 
     public static void renderRightHandHUD(DrawContext context) {
-        if ((rightHand.hideOn.f3 && Helper.isDebugHUDOpen()) || (rightHand.hideOn.chat && Helper.isChatFocused())) return;
+        if ((rightHand.hideOn.f3 && Helper.isDebugHUDOpen()) || (rightHand.hideOn.chat && Helper.isChatFocused()))
+            return;
 
         PlayerInventory playerInventory = client.player.getInventory();
 
@@ -80,7 +81,7 @@ public class hand {
 
         if (item.isEmpty()) return;
 
-        context.getMatrices().push();
+        context.getMatrices().pushMatrix();
         Helper.setHUDScale(context, rightHand.scale);
 
         // either draw the durability or the amount of item in the inventory.
@@ -96,21 +97,20 @@ public class hand {
             renderItemCountHUD(context, client.textRenderer, playerInventory, item, x, y, 14, rightHand.color | 0xFF000000);
         }
 
-        context.getMatrices().pop();
+        context.getMatrices().popMatrix();
     }
 
     private static void renderItemCountHUD(DrawContext context, TextRenderer textRenderer, PlayerInventory playerInventory, ItemStack stack, int x, int y, float v, int color) {
         int stackAmount = getItemCount(playerInventory, stack);
 
-        context.drawTexture(RenderLayer::getGuiTextured, HAND_TEXTURE, x, y, 0.0F, v, width_count + width, height, width_count + width, 27, color);
+        context.drawTexture(RenderPipelines.GUI_TEXTURED, HAND_TEXTURE, x, y, 0.0F, v, width_count + width, height, width_count + width, 27, color);
         context.drawText(textRenderer, Integer.toString(stackAmount), x + 19, y + 3, color, false);
     }
 
     private static int getItemCount(PlayerInventory inventory, ItemStack stack) {
         int stackAmount = 0;
 
-        for (int i = 0; i < inventory.size(); ++i)
-        {
+        for (int i = 0; i < inventory.size(); ++i) {
             ItemStack item = inventory.getStack(i);
             if (!item.isEmpty() && ItemStack.areItemsAndComponentsEqual(item, stack))
                 stackAmount += item.getCount();

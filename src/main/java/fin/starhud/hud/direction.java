@@ -4,8 +4,8 @@ import fin.starhud.Helper;
 import fin.starhud.Main;
 import fin.starhud.config.Settings;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.render.RenderLayer;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
@@ -31,13 +31,14 @@ public class direction {
     private static final MinecraftClient client = MinecraftClient.getInstance();
 
     public static void renderDirectionHUD(DrawContext context) {
-        if ((direction.hideOn.f3 && Helper.isDebugHUDOpen()) || (direction.hideOn.chat && Helper.isChatFocused())) return;
+        if ((direction.hideOn.f3 && Helper.isDebugHUDOpen()) || (direction.hideOn.chat && Helper.isChatFocused()))
+            return;
 
         Entity playerCamera = client.cameraEntity;
 
         float yaw = Math.round(MathHelper.wrapDegrees(playerCamera.getYaw()) * 10.0F) / 10.0F;
 
-        context.getMatrices().push();
+        context.getMatrices().pushMatrix();
         Helper.setHUDScale(context, direction.scale);
 
         if (direction.includeOrdinal) {
@@ -47,7 +48,7 @@ public class direction {
             int x = Helper.calculatePositionX(direction.x, direction.originX, width_ordinal, direction.scale);
             int y = Helper.calculatePositionY(direction.y, direction.originY, height, direction.scale);
 
-            context.drawTexture(RenderLayer::getGuiTextured, DIRECTION_INCLUDE_ORDINAL_TEXTURE, x, y, 0.0F, icon * 13, width_ordinal, height, width_ordinal, height * iconAmount_ordinal, color);
+            context.drawTexture(RenderPipelines.GUI_TEXTURED, DIRECTION_INCLUDE_ORDINAL_TEXTURE, x, y, 0.0F, icon * 13, width_ordinal, height, width_ordinal, height * iconAmount_ordinal, color);
             context.drawText(client.textRenderer, Float.toString(yaw), x + textX_ordinal, y + 3, color, false);
         } else {
             int icon = getCardinalDirectionIcon(yaw);
@@ -56,30 +57,30 @@ public class direction {
             int x = Helper.calculatePositionX(direction.x, direction.originX, width_cardinal, direction.scale);
             int y = Helper.calculatePositionY(direction.y, direction.originY, height, direction.scale);
 
-            context.drawTexture(RenderLayer::getGuiTextured, DIRECTION_TEXTURE, x, y, 0.0F, icon * 13, width_cardinal, height, width_cardinal, height * iconAmount_cardinal, color);
+            context.drawTexture(RenderPipelines.GUI_TEXTURED, DIRECTION_TEXTURE, x, y, 0.0F, icon * 13, width_cardinal, height, width_cardinal, height * iconAmount_cardinal, color);
             context.drawText(client.textRenderer, Float.toString(yaw), x + textX_cardinal, y + 3, color, false);
         }
 
-        context.getMatrices().pop();
+        context.getMatrices().popMatrix();
     }
 
     private static int getOrdinalDirectionIcon(float yaw) {
-        if (-22.5 <= yaw && yaw < 22.5)         return 0;   //south
-        else if (22.5 <= yaw && yaw < 67.5)     return 1;   //southwest
-        else if (67.5 <= yaw && yaw < 112.5)    return 2;   //west
-        else if (112.5 <= yaw && yaw < 157.5)   return 3;   //northwest
-        else if (157.5 <= yaw || yaw < -157.5)  return 4;   //north
+        if (-22.5 <= yaw && yaw < 22.5) return 0;   //south
+        else if (22.5 <= yaw && yaw < 67.5) return 1;   //southwest
+        else if (67.5 <= yaw && yaw < 112.5) return 2;   //west
+        else if (112.5 <= yaw && yaw < 157.5) return 3;   //northwest
+        else if (157.5 <= yaw || yaw < -157.5) return 4;   //north
         else if (-157.5 <= yaw && yaw < -112.5) return 5;   //northeast
-        else if (-112.5 <= yaw && yaw < -67.5)  return 6;   //east
-        else if (-67.5 <= yaw && yaw < -22.5)   return 7;   //southeast
+        else if (-112.5 <= yaw && yaw < -67.5) return 6;   //east
+        else if (-67.5 <= yaw && yaw < -22.5) return 7;   //southeast
         else return 0;
     }
 
     private static int getCardinalDirectionIcon(float yaw) {
-        if (-45.0 <= yaw && yaw < 45.0)         return 0;   //south
-        else if (45.0 <= yaw && yaw < 135.0)    return 1;   //west
-        else if (135.0 <= yaw || yaw < -135.0)  return 2;   //north
-        else if (-135.0 <= yaw && yaw < -45.0)  return 3;   //east
+        if (-45.0 <= yaw && yaw < 45.0) return 0;   //south
+        else if (45.0 <= yaw && yaw < 135.0) return 1;   //west
+        else if (135.0 <= yaw || yaw < -135.0) return 2;   //north
+        else if (-135.0 <= yaw && yaw < -45.0) return 3;   //east
         else return 0;
     }
 

@@ -32,34 +32,35 @@ public class armor {
 
         int x = Helper.calculatePositionX(armor.x, armor.originX, width, armor.scale);
         int y = Helper.calculatePositionY(armor.y, armor.originY, height, armor.scale);
-        
+
         int i = 3;
 
-        context.getMatrices().push();
+        context.getMatrices().pushMatrix();
         Helper.setHUDScale(context, armor.scale);
 
         // for each armor pieces
-        for (EquipmentSlot equipmentSlot : AttributeModifierSlot.ARMOR)
-        {
-            if (equipmentSlot.getType() == EquipmentSlot.Type.HUMANOID_ARMOR)
-            {
+        for (EquipmentSlot equipmentSlot : AttributeModifierSlot.ARMOR) {
+            if (equipmentSlot.getType() == EquipmentSlot.Type.HUMANOID_ARMOR) {
                 ItemStack armor = client.player.getEquippedStack(equipmentSlot);
-                if (SHOULD_RENDER[i] && !armor.isEmpty() && armor.isDamageable())
-                {
-                    Helper.renderItemDurabilityHUD(context, ARMOR_BACKGROUND_TEXTURE, armor, x + X_OFFSETS[i], y + Y_OFFSETS[i], 14 * i,13,  55, 0xFFFFFFFF);
+                if (SHOULD_RENDER[i] && !armor.isEmpty() && armor.isDamageable()) {
+                    Helper.renderItemDurabilityHUD(context, ARMOR_BACKGROUND_TEXTURE, armor, x + X_OFFSETS[i], y + Y_OFFSETS[i], 14 * i, 13, 55, 0xFFFFFFFF);
                 }
             }
             --i;
         }
 
-        context.getMatrices().pop();
+        context.getMatrices().popMatrix();
     }
 
     private static void initArmorConfiguration() {
-        X_OFFSETS[0] = armor.helmet.xOffset;        Y_OFFSETS[0] = armor.helmet.yOffset;
-        X_OFFSETS[1] = armor.chestplate.xOffset;    Y_OFFSETS[1] = armor.chestplate.yOffset;
-        X_OFFSETS[2] = armor.leggings.xOffset;      Y_OFFSETS[2] = armor.leggings.yOffset;
-        X_OFFSETS[3] = armor.boots.xOffset;         Y_OFFSETS[3] = armor.boots.yOffset;
+        X_OFFSETS[0] = armor.helmet.xOffset;
+        Y_OFFSETS[0] = armor.helmet.yOffset;
+        X_OFFSETS[1] = armor.chestplate.xOffset;
+        Y_OFFSETS[1] = armor.chestplate.yOffset;
+        X_OFFSETS[2] = armor.leggings.xOffset;
+        Y_OFFSETS[2] = armor.leggings.yOffset;
+        X_OFFSETS[3] = armor.boots.xOffset;
+        Y_OFFSETS[3] = armor.boots.yOffset;
 
         SHOULD_RENDER[0] = armor.helmet.shouldRender;
         SHOULD_RENDER[1] = armor.chestplate.shouldRender;

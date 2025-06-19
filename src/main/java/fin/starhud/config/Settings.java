@@ -13,6 +13,7 @@ public class Settings implements ConfigData {
     @ConfigEntry.Category("armor")
     @ConfigEntry.Gui.TransitiveObject
     public ArmorSettings armorSettings = new ArmorSettings();
+
     public static class ArmorSettings {
         @Comment("Toggle Armor HUD")
         public boolean shouldRender = true;
@@ -34,6 +35,7 @@ public class Settings implements ConfigData {
 
         @ConfigEntry.Gui.CollapsibleObject
         public HelmetSettings helmet = new HelmetSettings();
+
         public static class HelmetSettings {
             public boolean shouldRender = true;
             public int xOffset = 0;
@@ -42,6 +44,7 @@ public class Settings implements ConfigData {
 
         @ConfigEntry.Gui.CollapsibleObject
         public ChestplateSettings chestplate = new ChestplateSettings();
+
         public static class ChestplateSettings {
             public boolean shouldRender = true;
             public int xOffset = 0;
@@ -50,6 +53,7 @@ public class Settings implements ConfigData {
 
         @ConfigEntry.Gui.CollapsibleObject
         public LeggingsSettings leggings = new LeggingsSettings();
+
         public static class LeggingsSettings {
             public boolean shouldRender = true;
             public int xOffset = 0;
@@ -58,6 +62,7 @@ public class Settings implements ConfigData {
 
         @ConfigEntry.Gui.CollapsibleObject
         public BootsSettings boots = new BootsSettings();
+
         public static class BootsSettings {
             public boolean shouldRender = true;
             public int xOffset = 0;
@@ -66,6 +71,7 @@ public class Settings implements ConfigData {
 
         @ConfigEntry.Gui.CollapsibleObject
         public ArmorHideSettings hideOn = new ArmorHideSettings();
+
         public static class ArmorHideSettings {
             public boolean f3 = false;
             public boolean chat = false;
@@ -75,6 +81,7 @@ public class Settings implements ConfigData {
     @ConfigEntry.Category("coord")
     @ConfigEntry.Gui.TransitiveObject
     public CoordSettings coordSettings = new CoordSettings();
+
     public static class CoordSettings {
         @Comment("Toggle Coordinate HUD")
         public boolean shouldRender = true;
@@ -96,6 +103,7 @@ public class Settings implements ConfigData {
 
         @ConfigEntry.Gui.CollapsibleObject
         public CoordXSettings coordXSettings = new CoordXSettings();
+
         public static class CoordXSettings {
             public boolean shouldRender = true;
             @Comment("X Offset to origin X location")
@@ -108,6 +116,7 @@ public class Settings implements ConfigData {
 
         @ConfigEntry.Gui.CollapsibleObject
         public CoordYSettings coordYSettings = new CoordYSettings();
+
         public static class CoordYSettings {
             public boolean shouldRender = true;
             @Comment("X Offset to origin X location")
@@ -120,6 +129,7 @@ public class Settings implements ConfigData {
 
         @ConfigEntry.Gui.CollapsibleObject
         public CoordZSettings coordZSettings = new CoordZSettings();
+
         public static class CoordZSettings {
             public boolean shouldRender = true;
             @Comment("X Offset to origin X location")
@@ -132,6 +142,7 @@ public class Settings implements ConfigData {
 
         @ConfigEntry.Gui.CollapsibleObject
         public CoordHideSettings hideOn = new CoordHideSettings();
+
         public static class CoordHideSettings {
             public boolean f3 = false;
             public boolean chat = false;
@@ -141,6 +152,7 @@ public class Settings implements ConfigData {
     @ConfigEntry.Category("direction")
     @ConfigEntry.Gui.TransitiveObject
     public DirectionSettings directionSettings = new DirectionSettings();
+
     public static class DirectionSettings {
         @Comment("Toggle Direction HUD")
         public boolean shouldRender = true;
@@ -164,6 +176,7 @@ public class Settings implements ConfigData {
 
         @ConfigEntry.Gui.CollapsibleObject
         public DirectionColorSettings directionColor = new DirectionColorSettings();
+
         public static class DirectionColorSettings {
             @ConfigEntry.ColorPicker
             public int s = 0xffb5b5;
@@ -185,6 +198,7 @@ public class Settings implements ConfigData {
 
         @ConfigEntry.Gui.CollapsibleObject
         public DirectionHideSettings hideOn = new DirectionHideSettings();
+
         public static class DirectionHideSettings {
             public boolean f3 = false;
             public boolean chat = false;
@@ -194,6 +208,7 @@ public class Settings implements ConfigData {
     @ConfigEntry.Category("fps")
     @ConfigEntry.Gui.TransitiveObject
     public FPSSettings fpsSettings = new FPSSettings();
+
     public static class FPSSettings {
         @Comment("Toggle FPS HUD")
         public boolean shouldRender = true;
@@ -218,6 +233,7 @@ public class Settings implements ConfigData {
 
         @ConfigEntry.Gui.CollapsibleObject
         public FPSHideSettings hideOn = new FPSHideSettings();
+
         public static class FPSHideSettings {
             public boolean f3 = false;
             public boolean chat = false;
@@ -227,6 +243,7 @@ public class Settings implements ConfigData {
     @ConfigEntry.Category("ping")
     @ConfigEntry.Gui.TransitiveObject
     public PingSettings pingSettings = new PingSettings();
+
     public static class PingSettings {
         @Comment("Toggle Ping HUD")
         public boolean shouldRender = true;
@@ -251,6 +268,7 @@ public class Settings implements ConfigData {
 
         @ConfigEntry.Gui.CollapsibleObject
         public PingColorSettings pingColor = new PingColorSettings();
+
         public static class PingColorSettings {
             @ConfigEntry.ColorPicker
             public int first = 0x85F290;
@@ -264,6 +282,7 @@ public class Settings implements ConfigData {
 
         @ConfigEntry.Gui.CollapsibleObject
         public PingHideSettings hideOn = new PingHideSettings();
+
         public static class PingHideSettings {
             public boolean f3 = false;
             public boolean chat = false;
@@ -274,9 +293,11 @@ public class Settings implements ConfigData {
     @ConfigEntry.Category("clock")
     @ConfigEntry.Gui.TransitiveObject
     public ClockSettings clockSettings = new ClockSettings();
+
     public static class ClockSettings {
         @ConfigEntry.Gui.CollapsibleObject
         public ClockSystemSettings systemSettings = new ClockSystemSettings();
+
         public static class ClockSystemSettings {
             public boolean shouldRender = true;
 
@@ -300,6 +321,7 @@ public class Settings implements ConfigData {
 
             @ConfigEntry.Gui.CollapsibleObject
             public ClockSystemHideSettings hideOn = new ClockSystemHideSettings();
+
             public static class ClockSystemHideSettings {
                 public boolean f3 = false;
                 public boolean chat = false;
@@ -308,6 +330,7 @@ public class Settings implements ConfigData {
 
         @ConfigEntry.Gui.CollapsibleObject
         public ClockInGameSettings inGameSettings = new ClockInGameSettings();
+
         public static class ClockInGameSettings {
             public boolean shouldRender = true;
 
@@ -328,6 +351,7 @@ public class Settings implements ConfigData {
 
             @ConfigEntry.Gui.CollapsibleObject
             public ClockInGameColorSettings color = new ClockInGameColorSettings();
+
             public static class ClockInGameColorSettings {
                 @ConfigEntry.ColorPicker
                 public int day = 0xfff9b5;
@@ -341,6 +365,7 @@ public class Settings implements ConfigData {
 
             @ConfigEntry.Gui.CollapsibleObject
             public ClockInGameHideSettings hideOn = new ClockInGameHideSettings();
+
             public static class ClockInGameHideSettings {
                 public boolean f3 = false;
                 public boolean chat = false;
@@ -351,6 +376,7 @@ public class Settings implements ConfigData {
     @ConfigEntry.Category("biome")
     @ConfigEntry.Gui.TransitiveObject
     public BiomeSettings biomeSettings = new BiomeSettings();
+
     public static class BiomeSettings {
         public boolean shouldRender = true;
 
@@ -373,6 +399,7 @@ public class Settings implements ConfigData {
 
         @ConfigEntry.Gui.CollapsibleObject
         public DimensionColorSettings color = new DimensionColorSettings();
+
         public static class DimensionColorSettings {
             @ConfigEntry.ColorPicker
             public int overworld = 0xFFFFFF;
@@ -386,6 +413,7 @@ public class Settings implements ConfigData {
 
         @ConfigEntry.Gui.CollapsibleObject
         public BiomeHideSettings hideOn = new BiomeHideSettings();
+
         public static class BiomeHideSettings {
             public boolean f3 = false;
             public boolean chat = false;
@@ -395,6 +423,7 @@ public class Settings implements ConfigData {
     @ConfigEntry.Category("inventory")
     @ConfigEntry.Gui.TransitiveObject
     public InventorySettings inventorySettings = new InventorySettings();
+
     public static class InventorySettings {
         public boolean shouldRender = false;
 
@@ -415,6 +444,7 @@ public class Settings implements ConfigData {
 
         @ConfigEntry.Gui.CollapsibleObject
         public InventoryHideSettings hideOn = new InventoryHideSettings();
+
         public static class InventoryHideSettings {
             public boolean f3 = false;
             public boolean chat = false;
@@ -424,9 +454,11 @@ public class Settings implements ConfigData {
     @ConfigEntry.Category("hand")
     @ConfigEntry.Gui.TransitiveObject
     public HandSettings handSettings = new HandSettings();
+
     public static class HandSettings {
         @ConfigEntry.Gui.CollapsibleObject
         public LeftHandSettings leftHandSettings = new LeftHandSettings();
+
         public static class LeftHandSettings {
             public boolean shouldRender = true;
 
@@ -455,6 +487,7 @@ public class Settings implements ConfigData {
 
             @ConfigEntry.Gui.CollapsibleObject
             public LeftHandHideSettings hideOn = new LeftHandHideSettings();
+
             public static class LeftHandHideSettings {
                 public boolean f3 = false;
                 public boolean chat = false;
@@ -463,6 +496,7 @@ public class Settings implements ConfigData {
 
         @ConfigEntry.Gui.CollapsibleObject
         public RightHandSettings rightHandSettings = new RightHandSettings();
+
         public static class RightHandSettings {
             public boolean shouldRender = true;
 
@@ -491,6 +525,7 @@ public class Settings implements ConfigData {
 
             @ConfigEntry.Gui.CollapsibleObject
             public RightHandHideSettings hideOn = new RightHandHideSettings();
+
             public static class RightHandHideSettings {
                 public boolean f3 = false;
                 public boolean chat = false;

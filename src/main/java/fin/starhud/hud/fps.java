@@ -4,8 +4,8 @@ import fin.starhud.Helper;
 import fin.starhud.Main;
 import fin.starhud.config.Settings;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.render.RenderLayer;
 import net.minecraft.util.Identifier;
 
 public class fps {
@@ -29,12 +29,12 @@ public class fps {
 
         int color = fps.color | 0xFF000000;
 
-        context.getMatrices().push();
+        context.getMatrices().pushMatrix();
         Helper.setHUDScale(context, fps.scale);
 
-        context.drawTexture(RenderLayer::getGuiTextured, FPS_TEXTURE, x, y, 0.0F, 0.0F, width, height, width, height, color);
+        context.drawTexture(RenderPipelines.GUI_TEXTURED, FPS_TEXTURE, x, y, 0.0F, 0.0F, width, height, width, height, color);
         context.drawText(client.textRenderer, fpsStr, x + 19, y + 3, color, false);
 
-        context.getMatrices().pop();
+        context.getMatrices().popMatrix();
     }
 }

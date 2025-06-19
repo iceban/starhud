@@ -4,9 +4,9 @@ import fin.starhud.Helper;
 import fin.starhud.Main;
 import fin.starhud.config.Settings;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.network.PingMeasurer;
-import net.minecraft.client.render.RenderLayer;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.profiler.MultiValueDebugSampleLogImpl;
 import net.minecraft.world.World;
@@ -55,13 +55,13 @@ public class ping {
         int step = Math.min((int) currentPing / 150, 3);
         int color = getPingColor(step) | 0xFF000000;
 
-        context.getMatrices().push();
+        context.getMatrices().pushMatrix();
         Helper.setHUDScale(context, ping.scale);
 
-        context.drawTexture(RenderLayer::getGuiTextured, PING_TEXTURE, x, y, 0.0F, step * 13, width, height, width, height * 4, color);
+        context.drawTexture(RenderPipelines.GUI_TEXTURED, PING_TEXTURE, x, y, 0.0F, step * 13, width, height, width, height * 4, color);
         context.drawText(client.textRenderer, pingStr, x + 19, y + 3, color, false);
 
-        context.getMatrices().pop();
+        context.getMatrices().popMatrix();
     }
 
     public static int getPingColor(int step) {

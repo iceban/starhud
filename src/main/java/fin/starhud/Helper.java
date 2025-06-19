@@ -1,8 +1,8 @@
 package fin.starhud;
 
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.util.Window;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
@@ -57,6 +57,7 @@ public class Helper {
             case RIGHT -> textureWidth;
         };
     }
+
     public static int calculateTextureOffsetY(ScreenAlignmentY alignmentY, int textureHeight) {
         return switch (alignmentY) {
             case TOP -> 0;
@@ -95,7 +96,7 @@ public class Helper {
         float scaleFactor = scale / (float) window.getScaleFactor();
 
         if (scaleFactor == 1) return;
-        context.getMatrices().scale(scaleFactor, scaleFactor, scaleFactor);
+        context.getMatrices().scale(scaleFactor, scaleFactor);
     }
 
     public static void fillRoundedRightSide(DrawContext context, int x1, int y1, int x2, int y2, int color) {
@@ -105,7 +106,7 @@ public class Helper {
 
     // get the durability "steps" or progress.
     public static int getItemBarStep(ItemStack stack) {
-        return MathHelper.clamp(Math.round(10 - (float)stack.getDamage() * 10 / (float)stack.getMaxDamage()), 0, 10);
+        return MathHelper.clamp(Math.round(10 - (float) stack.getDamage() * 10 / (float) stack.getMaxDamage()), 0, 10);
     }
 
     // color transition from pastel (red to green).
@@ -118,11 +119,11 @@ public class Helper {
         int color_dura = getItemBarColor(step) | 0xFF000000;
 
         // draw the icon
-        context.drawTexture(RenderLayer::getGuiTextured, ICON, x, y, 0.0F, v, 13, 13, textureWidth, textureHeight, color);
+        context.drawTexture(RenderPipelines.GUI_TEXTURED, ICON, x, y, 0.0F, v, 13, 13, textureWidth, textureHeight, color);
 
         // draw the durability background and steps
-        context.drawTexture(RenderLayer::getGuiTextured, DURABILITY_BACKGROUND_TEXTURE, x + 14, y, 0.0F, 0.0F, 49, 13, 49, 13);
-        context.drawTexture(RenderLayer::getGuiTextured, DURABILITY_TEXTURE, x + 19, y + 3, 0, 0, 4 * step, 7, 40, 7, color_dura);
+        context.drawTexture(RenderPipelines.GUI_TEXTURED, DURABILITY_BACKGROUND_TEXTURE, x + 14, y, 0.0F, 0.0F, 49, 13, 49, 13);
+        context.drawTexture(RenderPipelines.GUI_TEXTURED, DURABILITY_TEXTURE, x + 19, y + 3, 0, 0, 4 * step, 7, 40, 7, color_dura);
     }
 
     public static boolean isChatFocused() {
