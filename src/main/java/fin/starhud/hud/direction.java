@@ -12,53 +12,53 @@ import net.minecraft.util.math.MathHelper;
 
 public class direction {
 
-    private static final Settings.DirectionSettings direction = Main.settings.directionSettings;
+    private static final Settings.DirectionSettings directionSettings = Main.settings.directionSettings;
 
-    private static final Identifier DIRECTION_TEXTURE = Identifier.of("starhud", "hud/direction.png");
-    private static final Identifier DIRECTION_INCLUDE_ORDINAL_TEXTURE = Identifier.of("starhud", "hud/direction_ordinal.png");
+    private static final Identifier DIRECTION_CARDINAL_TEXTURE = Identifier.of("starhud", "hud/direction.png");
+    private static final Identifier DIRECTION_ORDINAL_TEXTURE = Identifier.of("starhud", "hud/direction_ordinal.png");
 
-    private static final int height = 13;
+    private static final int TEXTURE_HEIGHT = 13;
 
-    private static final int width_cardinal = 55;
-    private static final int width_ordinal = 61;
+    private static final int TEXTURE_CARDINAL_WIDTH = 55;
+    private static final int TEXTURE_ORDINAL_WIDTH = 61;
 
-    private static final int iconAmount_cardinal = 4;
-    private static final int iconAmount_ordinal = 8;
+    private static final int CARDINAL_ICON_AMOUNT = 4;
+    private static final int ORDINAL_ICON_AMOUNT = 8;
 
-    private static final int textX_cardinal = 19;
-    private static final int textX_ordinal = 25;
+    private static final int CARDINAL_TEXT_OFFSET = 19;
+    private static final int ORDINAL_TEXT_OFFSET = 25;
 
-    private static final MinecraftClient client = MinecraftClient.getInstance();
+    private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
 
     public static void renderDirectionHUD(DrawContext context) {
-        if ((direction.hideOn.f3 && Helper.isDebugHUDOpen()) || (direction.hideOn.chat && Helper.isChatFocused()))
+        if ((directionSettings.hideOn.f3 && Helper.isDebugHUDOpen()) || (directionSettings.hideOn.chat && Helper.isChatFocused()))
             return;
 
-        Entity playerCamera = client.cameraEntity;
+        Entity playerCamera = CLIENT.cameraEntity;
 
         float yaw = Math.round(MathHelper.wrapDegrees(playerCamera.getYaw()) * 10.0F) / 10.0F;
 
         context.getMatrices().pushMatrix();
-        Helper.setHUDScale(context, direction.scale);
+        Helper.setHUDScale(context, directionSettings.scale);
 
-        if (direction.includeOrdinal) {
+        if (directionSettings.includeOrdinal) {
             int icon = getOrdinalDirectionIcon(yaw);
             int color = getDirectionColor(icon) | 0xFF000000;
 
-            int x = Helper.calculatePositionX(direction.x, direction.originX, width_ordinal, direction.scale);
-            int y = Helper.calculatePositionY(direction.y, direction.originY, height, direction.scale);
+            int x = Helper.calculatePositionX(directionSettings.x, directionSettings.originX, TEXTURE_ORDINAL_WIDTH, directionSettings.scale);
+            int y = Helper.calculatePositionY(directionSettings.y, directionSettings.originY, TEXTURE_HEIGHT, directionSettings.scale);
 
-            context.drawTexture(RenderPipelines.GUI_TEXTURED, DIRECTION_INCLUDE_ORDINAL_TEXTURE, x, y, 0.0F, icon * 13, width_ordinal, height, width_ordinal, height * iconAmount_ordinal, color);
-            context.drawText(client.textRenderer, Float.toString(yaw), x + textX_ordinal, y + 3, color, false);
+            context.drawTexture(RenderPipelines.GUI_TEXTURED, DIRECTION_ORDINAL_TEXTURE, x, y, 0.0F, icon * 13, TEXTURE_ORDINAL_WIDTH, TEXTURE_HEIGHT, TEXTURE_ORDINAL_WIDTH, TEXTURE_HEIGHT * ORDINAL_ICON_AMOUNT, color);
+            context.drawText(CLIENT.textRenderer, Float.toString(yaw), x + ORDINAL_TEXT_OFFSET, y + 3, color, false);
         } else {
             int icon = getCardinalDirectionIcon(yaw);
             int color = getDirectionColor(icon * 2) | 0xFF000000;
 
-            int x = Helper.calculatePositionX(direction.x, direction.originX, width_cardinal, direction.scale);
-            int y = Helper.calculatePositionY(direction.y, direction.originY, height, direction.scale);
+            int x = Helper.calculatePositionX(directionSettings.x, directionSettings.originX, TEXTURE_CARDINAL_WIDTH, directionSettings.scale);
+            int y = Helper.calculatePositionY(directionSettings.y, directionSettings.originY, TEXTURE_HEIGHT, directionSettings.scale);
 
-            context.drawTexture(RenderPipelines.GUI_TEXTURED, DIRECTION_TEXTURE, x, y, 0.0F, icon * 13, width_cardinal, height, width_cardinal, height * iconAmount_cardinal, color);
-            context.drawText(client.textRenderer, Float.toString(yaw), x + textX_cardinal, y + 3, color, false);
+            context.drawTexture(RenderPipelines.GUI_TEXTURED, DIRECTION_CARDINAL_TEXTURE, x, y, 0.0F, icon * 13, TEXTURE_CARDINAL_WIDTH, TEXTURE_HEIGHT, TEXTURE_CARDINAL_WIDTH, TEXTURE_HEIGHT * CARDINAL_ICON_AMOUNT, color);
+            context.drawText(CLIENT.textRenderer, Float.toString(yaw), x + CARDINAL_TEXT_OFFSET, y + 3, color, false);
         }
 
         context.getMatrices().popMatrix();
@@ -86,14 +86,14 @@ public class direction {
 
     private static int getDirectionColor(int icon) {
         return switch (icon) {
-            case 0 -> direction.directionColor.s;
-            case 1 -> direction.directionColor.sw;
-            case 2 -> direction.directionColor.w;
-            case 3 -> direction.directionColor.nw;
-            case 4 -> direction.directionColor.n;
-            case 5 -> direction.directionColor.ne;
-            case 6 -> direction.directionColor.e;
-            case 7 -> direction.directionColor.se;
+            case 0 -> directionSettings.directionColor.s;
+            case 1 -> directionSettings.directionColor.sw;
+            case 2 -> directionSettings.directionColor.w;
+            case 3 -> directionSettings.directionColor.nw;
+            case 4 -> directionSettings.directionColor.n;
+            case 5 -> directionSettings.directionColor.ne;
+            case 6 -> directionSettings.directionColor.e;
+            case 7 -> directionSettings.directionColor.se;
             default -> 0xFFFFFF;
         };
     }

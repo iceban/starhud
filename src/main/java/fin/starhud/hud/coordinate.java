@@ -12,46 +12,41 @@ import net.minecraft.util.math.Vec3d;
 
 public class coordinate {
 
-    private static final Settings.CoordSettings coord = Main.settings.coordSettings;
+    private static final Settings.CoordSettings coordSettings = Main.settings.coordSettings;
     private static final Identifier COORD_TEXTURE = Identifier.of("starhud", "hud/coordinate.png");
 
-    private static final int[] X_OFFSETS = new int[3];
-    private static final int[] Y_OFFSETS = new int[3];
-    private static final boolean[] SHOULD_RENDER = new boolean[3];
+    private static final int TEXTURE_WIDTH = 65;
+    private static final int TEXTURE_HEIGHT = 13;
 
-    private static final int width = 65;
-    private static final int height = 13;
-
-    private static final MinecraftClient client = MinecraftClient.getInstance();
+    private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
 
     public static void renderCoordinateHUD(DrawContext context) {
-        if ((coord.hideOn.f3 && Helper.isDebugHUDOpen()) || (coord.hideOn.chat && Helper.isChatFocused())) return;
+        if ((coordSettings.hideOn.f3 && Helper.isDebugHUDOpen()) || (coordSettings.hideOn.chat && Helper.isChatFocused())) return;
 
-        initCoordinateConfiguration();
-        TextRenderer textRenderer = client.textRenderer;
+        TextRenderer textRenderer = CLIENT.textRenderer;
 
-        Vec3d vec3d = client.player.getPos();
+        Vec3d vec3d = CLIENT.player.getPos();
 
         String coordX = Integer.toString((int) vec3d.x);
         String coordY = Integer.toString((int) vec3d.y);
         String coordZ = Integer.toString((int) vec3d.z);
 
-        int x = Helper.calculatePositionX(coord.x, coord.originX, width, coord.scale);
-        int y = Helper.calculatePositionY(coord.y, coord.originY, height, coord.scale);
+        int x = Helper.calculatePositionX(coordSettings.x, coordSettings.originX, TEXTURE_WIDTH, coordSettings.scale);
+        int y = Helper.calculatePositionY(coordSettings.y, coordSettings.originY, TEXTURE_HEIGHT, coordSettings.scale);
 
-        int colorX = coord.coordXSettings.color | 0xFF000000;
-        int colorY = coord.coordYSettings.color | 0xFF000000;
-        int colorZ = coord.coordZSettings.color | 0xFF000000;
+        int colorX = coordSettings.coordXSettings.color | 0xFF000000;
+        int colorY = coordSettings.coordYSettings.color | 0xFF000000;
+        int colorZ = coordSettings.coordZSettings.color | 0xFF000000;
 
         context.getMatrices().pushMatrix();
-        Helper.setHUDScale(context, coord.scale);
+        Helper.setHUDScale(context, coordSettings.scale);
 
-        if (SHOULD_RENDER[0])
-            renderEachCoordinate(context, textRenderer, coordX, x + X_OFFSETS[0], y + Y_OFFSETS[0], 0.0F, width, height, colorX);
-        if (SHOULD_RENDER[1])
-            renderEachCoordinate(context, textRenderer, coordY, x + X_OFFSETS[1], y + Y_OFFSETS[1], 14.0F, width, height, colorY);
-        if (SHOULD_RENDER[2])
-            renderEachCoordinate(context, textRenderer, coordZ, x + X_OFFSETS[2], y + Y_OFFSETS[2], 28.0F, width, height, colorZ);
+        if (coordSettings.coordXSettings.shouldRender)
+            renderEachCoordinate(context, textRenderer, coordX, x + coordSettings.coordXSettings.xOffset, y + coordSettings.coordXSettings.yOffset, 0.0F, TEXTURE_WIDTH, TEXTURE_HEIGHT, colorX);
+        if (coordSettings.coordYSettings.shouldRender)
+            renderEachCoordinate(context, textRenderer, coordY, x + coordSettings.coordYSettings.xOffset, y + coordSettings.coordYSettings.yOffset, 14.0F, TEXTURE_WIDTH, TEXTURE_HEIGHT, colorY);
+        if (coordSettings.coordZSettings.shouldRender)
+            renderEachCoordinate(context, textRenderer, coordZ, x + coordSettings.coordZSettings.xOffset, y + coordSettings.coordZSettings.yOffset, 28.0F, TEXTURE_WIDTH, TEXTURE_HEIGHT, colorZ);
 
         context.getMatrices().popMatrix();
     }
@@ -59,18 +54,5 @@ public class coordinate {
     public static void renderEachCoordinate(DrawContext context, TextRenderer textRenderer, String str, int x, int y, float v, int width, int height, int color) {
         context.drawTexture(RenderPipelines.GUI_TEXTURED, COORD_TEXTURE, x, y, 0.0F, v, width, height, width, 41, color);
         context.drawText(textRenderer, str, x + 19, y + 3, color, false);
-    }
-
-    private static void initCoordinateConfiguration() {
-        X_OFFSETS[0] = coord.coordXSettings.xOffset;
-        Y_OFFSETS[0] = coord.coordXSettings.yOffset;
-        X_OFFSETS[1] = coord.coordYSettings.xOffset;
-        Y_OFFSETS[1] = coord.coordYSettings.yOffset;
-        X_OFFSETS[2] = coord.coordZSettings.xOffset;
-        Y_OFFSETS[2] = coord.coordZSettings.yOffset;
-
-        SHOULD_RENDER[0] = coord.coordXSettings.shouldRender;
-        SHOULD_RENDER[1] = coord.coordYSettings.shouldRender;
-        SHOULD_RENDER[2] = coord.coordZSettings.shouldRender;
     }
 }

@@ -16,7 +16,7 @@ import net.minecraft.world.biome.Biome;
 
 public class biome {
 
-    private static final Settings.BiomeSettings biome = Main.settings.biomeSettings;
+    private static final Settings.BiomeSettings biomeSettings = Main.settings.biomeSettings;
 
     private static final Identifier DIMENSION_TEXTURE = Identifier.of("starhud", "hud/biome.png");
 
@@ -24,18 +24,18 @@ public class biome {
     private static RegistryEntry<Biome> cachedBiome;
     private static int cachedTextWidth;
 
-    private static final int width = 24;
-    private static final int height = 13;
+    private static final int TEXTURE_WIDTH = 24;
+    private static final int TEXTURE_HEIGHT = 13;
 
-    private static final MinecraftClient client = MinecraftClient.getInstance();
+    private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
 
     public static void renderBiomeIndicatorHUD(DrawContext context) {
-        if ((biome.hideOn.f3 && Helper.isDebugHUDOpen()) || (biome.hideOn.chat && Helper.isChatFocused())) return;
+        if ((biomeSettings.hideOn.f3 && Helper.isDebugHUDOpen()) || (biomeSettings.hideOn.chat && Helper.isChatFocused())) return;
 
-        TextRenderer textRenderer = client.textRenderer;
+        TextRenderer textRenderer = CLIENT.textRenderer;
 
-        BlockPos blockPos = client.player.getBlockPos();
-        RegistryEntry<Biome> currentBiome = client.world.getBiome(blockPos);
+        BlockPos blockPos = CLIENT.player.getBlockPos();
+        RegistryEntry<Biome> currentBiome = CLIENT.world.getBiome(blockPos);
 
         if (cachedBiome != currentBiome) {
             cachedFormattedBiomeStr = biomeNameFormatter(currentBiome.getIdAsString());
@@ -43,19 +43,19 @@ public class biome {
             cachedTextWidth = textRenderer.getWidth(cachedFormattedBiomeStr);
         }
 
-        int x = Helper.calculatePositionX(biome.x, biome.originX, width, biome.scale)
-                - Helper.getGrowthDirection(biome.textGrowth, cachedTextWidth);
-        int y = Helper.calculatePositionY(biome.y, biome.originY, height, biome.scale);
+        int x = Helper.calculatePositionX(biomeSettings.x, biomeSettings.originX, TEXTURE_WIDTH, biomeSettings.scale)
+                - Helper.getGrowthDirection(biomeSettings.textGrowth, cachedTextWidth);
+        int y = Helper.calculatePositionY(biomeSettings.y, biomeSettings.originY, TEXTURE_HEIGHT, biomeSettings.scale);
 
-        int dimensionIcon = getDimensionIcon(client.world.getRegistryKey());
+        int dimensionIcon = getDimensionIcon(CLIENT.world.getRegistryKey());
         int color = getTextColorFromDimension(dimensionIcon) | 0xFF000000;
 
         context.getMatrices().pushMatrix();
-        Helper.setHUDScale(context, biome.scale);
+        Helper.setHUDScale(context, biomeSettings.scale);
 
-        context.drawTexture(RenderPipelines.GUI_TEXTURED, DIMENSION_TEXTURE, x, y, 0.0F, dimensionIcon * height, 13, height, 13, 52);
-        Helper.fillRoundedRightSide(context, x + 14, y, x + 14 + cachedTextWidth + 9, y + height, 0x80000000);
-        context.drawText(client.textRenderer, cachedFormattedBiomeStr, x + 19, y + 3, color, false);
+        context.drawTexture(RenderPipelines.GUI_TEXTURED, DIMENSION_TEXTURE, x, y, 0.0F, dimensionIcon * TEXTURE_HEIGHT, 13, TEXTURE_HEIGHT, 13, 52);
+        Helper.fillRoundedRightSide(context, x + 14, y, x + 14 + cachedTextWidth + 9, y + TEXTURE_HEIGHT, 0x80000000);
+        context.drawText(CLIENT.textRenderer, cachedFormattedBiomeStr, x + 19, y + 3, color, false);
 
         context.getMatrices().popMatrix();
     }
@@ -69,10 +69,10 @@ public class biome {
 
     private static int getTextColorFromDimension(int dimension) {
         return switch (dimension) {
-            case 0 -> biome.color.overworld;
-            case 1 -> biome.color.nether;
-            case 2 -> biome.color.end;
-            default -> biome.color.custom;
+            case 0 -> biomeSettings.color.overworld;
+            case 1 -> biomeSettings.color.nether;
+            case 2 -> biomeSettings.color.end;
+            default -> biomeSettings.color.custom;
         };
     }
 

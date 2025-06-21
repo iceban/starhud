@@ -13,8 +13,8 @@ public class Helper {
 
     private static final Identifier DURABILITY_TEXTURE = Identifier.of("starhud", "hud/durability.png");
     private static final Identifier DURABILITY_BACKGROUND_TEXTURE = Identifier.of("starhud", "hud/durability_background.png");
-    private static final MinecraftClient client = MinecraftClient.getInstance();
-    private static final Window window = client.getWindow();
+    private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
+    private static final Window WINDOW = CLIENT.getWindow();
 
     public enum ScreenAlignmentX {
         LEFT,
@@ -75,25 +75,25 @@ public class Helper {
     }
 
     public static float scaledX(int scale) {
-        return scale == 0 ? 1 : (float) window.getScaleFactor() / scale;
+        return scale == 0 ? 1 : (float) WINDOW.getScaleFactor() / scale;
     }
 
     public static float scaledY(int scale) {
-        return scale == 0 ? 1 : (float) window.getScaleFactor() / scale;
+        return scale == 0 ? 1 : (float) WINDOW.getScaleFactor() / scale;
     }
 
     public static int calculatePositionX(int x, ScreenAlignmentX alignmentX, int HUDWidth, int HUDScale) {
-        return x + (int) (defaultHUDAlignmentX(alignmentX, window.getScaledWidth()) * scaledX(HUDScale)) - calculateTextureOffsetX(alignmentX, HUDWidth);
+        return x + (int) (defaultHUDAlignmentX(alignmentX, WINDOW.getScaledWidth()) * scaledX(HUDScale)) - calculateTextureOffsetX(alignmentX, HUDWidth);
     }
 
     public static int calculatePositionY(int y, ScreenAlignmentY alignmentY, int HUDHeight, int HUDScale) {
-        return y + (int) (defaultHUDAlignmentY(alignmentY, window.getScaledHeight()) * scaledY(HUDScale)) - calculateTextureOffsetY(alignmentY, HUDHeight);
+        return y + (int) (defaultHUDAlignmentY(alignmentY, WINDOW.getScaledHeight()) * scaledY(HUDScale)) - calculateTextureOffsetY(alignmentY, HUDHeight);
     }
 
     public static void setHUDScale(DrawContext context, int scale) {
         if (scale == 0) return;
 
-        float scaleFactor = scale / (float) window.getScaleFactor();
+        float scaleFactor = scale / (float) WINDOW.getScaleFactor();
 
         if (scaleFactor == 1) return;
         context.getMatrices().scale(scaleFactor, scaleFactor);
@@ -116,21 +116,21 @@ public class Helper {
 
     public static void renderItemDurabilityHUD(DrawContext context, Identifier ICON, ItemStack stack, int x, int y, float v, int textureWidth, int textureHeight, int color) {
         int step = getItemBarStep(stack);
-        int color_dura = getItemBarColor(step) | 0xFF000000;
+        int durabilityColor = getItemBarColor(step) | 0xFF000000;
 
         // draw the icon
         context.drawTexture(RenderPipelines.GUI_TEXTURED, ICON, x, y, 0.0F, v, 13, 13, textureWidth, textureHeight, color);
 
         // draw the durability background and steps
         context.drawTexture(RenderPipelines.GUI_TEXTURED, DURABILITY_BACKGROUND_TEXTURE, x + 14, y, 0.0F, 0.0F, 49, 13, 49, 13);
-        context.drawTexture(RenderPipelines.GUI_TEXTURED, DURABILITY_TEXTURE, x + 19, y + 3, 0, 0, 4 * step, 7, 40, 7, color_dura);
+        context.drawTexture(RenderPipelines.GUI_TEXTURED, DURABILITY_TEXTURE, x + 19, y + 3, 0, 0, 4 * step, 7, 40, 7, durabilityColor);
     }
 
     public static boolean isChatFocused() {
-        return client.inGameHud.getChatHud().isChatFocused();
+        return CLIENT.inGameHud.getChatHud().isChatFocused();
     }
 
     public static boolean isDebugHUDOpen() {
-        return client.getDebugHud().shouldShowDebugHud();
+        return CLIENT.getDebugHud().shouldShowDebugHud();
     }
 }
