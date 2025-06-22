@@ -24,7 +24,8 @@ public class inventory {
 
     private static final Settings.InventorySettings inventorySettings = Main.settings.inventorySettings;
 
-    private static final int TEXTURE_WIDTH = 206;
+    // 9 inventory slots + 8 for each gap.
+    private static final int TEXTURE_WIDTH = 22 * 9 + 8;
     private static final int TEXTURE_HEIGHT = 68;
 
     private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
@@ -46,17 +47,17 @@ public class inventory {
         if (inventorySettings.drawVertical) {
             int x = Helper.calculatePositionX(inventorySettings.x, inventorySettings.originX, TEXTURE_HEIGHT, inventorySettings.scale);
             int y = Helper.calculatePositionY(inventorySettings.y, inventorySettings.originY, TEXTURE_WIDTH, inventorySettings.scale);
-            drawInventoryVertical(playerInventory, CLIENT.textRenderer, context, x, y);
+            drawInventoryVertical(playerInventory, context, x, y);
         } else {
             int x = Helper.calculatePositionX(inventorySettings.x, inventorySettings.originX, TEXTURE_WIDTH, inventorySettings.scale);
             int y = Helper.calculatePositionY(inventorySettings.y, inventorySettings.originY, TEXTURE_HEIGHT, inventorySettings.scale);
-            drawInventoryHorizontal(playerInventory, CLIENT.textRenderer, context, x, y);
+            drawInventoryHorizontal(playerInventory, context, x, y);
         }
 
         context.getMatrices().popMatrix();
     }
 
-    private static void drawInventoryVertical(PlayerInventory inventory, TextRenderer textRenderer, DrawContext context, int x, int y) {
+    private static void drawInventoryVertical(PlayerInventory inventory, DrawContext context, int x, int y) {
         boolean foundItem = false;
 
         for (int i = 0; i < 27; ++i) {
@@ -74,12 +75,12 @@ public class inventory {
                 int y1 = y + SLOT_Y_VERTICAL[i];
 
                 context.drawItem(stack, x1, y1);
-                context.drawStackOverlay(textRenderer, stack, x1, y1);
+                context.drawStackOverlay(CLIENT.textRenderer, stack, x1, y1);
             }
         }
     }
 
-    private static void drawInventoryHorizontal(PlayerInventory inventory, TextRenderer textRenderer, DrawContext context, int x, int y) {
+    private static void drawInventoryHorizontal(PlayerInventory inventory, DrawContext context, int x, int y) {
         boolean foundItem = false;
         for (int itemIndex = 0; itemIndex < 27; ++itemIndex) {
 
@@ -96,15 +97,16 @@ public class inventory {
                 int y1 = y + SLOT_Y_HORIZONTAL[itemIndex];
 
                 context.drawItem(stack, x1, y1);
-                context.drawStackOverlay(textRenderer, stack, x1, y1);
+                context.drawStackOverlay(CLIENT.textRenderer, stack, x1, y1);
             }
         }
     }
 
     private static void preComputeHorizontal() {
         int x1 = 3;
-        // 1 offset
-        int y1 = -20;
+
+        // start y1 on index -1 (before start)
+        int y1 = 3 - 23;
 
         for (int i = 0; i < 27; ++i) {
             if (i % 9 == 0) {
@@ -118,8 +120,9 @@ public class inventory {
     }
 
     private static void preComputeVertical() {
-        // 72 = 23 + 23 + 23 + 3 (2 items to the right + 1 offset)
-        int x1 = 72;
+        // start the first row on the right-most column, hence the 23 + 23.
+        // adds another 23 to start on index -1 (before start).
+        int x1 = 3 + 23 + 23 + 23;
         int y1 = 3;
 
         for (int i = 0; i < 27; ++i) {

@@ -17,9 +17,9 @@ public class hand {
 
     private static final Identifier HAND_TEXTURE = Identifier.of("starhud", "hud/hand.png");
 
-    // base HUD Width (Icon width = 13, 1 for the gap between icon and text, 10 for the padding at left / right edge).
+    // base HUD Width (Icon width = 13, 1 for the gap between icon and text, 5 for the gap on left side of the attribute, 5 for the gap on the right of the attribute).
     // guys i legit forgot what the "10 for the padding at left / right edge" meant help.
-    private static final int TEXTURE_WIDTH = 14;
+    private static final int TEXTURE_WIDTH = 13 + 1 + 5 + 5;
     // 3 x 10 (10 durability bars) + 9 for each gap.
     // durability adds 39 additional width.
     private static final int DURABILITY_WIDTH = 39;
