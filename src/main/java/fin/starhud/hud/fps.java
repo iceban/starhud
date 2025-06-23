@@ -20,7 +20,10 @@ public class fps {
     private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
 
     public static void renderFPSHUD(DrawContext context) {
-        if ((fpsSettings.hideOn.f3 && Helper.isDebugHUDOpen()) || (fpsSettings.hideOn.chat && Helper.isChatFocused())) return;
+        if (    (fpsSettings.hideOn.f3 && Helper.isDebugHUDOpen()) ||
+                (fpsSettings.hideOn.chat && Helper.isChatFocused()) ||
+                (fpsSettings.hideOn.bossbar && Helper.isBossBarShown()))
+            return;
 
         String fpsStr = CLIENT.getCurrentFps() + " FPS";
 

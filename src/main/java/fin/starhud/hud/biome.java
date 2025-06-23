@@ -30,7 +30,10 @@ public class biome {
     private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
 
     public static void renderBiomeIndicatorHUD(DrawContext context) {
-        if ((biomeSettings.hideOn.f3 && Helper.isDebugHUDOpen()) || (biomeSettings.hideOn.chat && Helper.isChatFocused())) return;
+        if (    (biomeSettings.hideOn.f3 && Helper.isDebugHUDOpen()) ||
+                (biomeSettings.hideOn.chat && Helper.isChatFocused()) ||
+                (biomeSettings.hideOn.bossbar && Helper.isBossBarShown()))
+            return;
 
         TextRenderer textRenderer = CLIENT.textRenderer;
 

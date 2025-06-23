@@ -26,7 +26,10 @@ public class armor {
     private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
 
     public static void renderArmorHUD(DrawContext context) {
-        if ((armorSettings.hideOn.f3 && Helper.isDebugHUDOpen()) || (armorSettings.hideOn.chat && Helper.isChatFocused())) return;
+        if (    (armorSettings.hideOn.f3 && Helper.isDebugHUDOpen()) ||
+                (armorSettings.hideOn.chat && Helper.isChatFocused()) ||
+                (armorSettings.hideOn.bossbar && Helper.isBossBarShown()))
+            return;
 
         initArmorConfiguration();
 

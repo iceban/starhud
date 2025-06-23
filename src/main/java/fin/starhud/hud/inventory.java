@@ -36,7 +36,9 @@ public class inventory {
     }
 
     public static void renderInventoryHUD(DrawContext context) {
-        if ((inventorySettings.hideOn.f3 && Helper.isDebugHUDOpen()) || (inventorySettings.hideOn.chat && Helper.isChatFocused()))
+        if (    (inventorySettings.hideOn.f3 && Helper.isDebugHUDOpen()) ||
+                (inventorySettings.hideOn.chat && Helper.isChatFocused()) ||
+                (inventorySettings.hideOn.bossbar && Helper.isBossBarShown()))
             return;
 
         PlayerInventory playerInventory = CLIENT.player.getInventory();

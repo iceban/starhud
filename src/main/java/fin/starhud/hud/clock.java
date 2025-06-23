@@ -31,7 +31,9 @@ public class clock {
     private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
 
     public static void renderInGameTimeHUD(DrawContext context) {
-        if ((clockInGameSettings.hideOn.f3 && Helper.isDebugHUDOpen()) || (clockInGameSettings.hideOn.chat && Helper.isChatFocused()))
+        if (    (clockInGameSettings.hideOn.f3 && Helper.isDebugHUDOpen()) ||
+                (clockInGameSettings.hideOn.chat && Helper.isChatFocused()) ||
+                (clockInGameSettings.hideOn.bossbar && Helper.isBossBarShown()))
             return;
 
         ClientWorld world = CLIENT.world;
@@ -129,7 +131,9 @@ public class clock {
     private static final int TEXTURE_SYSTEM_24_WIDTH = 49;
 
     public static void renderSystemTimeHUD(DrawContext context) {
-        if ((clockSystemSettings.hideOn.f3 && Helper.isDebugHUDOpen()) || (clockSystemSettings.hideOn.chat && Helper.isChatFocused()))
+        if (    (clockSystemSettings.hideOn.f3 && Helper.isDebugHUDOpen()) ||
+                (clockSystemSettings.hideOn.chat && Helper.isChatFocused()) ||
+                (clockSystemSettings.hideOn.bossbar && Helper.isBossBarShown()))
             return;
 
         // update each minute

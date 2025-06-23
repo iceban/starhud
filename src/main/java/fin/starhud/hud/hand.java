@@ -34,7 +34,10 @@ public class hand {
     private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
 
     public static void renderLeftHandHUD(DrawContext context) {
-        if ((leftHandSettings.hideOn.f3 && Helper.isDebugHUDOpen()) || (leftHandSettings.hideOn.chat && Helper.isChatFocused())) return;
+        if (    (leftHandSettings.hideOn.f3 && Helper.isDebugHUDOpen()) ||
+                (leftHandSettings.hideOn.chat && Helper.isChatFocused()) ||
+                (leftHandSettings.hideOn.bossbar && Helper.isBossBarShown()))
+            return;
 
         PlayerInventory playerInventory = CLIENT.player.getInventory();
 
@@ -69,7 +72,9 @@ public class hand {
     private static final Settings.HandSettings.RightHandSettings rightHandSettings = Main.settings.handSettings.rightHandSettings;
 
     public static void renderRightHandHUD(DrawContext context) {
-        if ((rightHandSettings.hideOn.f3 && Helper.isDebugHUDOpen()) || (rightHandSettings.hideOn.chat && Helper.isChatFocused()))
+        if (    (rightHandSettings.hideOn.f3 && Helper.isDebugHUDOpen()) ||
+                (rightHandSettings.hideOn.chat && Helper.isChatFocused()) ||
+                (rightHandSettings.hideOn.bossbar && Helper.isBossBarShown()))
             return;
 
         PlayerInventory playerInventory = CLIENT.player.getInventory();
@@ -81,7 +86,6 @@ public class hand {
             item = CLIENT.player.getEquippedStack(EquipmentSlot.MAINHAND);
 
         if (item.isEmpty()) return;
-
         context.getMatrices().pushMatrix();
         Helper.setHUDScale(context, rightHandSettings.scale);
 

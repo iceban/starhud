@@ -31,7 +31,9 @@ public class direction {
     private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
 
     public static void renderDirectionHUD(DrawContext context) {
-        if ((directionSettings.hideOn.f3 && Helper.isDebugHUDOpen()) || (directionSettings.hideOn.chat && Helper.isChatFocused()))
+        if (    (directionSettings.hideOn.f3 && Helper.isDebugHUDOpen()) ||
+                (directionSettings.hideOn.chat && Helper.isChatFocused()) ||
+                (directionSettings.hideOn.bossbar && Helper.isBossBarShown()))
             return;
 
         Entity playerCamera = CLIENT.cameraEntity;

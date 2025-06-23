@@ -1,12 +1,17 @@
 package fin.starhud;
 
+import fin.starhud.mixin.accessor.AccessorBossBarHud;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.hud.ClientBossBar;
 import net.minecraft.client.util.Window;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
+
+import java.util.Map;
+import java.util.UUID;
 
 
 public class Helper {
@@ -15,6 +20,8 @@ public class Helper {
     private static final Identifier DURABILITY_BACKGROUND_TEXTURE = Identifier.of("starhud", "hud/durability_background.png");
     private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
     private static final Window WINDOW = CLIENT.getWindow();
+
+    public static final Map<UUID, ClientBossBar> bossBars = ((AccessorBossBarHud) CLIENT.inGameHud.getBossBarHud()).getBossBars();
 
     public enum ScreenAlignmentX {
         LEFT,
@@ -132,5 +139,9 @@ public class Helper {
 
     public static boolean isDebugHUDOpen() {
         return CLIENT.getDebugHud().shouldShowDebugHud();
+    }
+
+    public static boolean isBossBarShown() {
+        return !bossBars.isEmpty();
     }
 }

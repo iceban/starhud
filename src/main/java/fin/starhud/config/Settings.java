@@ -75,6 +75,7 @@ public class Settings implements ConfigData {
         public static class ArmorHideSettings {
             public boolean f3 = false;
             public boolean chat = false;
+            public boolean bossbar = false;
         }
     }
 
@@ -146,6 +147,7 @@ public class Settings implements ConfigData {
         public static class CoordHideSettings {
             public boolean f3 = false;
             public boolean chat = false;
+            public boolean bossbar = false;
         }
     }
 
@@ -202,6 +204,7 @@ public class Settings implements ConfigData {
         public static class DirectionHideSettings {
             public boolean f3 = false;
             public boolean chat = false;
+            public boolean bossbar = false;
         }
     }
 
@@ -237,6 +240,7 @@ public class Settings implements ConfigData {
         public static class FPSHideSettings {
             public boolean f3 = false;
             public boolean chat = false;
+            public boolean bossbar = false;
         }
     }
 
@@ -286,6 +290,7 @@ public class Settings implements ConfigData {
         public static class PingHideSettings {
             public boolean f3 = false;
             public boolean chat = false;
+            public boolean bossbar = false;
         }
 
     }
@@ -325,6 +330,7 @@ public class Settings implements ConfigData {
             public static class ClockSystemHideSettings {
                 public boolean f3 = false;
                 public boolean chat = false;
+                public boolean bossbar = false;
             }
         }
 
@@ -369,6 +375,7 @@ public class Settings implements ConfigData {
             public static class ClockInGameHideSettings {
                 public boolean f3 = false;
                 public boolean chat = false;
+                public boolean bossbar = false;
             }
         }
     }
@@ -417,6 +424,7 @@ public class Settings implements ConfigData {
         public static class BiomeHideSettings {
             public boolean f3 = false;
             public boolean chat = false;
+            public boolean bossbar = false;
         }
     }
 
@@ -448,6 +456,7 @@ public class Settings implements ConfigData {
         public static class InventoryHideSettings {
             public boolean f3 = false;
             public boolean chat = false;
+            public boolean bossbar = false;
         }
     }
 
@@ -491,6 +500,7 @@ public class Settings implements ConfigData {
             public static class LeftHandHideSettings {
                 public boolean f3 = false;
                 public boolean chat = false;
+                public boolean bossbar = false;
             }
         }
 
@@ -529,6 +539,7 @@ public class Settings implements ConfigData {
             public static class RightHandHideSettings {
                 public boolean f3 = false;
                 public boolean chat = false;
+                public boolean bossbar = false;
             }
         }
     }

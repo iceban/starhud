@@ -21,7 +21,10 @@ public class coordinate {
     private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
 
     public static void renderCoordinateHUD(DrawContext context) {
-        if ((coordSettings.hideOn.f3 && Helper.isDebugHUDOpen()) || (coordSettings.hideOn.chat && Helper.isChatFocused())) return;
+        if (    (coordSettings.hideOn.f3 && Helper.isDebugHUDOpen()) ||
+                (coordSettings.hideOn.chat && Helper.isChatFocused()) ||
+                (coordSettings.hideOn.bossbar && Helper.isBossBarShown()))
+            return;
 
         TextRenderer textRenderer = CLIENT.textRenderer;
 
