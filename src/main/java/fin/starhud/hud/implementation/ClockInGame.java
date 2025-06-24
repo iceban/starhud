@@ -1,0 +1,119 @@
+package fin.starhud.hud.implementation;
+
+import fin.starhud.Main;
+import fin.starhud.config.hud.ClockInGameSetting;
+import fin.starhud.hud.AbstractHUD;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gl.RenderPipelines;
+import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.world.ClientWorld;
+import net.minecraft.util.Identifier;
+
+public class ClockInGame extends AbstractHUD {
+
+    private static final ClockInGameSetting clockInGameSetting = Main.settings.clockSetting.inGameSetting;
+
+    private static final Identifier CLOCK_12_TEXTURE = Identifier.of("starhud", "hud/clock_12.png");
+    private static final Identifier CLOCK_24_TEXTURE = Identifier.of("starhud", "hud/clock_24.png");
+
+    private static final int TEXTURE_HEIGHT = 13;
+
+    private static String cachedMinecraftTimeString = "";
+    private static int cachedMinecraftMinute = -1;
+    private static boolean cachedInGameUse12Hour = clockInGameSetting.use12Hour;
+
+    private static final int TEXTURE_INGAME_12_WIDTH = 65;
+    private static final int TEXTURE_INGAME_24_WIDTH = 49;
+
+    private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
+
+    public ClockInGame() {
+        super(clockInGameSetting.base);
+    }
+
+    @Override
+    public void renderHUD(DrawContext context) {
+        ClientWorld world = CLIENT.world;
+
+        if (world == null) return;
+
+        long time = world.getTimeOfDay() % 24000;
+
+        boolean use12Hour = clockInGameSetting.use12Hour;
+
+        int minutes = (int) ((time % 1000) * 3 / 50);
+        int hours = (int) ((time / 1000) + 6) % 24;
+        if (minutes != cachedMinecraftMinute || use12Hour != cachedInGameUse12Hour) {
+            cachedMinecraftMinute = minutes;
+            cachedInGameUse12Hour = use12Hour;
+
+            cachedMinecraftTimeString = use12Hour ?
+                    buildMinecraftCivilianTimeString(hours, minutes) :
+                    buildMinecraftMilitaryTimeString(hours, minutes);
+        }
+
+        int icon = getWeatherOrTime(world);
+        int color = getIconColor(icon) | 0xFF000000;
+
+        if (use12Hour) {
+            context.drawTexture(RenderPipelines.GUI_TEXTURED, CLOCK_12_TEXTURE, x, y, 0.0F, icon * 13, TEXTURE_INGAME_12_WIDTH, TEXTURE_HEIGHT, TEXTURE_INGAME_12_WIDTH, TEXTURE_HEIGHT * 5, color);
+            context.drawText(CLIENT.textRenderer, cachedMinecraftTimeString, x + 19, y + 3, color, false);
+        } else {
+            context.drawTexture(RenderPipelines.GUI_TEXTURED, CLOCK_24_TEXTURE, x, y, 0.0F, icon * 13, TEXTURE_INGAME_24_WIDTH, TEXTURE_HEIGHT, TEXTURE_INGAME_24_WIDTH, TEXTURE_HEIGHT * 5, color);
+            context.drawText(CLIENT.textRenderer, cachedMinecraftTimeString, x + 19, y + 3, color, false);
+        }
+    }
+
+    private static int getIconColor(int icon) {
+        return switch (icon) {
+            case 1 -> clockInGameSetting.color.day;
+            case 2 -> clockInGameSetting.color.night;
+            case 3 -> clockInGameSetting.color.rain;
+            case 4 -> clockInGameSetting.color.thunder;
+            default -> 0xFFFFFF;
+        };
+    }
+
+    private static int getWeatherOrTime(ClientWorld clientWorld) {
+        if (clientWorld.isThundering()) return 4;
+        else if (clientWorld.isRaining()) return 3;
+        else if (clientWorld.isNight()) return 2;
+        else return 1;
+    }
+
+    private static String buildMinecraftMilitaryTimeString(int hours, int minutes) {
+        StringBuilder timeBuilder = new StringBuilder();
+
+        if (hours < 10) timeBuilder.append('0');
+        timeBuilder.append(hours).append(':');
+
+        if (minutes < 10) timeBuilder.append('0');
+        timeBuilder.append(minutes);
+
+        return timeBuilder.toString();
+    }
+
+    private static String buildMinecraftCivilianTimeString(int hours, int minutes) {
+        StringBuilder timeBuilder = new StringBuilder();
+
+        String period = hours >= 12 ? " PM" : " AM";
+
+        // 01.00 until 12.59 AM / PM
+        hours %= 12;
+        if (hours == 0) hours = 12;
+
+        timeBuilder.append(buildMinecraftMilitaryTimeString(hours, minutes)).append(period);
+
+        return timeBuilder.toString();
+    }
+
+    @Override
+    public int getTextureWidth() {
+        return clockInGameSetting.use12Hour ? TEXTURE_INGAME_12_WIDTH : TEXTURE_INGAME_24_WIDTH;
+    }
+
+    @Override
+    public int getTextureHeight() {
+        return TEXTURE_HEIGHT;
+    }
+}

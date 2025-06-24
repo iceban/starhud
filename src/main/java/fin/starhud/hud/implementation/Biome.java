@@ -1,8 +1,9 @@
-package fin.starhud.hud;
+package fin.starhud.hud.implementation;
 
 import fin.starhud.Helper;
 import fin.starhud.Main;
-import fin.starhud.config.Settings;
+import fin.starhud.config.hud.BiomeSetting;
+import fin.starhud.hud.AbstractHUD;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gl.RenderPipelines;
@@ -12,16 +13,15 @@ import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.Biome;
 
-public class biome {
+public class Biome extends AbstractHUD {
 
-    private static final Settings.BiomeSettings biomeSettings = Main.settings.biomeSettings;
+    private static final BiomeSetting biomeSetting = Main.settings.biomeSetting;
 
     private static final Identifier DIMENSION_TEXTURE = Identifier.of("starhud", "hud/biome.png");
 
     private static String cachedFormattedBiomeStr = "";
-    private static RegistryEntry<Biome> cachedBiome;
+    private static RegistryEntry<net.minecraft.world.biome.Biome> cachedBiome;
     private static int cachedTextWidth;
 
     private static final int TEXTURE_WIDTH = 24;
@@ -29,16 +29,18 @@ public class biome {
 
     private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
 
-    public static void renderBiomeIndicatorHUD(DrawContext context) {
-        if (    (biomeSettings.hideOn.f3 && Helper.isDebugHUDOpen()) ||
-                (biomeSettings.hideOn.chat && Helper.isChatFocused()) ||
-                (biomeSettings.hideOn.bossbar && Helper.isBossBarShown()))
-            return;
+    public Biome() {
+        super(biomeSetting.base);
+    }
 
+    @Override
+    public void renderHUD(DrawContext context) {
         TextRenderer textRenderer = CLIENT.textRenderer;
 
         BlockPos blockPos = CLIENT.player.getBlockPos();
-        RegistryEntry<Biome> currentBiome = CLIENT.world.getBiome(blockPos);
+        RegistryEntry<net.minecraft.world.biome.Biome> currentBiome = CLIENT.world.getBiome(blockPos);
+
+        int xTemp = x - Helper.getGrowthDirection(biomeSetting.textGrowth, cachedTextWidth);
 
         if (cachedBiome != currentBiome) {
             cachedFormattedBiomeStr = biomeNameFormatter(currentBiome.getIdAsString());
@@ -46,21 +48,12 @@ public class biome {
             cachedTextWidth = textRenderer.getWidth(cachedFormattedBiomeStr);
         }
 
-        int x = Helper.calculatePositionX(biomeSettings.x, biomeSettings.originX, TEXTURE_WIDTH, biomeSettings.scale)
-                - Helper.getGrowthDirection(biomeSettings.textGrowth, cachedTextWidth);
-        int y = Helper.calculatePositionY(biomeSettings.y, biomeSettings.originY, TEXTURE_HEIGHT, biomeSettings.scale);
-
         int dimensionIcon = getDimensionIcon(CLIENT.world.getRegistryKey());
         int color = getTextColorFromDimension(dimensionIcon) | 0xFF000000;
 
-        context.getMatrices().pushMatrix();
-        Helper.setHUDScale(context, biomeSettings.scale);
-
-        context.drawTexture(RenderPipelines.GUI_TEXTURED, DIMENSION_TEXTURE, x, y, 0.0F, dimensionIcon * TEXTURE_HEIGHT, 13, TEXTURE_HEIGHT, 13, 52);
-        Helper.fillRoundedRightSide(context, x + 14, y, x + 14 + cachedTextWidth + 9, y + TEXTURE_HEIGHT, 0x80000000);
-        context.drawText(CLIENT.textRenderer, cachedFormattedBiomeStr, x + 19, y + 3, color, false);
-
-        context.getMatrices().popMatrix();
+        context.drawTexture(RenderPipelines.GUI_TEXTURED, DIMENSION_TEXTURE, xTemp, y, 0.0F, dimensionIcon * TEXTURE_HEIGHT, 13, TEXTURE_HEIGHT, 13, 52);
+        Helper.fillRoundedRightSide(context, xTemp + 14, y, xTemp + 14 + cachedTextWidth + 9, y + TEXTURE_HEIGHT, 0x80000000);
+        context.drawText(CLIENT.textRenderer, cachedFormattedBiomeStr, xTemp + 19, y + 3, color, false);
     }
 
     private static int getDimensionIcon(RegistryKey<World> registryKey) {
@@ -72,10 +65,10 @@ public class biome {
 
     private static int getTextColorFromDimension(int dimension) {
         return switch (dimension) {
-            case 0 -> biomeSettings.color.overworld;
-            case 1 -> biomeSettings.color.nether;
-            case 2 -> biomeSettings.color.end;
-            default -> biomeSettings.color.custom;
+            case 0 -> biomeSetting.color.overworld;
+            case 1 -> biomeSetting.color.nether;
+            case 2 -> biomeSetting.color.end;
+            default -> biomeSetting.color.custom;
         };
     }
 
@@ -101,5 +94,15 @@ public class biome {
         }
 
         return new String(chars);
+    }
+
+    @Override
+    public int getTextureWidth() {
+        return TEXTURE_WIDTH;
+    }
+
+    @Override
+    public int getTextureHeight() {
+        return TEXTURE_HEIGHT;
     }
 }

@@ -8,5 +8,5 @@
   "client": [
     "MixinInGameHUD",
     "accessor.AccessorBossBarHud"
-    ]
+  ]
 }

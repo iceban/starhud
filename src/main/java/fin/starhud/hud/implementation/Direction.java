@@ -1,18 +1,17 @@
-package fin.starhud.hud;
+package fin.starhud.hud.implementation;
 
-import fin.starhud.Helper;
 import fin.starhud.Main;
-import fin.starhud.config.Settings;
+import fin.starhud.config.hud.DirectionSetting;
+import fin.starhud.hud.AbstractHUD;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.entity.Entity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 
-public class direction {
+public class Direction extends AbstractHUD {
 
-    private static final Settings.DirectionSettings directionSettings = Main.settings.directionSettings;
+    private static final DirectionSetting directionSetting = Main.settings.directionSetting;
 
     private static final Identifier DIRECTION_CARDINAL_TEXTURE = Identifier.of("starhud", "hud/direction.png");
     private static final Identifier DIRECTION_ORDINAL_TEXTURE = Identifier.of("starhud", "hud/direction_ordinal.png");
@@ -30,25 +29,17 @@ public class direction {
 
     private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
 
-    public static void renderDirectionHUD(DrawContext context) {
-        if (    (directionSettings.hideOn.f3 && Helper.isDebugHUDOpen()) ||
-                (directionSettings.hideOn.chat && Helper.isChatFocused()) ||
-                (directionSettings.hideOn.bossbar && Helper.isBossBarShown()))
-            return;
+    public Direction() {
+        super(directionSetting.base);
+    }
 
-        Entity playerCamera = CLIENT.cameraEntity;
+    @Override
+    public void renderHUD(DrawContext context) {
+        float yaw = Math.round(MathHelper.wrapDegrees(CLIENT.cameraEntity.getYaw()) * 10.0F) / 10.0F;
 
-        float yaw = Math.round(MathHelper.wrapDegrees(playerCamera.getYaw()) * 10.0F) / 10.0F;
-
-        context.getMatrices().pushMatrix();
-        Helper.setHUDScale(context, directionSettings.scale);
-
-        if (directionSettings.includeOrdinal) {
+        if (directionSetting.includeOrdinal) {
             int icon = getOrdinalDirectionIcon(yaw);
             int color = getDirectionColor(icon) | 0xFF000000;
-
-            int x = Helper.calculatePositionX(directionSettings.x, directionSettings.originX, TEXTURE_ORDINAL_WIDTH, directionSettings.scale);
-            int y = Helper.calculatePositionY(directionSettings.y, directionSettings.originY, TEXTURE_HEIGHT, directionSettings.scale);
 
             context.drawTexture(RenderPipelines.GUI_TEXTURED, DIRECTION_ORDINAL_TEXTURE, x, y, 0.0F, icon * 13, TEXTURE_ORDINAL_WIDTH, TEXTURE_HEIGHT, TEXTURE_ORDINAL_WIDTH, TEXTURE_HEIGHT * ORDINAL_ICON_AMOUNT, color);
             context.drawText(CLIENT.textRenderer, Float.toString(yaw), x + ORDINAL_TEXT_OFFSET, y + 3, color, false);
@@ -56,14 +47,9 @@ public class direction {
             int icon = getCardinalDirectionIcon(yaw);
             int color = getDirectionColor(icon * 2) | 0xFF000000;
 
-            int x = Helper.calculatePositionX(directionSettings.x, directionSettings.originX, TEXTURE_CARDINAL_WIDTH, directionSettings.scale);
-            int y = Helper.calculatePositionY(directionSettings.y, directionSettings.originY, TEXTURE_HEIGHT, directionSettings.scale);
-
             context.drawTexture(RenderPipelines.GUI_TEXTURED, DIRECTION_CARDINAL_TEXTURE, x, y, 0.0F, icon * 13, TEXTURE_CARDINAL_WIDTH, TEXTURE_HEIGHT, TEXTURE_CARDINAL_WIDTH, TEXTURE_HEIGHT * CARDINAL_ICON_AMOUNT, color);
             context.drawText(CLIENT.textRenderer, Float.toString(yaw), x + CARDINAL_TEXT_OFFSET, y + 3, color, false);
         }
-
-        context.getMatrices().popMatrix();
     }
 
     private static int getOrdinalDirectionIcon(float yaw) {
@@ -88,15 +74,25 @@ public class direction {
 
     private static int getDirectionColor(int icon) {
         return switch (icon) {
-            case 0 -> directionSettings.directionColor.s;
-            case 1 -> directionSettings.directionColor.sw;
-            case 2 -> directionSettings.directionColor.w;
-            case 3 -> directionSettings.directionColor.nw;
-            case 4 -> directionSettings.directionColor.n;
-            case 5 -> directionSettings.directionColor.ne;
-            case 6 -> directionSettings.directionColor.e;
-            case 7 -> directionSettings.directionColor.se;
+            case 0 -> directionSetting.directionColor.s;
+            case 1 -> directionSetting.directionColor.sw;
+            case 2 -> directionSetting.directionColor.w;
+            case 3 -> directionSetting.directionColor.nw;
+            case 4 -> directionSetting.directionColor.n;
+            case 5 -> directionSetting.directionColor.ne;
+            case 6 -> directionSetting.directionColor.e;
+            case 7 -> directionSetting.directionColor.se;
             default -> 0xFFFFFF;
         };
+    }
+
+    @Override
+    public int getTextureWidth() {
+        return directionSetting.includeOrdinal ? TEXTURE_ORDINAL_WIDTH : TEXTURE_CARDINAL_WIDTH;
+    }
+
+    @Override
+    public int getTextureHeight() {
+        return TEXTURE_HEIGHT;
     }
 }

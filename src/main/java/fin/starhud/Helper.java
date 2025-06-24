@@ -1,17 +1,15 @@
 package fin.starhud;
 
+import fin.starhud.helper.GrowthDirectionX;
+import fin.starhud.helper.ScreenAlignmentX;
+import fin.starhud.helper.ScreenAlignmentY;
 import fin.starhud.mixin.accessor.AccessorBossBarHud;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.hud.ClientBossBar;
-import net.minecraft.client.util.Window;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
-
-import java.util.Map;
-import java.util.UUID;
 
 
 public class Helper {
@@ -19,91 +17,13 @@ public class Helper {
     private static final Identifier DURABILITY_TEXTURE = Identifier.of("starhud", "hud/durability.png");
     private static final Identifier DURABILITY_BACKGROUND_TEXTURE = Identifier.of("starhud", "hud/durability_background.png");
     private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
-    private static final Window WINDOW = CLIENT.getWindow();
 
-    public static final Map<UUID, ClientBossBar> bossBars = ((AccessorBossBarHud) CLIENT.inGameHud.getBossBarHud()).getBossBars();
-
-    public enum ScreenAlignmentX {
-        LEFT,
-        CENTER,
-        RIGHT
-    }
-
-    public enum ScreenAlignmentY {
-        TOP,
-        MIDDLE,
-        BOTTOM,
-    }
-
-    public enum GrowthDirection {
-        LEFT,
-        CENTER,
-        RIGHT,
-    }
-
-    public static int defaultHUDAlignmentX(ScreenAlignmentX alignmentX, int scaledWidth) {
-        return switch (alignmentX) {
-            case LEFT -> 0;
-            case CENTER -> scaledWidth / 2;
-            case RIGHT -> scaledWidth;
-        };
-    }
-
-    public static int defaultHUDAlignmentY(ScreenAlignmentY alignmentY, int scaledHeight) {
-        return switch (alignmentY) {
-            case TOP -> 0;
-            case MIDDLE -> scaledHeight / 2;
-            case BOTTOM -> scaledHeight;
-        };
-    }
-
-    public static int calculateTextureOffsetX(ScreenAlignmentX alignmentX, int textureWidth) {
-        return switch (alignmentX) {
-            case LEFT -> 0;
-            case CENTER -> textureWidth / 2;
-            case RIGHT -> textureWidth;
-        };
-    }
-
-    public static int calculateTextureOffsetY(ScreenAlignmentY alignmentY, int textureHeight) {
-        return switch (alignmentY) {
-            case TOP -> 0;
-            case MIDDLE -> textureHeight / 2;
-            case BOTTOM -> textureHeight;
-        };
-    }
-
-    public static int getGrowthDirection(GrowthDirection growthDirection, int growableWidth) {
+    public static int getGrowthDirection(GrowthDirectionX growthDirection, int growableWidth) {
         return switch (growthDirection) {
             case LEFT -> growableWidth;
             case CENTER -> growableWidth / 2;
             case RIGHT -> 0;
         };
-    }
-
-    public static float scaledX(int scale) {
-        return scale == 0 ? 1 : (float) WINDOW.getScaleFactor() / scale;
-    }
-
-    public static float scaledY(int scale) {
-        return scale == 0 ? 1 : (float) WINDOW.getScaleFactor() / scale;
-    }
-
-    public static int calculatePositionX(int x, ScreenAlignmentX alignmentX, int HUDWidth, int HUDScale) {
-        return x + (int) (defaultHUDAlignmentX(alignmentX, WINDOW.getScaledWidth()) * scaledX(HUDScale)) - calculateTextureOffsetX(alignmentX, HUDWidth);
-    }
-
-    public static int calculatePositionY(int y, ScreenAlignmentY alignmentY, int HUDHeight, int HUDScale) {
-        return y + (int) (defaultHUDAlignmentY(alignmentY, WINDOW.getScaledHeight()) * scaledY(HUDScale)) - calculateTextureOffsetY(alignmentY, HUDHeight);
-    }
-
-    public static void setHUDScale(DrawContext context, int scale) {
-        if (scale == 0) return;
-
-        float scaleFactor = scale / (float) WINDOW.getScaleFactor();
-
-        if (scaleFactor == 1) return;
-        context.getMatrices().scale(scaleFactor, scaleFactor);
     }
 
     public static void fillRoundedRightSide(DrawContext context, int x1, int y1, int x2, int y2, int color) {
@@ -142,6 +62,6 @@ public class Helper {
     }
 
     public static boolean isBossBarShown() {
-        return !bossBars.isEmpty();
+        return !((AccessorBossBarHud) CLIENT.inGameHud.getBossBarHud()).getBossBars().isEmpty();
     }
 }

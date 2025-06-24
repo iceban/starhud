@@ -1,18 +1,18 @@
-package fin.starhud.hud;
+package fin.starhud.hud.implementation;
 
-import fin.starhud.Helper;
 import fin.starhud.Main;
-import fin.starhud.config.Settings;
+import fin.starhud.config.hud.InventorySetting;
+import fin.starhud.hud.AbstractHUD;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 
-public class inventory {
+public class Inventory extends AbstractHUD {
 
+    private static final InventorySetting inventorySetting = Main.settings.inventorySetting;
     private static final Identifier INVENTORY_TEXTURE = Identifier.of("starhud", "hud/inventory.png");
     private static final Identifier INVENTORY_TEXTURE_VERTICAL = Identifier.of("starhud", "hud/inventory_vertical.png");
 
@@ -22,11 +22,12 @@ public class inventory {
     private static final int[] SLOT_X_VERTICAL = new int[27];
     private static final int[] SLOT_Y_VERTICAL = new int[27];
 
-    private static final Settings.InventorySettings inventorySettings = Main.settings.inventorySettings;
-
     // 9 inventory slots + 8 for each gap.
-    private static final int TEXTURE_WIDTH = 22 * 9 + 8;
-    private static final int TEXTURE_HEIGHT = 68;
+    private static final int TEXTURE_WIDTH_HORIZONTAL = 22 * 9 + 8;
+    private static final int TEXTURE_HEIGHT_HORIZONTAL = 68;
+
+    private static final int TEXTURE_WIDTH_VERTICAL = 68;
+    private static final int TEXTURE_HEIGHT_VERTICAL = 22 * 9 + 8;
 
     private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
 
@@ -35,55 +36,23 @@ public class inventory {
         preComputeVertical();
     }
 
-    public static void renderInventoryHUD(DrawContext context) {
-        if (    (inventorySettings.hideOn.f3 && Helper.isDebugHUDOpen()) ||
-                (inventorySettings.hideOn.chat && Helper.isChatFocused()) ||
-                (inventorySettings.hideOn.bossbar && Helper.isBossBarShown()))
-            return;
+    public Inventory() {
+        super(inventorySetting.base);
+    }
 
-        PlayerInventory playerInventory = CLIENT.player.getInventory();
-
-        context.getMatrices().pushMatrix();
-        Helper.setHUDScale(context, inventorySettings.scale);
-
-        if (inventorySettings.drawVertical) {
-            int x = Helper.calculatePositionX(inventorySettings.x, inventorySettings.originX, TEXTURE_HEIGHT, inventorySettings.scale);
-            int y = Helper.calculatePositionY(inventorySettings.y, inventorySettings.originY, TEXTURE_WIDTH, inventorySettings.scale);
-            drawInventoryVertical(playerInventory, context, x, y);
+    @Override
+    public void renderHUD(DrawContext context) {
+        if (inventorySetting.drawVertical) {
+            drawInventoryVertical(context, x, y);
         } else {
-            int x = Helper.calculatePositionX(inventorySettings.x, inventorySettings.originX, TEXTURE_WIDTH, inventorySettings.scale);
-            int y = Helper.calculatePositionY(inventorySettings.y, inventorySettings.originY, TEXTURE_HEIGHT, inventorySettings.scale);
-            drawInventoryHorizontal(playerInventory, context, x, y);
-        }
-
-        context.getMatrices().popMatrix();
-    }
-
-    private static void drawInventoryVertical(PlayerInventory inventory, DrawContext context, int x, int y) {
-        boolean foundItem = false;
-
-        for (int i = 0; i < 27; ++i) {
-
-            ItemStack stack = inventory.getMainStacks().get(i + 9);
-
-            if (!stack.isEmpty()) {
-
-                if (!foundItem) {
-                    foundItem = true;
-                    context.drawTexture(RenderPipelines.GUI_TEXTURED, INVENTORY_TEXTURE_VERTICAL, x, y, 0.0F, 0.0F, TEXTURE_HEIGHT, TEXTURE_WIDTH, TEXTURE_HEIGHT, TEXTURE_WIDTH);
-                }
-
-                int x1 = x + SLOT_X_VERTICAL[i];
-                int y1 = y + SLOT_Y_VERTICAL[i];
-
-                context.drawItem(stack, x1, y1);
-                context.drawStackOverlay(CLIENT.textRenderer, stack, x1, y1);
-            }
+            drawInventoryHorizontal(context, x, y);
         }
     }
 
-    private static void drawInventoryHorizontal(PlayerInventory inventory, DrawContext context, int x, int y) {
+    private static void drawInventoryVertical(DrawContext context, int x, int y) {
+        PlayerInventory inventory = CLIENT.player.getInventory();
         boolean foundItem = false;
+
         for (int itemIndex = 0; itemIndex < 27; ++itemIndex) {
 
             ItemStack stack = inventory.getMainStacks().get(itemIndex + 9);
@@ -92,7 +61,31 @@ public class inventory {
 
                 if (!foundItem) {
                     foundItem = true;
-                    context.drawTexture(RenderPipelines.GUI_TEXTURED, INVENTORY_TEXTURE, x, y, 0.0F, 0.0F, TEXTURE_WIDTH, TEXTURE_HEIGHT, TEXTURE_WIDTH, TEXTURE_HEIGHT);
+                    context.drawTexture(RenderPipelines.GUI_TEXTURED, INVENTORY_TEXTURE_VERTICAL, x, y, 0.0F, 0.0F, TEXTURE_WIDTH_VERTICAL, TEXTURE_HEIGHT_VERTICAL, TEXTURE_WIDTH_VERTICAL, TEXTURE_HEIGHT_VERTICAL);
+                }
+
+                int x1 = x + SLOT_X_VERTICAL[itemIndex];
+                int y1 = y + SLOT_Y_VERTICAL[itemIndex];
+
+                context.drawItem(stack, x1, y1);
+                context.drawStackOverlay(CLIENT.textRenderer, stack, x1, y1);
+            }
+        }
+    }
+
+    private static void drawInventoryHorizontal(DrawContext context, int x, int y) {
+        PlayerInventory inventory = CLIENT.player.getInventory();
+        boolean foundItem = false;
+
+        for (int itemIndex = 0; itemIndex < 27; ++itemIndex) {
+
+            ItemStack stack = inventory.getMainStacks().get(itemIndex + 9);
+
+            if (!stack.isEmpty()) {
+
+                if (!foundItem) {
+                    foundItem = true;
+                    context.drawTexture(RenderPipelines.GUI_TEXTURED, INVENTORY_TEXTURE, x, y, 0.0F, 0.0F, TEXTURE_WIDTH_HORIZONTAL, TEXTURE_HEIGHT_HORIZONTAL, TEXTURE_WIDTH_HORIZONTAL, TEXTURE_HEIGHT_HORIZONTAL);
                 }
 
                 int x1 = x + SLOT_X_HORIZONTAL[itemIndex];
@@ -138,5 +131,17 @@ public class inventory {
 
             y1 += 23;
         }
+    }
+
+    // if vertical, flip the width with the height.
+
+    @Override
+    public int getTextureWidth() {
+        return inventorySetting.drawVertical ? TEXTURE_WIDTH_VERTICAL : TEXTURE_WIDTH_HORIZONTAL;
+    }
+
+    @Override
+    public int getTextureHeight() {
+        return inventorySetting.drawVertical ? TEXTURE_HEIGHT_VERTICAL : TEXTURE_HEIGHT_HORIZONTAL;
     }
 }
