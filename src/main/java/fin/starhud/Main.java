@@ -19,5 +19,11 @@ public class Main implements ClientModInitializer {
     public void onInitializeClient() {
         AutoConfig.register(Settings.class, GsonConfigSerializer::new);
         settings = AutoConfig.getConfigHolder(Settings.class).getConfig();
+        AutoConfig.getConfigHolder(Settings.class).registerSaveListener(this::onConfigSaved);
+    }
+
+    private ActionResult onConfigSaved(ConfigHolder<Settings> holder, Settings config) {
+        HUDComponent.updateAll();
+        return ActionResult.SUCCESS;
     }
 }

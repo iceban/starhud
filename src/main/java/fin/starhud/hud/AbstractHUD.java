@@ -64,10 +64,8 @@ public abstract class AbstractHUD implements HUDInterface {
     }
 
     @Override
-    public void setXY() {
-        updateX();
+    public void modifyXY() {
         modifyX();
-        updateY();
         modifyY();
     }
 
