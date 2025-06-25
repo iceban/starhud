@@ -1,7 +1,7 @@
 package fin.starhud.hud.implementation;
 
 import fin.starhud.Main;
-import fin.starhud.config.hud.CoordSetting;
+import fin.starhud.config.hud.CoordSettings;
 import fin.starhud.hud.AbstractHUD;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
@@ -12,7 +12,7 @@ import net.minecraft.util.math.Vec3d;
 
 public class Coordinate extends AbstractHUD {
 
-    private static final CoordSetting coordSetting = Main.settings.coordSetting;
+    private static final CoordSettings COORD_SETTINGS = Main.settings.coordSettings;
 
     private static final Identifier COORD_TEXTURE = Identifier.of("starhud", "hud/coordinate.png");
 
@@ -22,7 +22,7 @@ public class Coordinate extends AbstractHUD {
     private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
 
     public Coordinate() {
-        super(coordSetting.base);
+        super(COORD_SETTINGS.base);
     }
 
     @Override
@@ -34,16 +34,16 @@ public class Coordinate extends AbstractHUD {
         String coordY = Integer.toString((int) vec3d.y);
         String coordZ = Integer.toString((int) vec3d.z);
 
-        int colorX = coordSetting.X.color | 0xFF000000;
-        int colorY = coordSetting.Y.color | 0xFF000000;
-        int colorZ = coordSetting.Z.color | 0xFF000000;
+        int colorX = COORD_SETTINGS.X.color | 0xFF000000;
+        int colorY = COORD_SETTINGS.Y.color | 0xFF000000;
+        int colorZ = COORD_SETTINGS.Z.color | 0xFF000000;
 
-        if (coordSetting.X.shouldRender)
-            renderEachCoordinate(context, textRenderer, coordX, x + coordSetting.X.xOffset, y + coordSetting.X.yOffset, 0.0F, TEXTURE_WIDTH, TEXTURE_HEIGHT, colorX);
-        if (coordSetting.Y.shouldRender)
-            renderEachCoordinate(context, textRenderer, coordY, x + coordSetting.Y.xOffset, y + coordSetting.Y.yOffset, 14.0F, TEXTURE_WIDTH, TEXTURE_HEIGHT, colorY);
-        if (coordSetting.Z.shouldRender)
-            renderEachCoordinate(context, textRenderer, coordZ, x + coordSetting.Z.xOffset, y + coordSetting.Z.yOffset, 28.0F, TEXTURE_WIDTH, TEXTURE_HEIGHT, colorZ);
+        if (COORD_SETTINGS.X.shouldRender)
+            renderEachCoordinate(context, textRenderer, coordX, x + COORD_SETTINGS.X.xOffset, y + COORD_SETTINGS.X.yOffset, 0.0F, TEXTURE_WIDTH, TEXTURE_HEIGHT, colorX);
+        if (COORD_SETTINGS.Y.shouldRender)
+            renderEachCoordinate(context, textRenderer, coordY, x + COORD_SETTINGS.Y.xOffset, y + COORD_SETTINGS.Y.yOffset, 14.0F, TEXTURE_WIDTH, TEXTURE_HEIGHT, colorY);
+        if (COORD_SETTINGS.Z.shouldRender)
+            renderEachCoordinate(context, textRenderer, coordZ, x + COORD_SETTINGS.Z.xOffset, y + COORD_SETTINGS.Z.yOffset, 28.0F, TEXTURE_WIDTH, TEXTURE_HEIGHT, colorZ);
 
     }
 

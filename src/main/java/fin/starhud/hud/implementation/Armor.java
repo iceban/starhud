@@ -2,7 +2,7 @@ package fin.starhud.hud.implementation;
 
 import fin.starhud.Helper;
 import fin.starhud.Main;
-import fin.starhud.config.hud.ArmorSetting;
+import fin.starhud.config.hud.ArmorSettings;
 import fin.starhud.hud.AbstractHUD;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
@@ -13,7 +13,7 @@ import net.minecraft.util.Identifier;
 
 public class Armor extends AbstractHUD {
 
-    private static final ArmorSetting armorSetting = Main.settings.armorSetting;
+    private static final ArmorSettings ARMOR_SETTINGS = Main.settings.armorSettings;
 
     private static final Identifier ARMOR_BACKGROUND_TEXTURE = Identifier.of("starhud", "hud/armor.png");
 
@@ -27,7 +27,7 @@ public class Armor extends AbstractHUD {
     private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
 
     public Armor() {
-        super(armorSetting.base);
+        super(ARMOR_SETTINGS.base);
     }
 
     @Override
@@ -69,18 +69,18 @@ public class Armor extends AbstractHUD {
         updateX();
         updateY();
 
-        X_OFFSETS[0] = armorSetting.helmet.xOffset;
-        Y_OFFSETS[0] = armorSetting.helmet.yOffset;
-        X_OFFSETS[1] = armorSetting.chestplate.xOffset;
-        Y_OFFSETS[1] = armorSetting.chestplate.yOffset;
-        X_OFFSETS[2] = armorSetting.leggings.xOffset;
-        Y_OFFSETS[2] = armorSetting.leggings.yOffset;
-        X_OFFSETS[3] = armorSetting.boots.xOffset;
-        Y_OFFSETS[3] = armorSetting.boots.yOffset;
+        X_OFFSETS[0] = ARMOR_SETTINGS.helmet.xOffset;
+        Y_OFFSETS[0] = ARMOR_SETTINGS.helmet.yOffset;
+        X_OFFSETS[1] = ARMOR_SETTINGS.chestplate.xOffset;
+        Y_OFFSETS[1] = ARMOR_SETTINGS.chestplate.yOffset;
+        X_OFFSETS[2] = ARMOR_SETTINGS.leggings.xOffset;
+        Y_OFFSETS[2] = ARMOR_SETTINGS.leggings.yOffset;
+        X_OFFSETS[3] = ARMOR_SETTINGS.boots.xOffset;
+        Y_OFFSETS[3] = ARMOR_SETTINGS.boots.yOffset;
 
-        SHOULD_RENDER[0] = armorSetting.helmet.shouldRender;
-        SHOULD_RENDER[1] = armorSetting.chestplate.shouldRender;
-        SHOULD_RENDER[2] = armorSetting.leggings.shouldRender;
-        SHOULD_RENDER[3] = armorSetting.boots.shouldRender;
+        SHOULD_RENDER[0] = ARMOR_SETTINGS.helmet.shouldRender;
+        SHOULD_RENDER[1] = ARMOR_SETTINGS.chestplate.shouldRender;
+        SHOULD_RENDER[2] = ARMOR_SETTINGS.leggings.shouldRender;
+        SHOULD_RENDER[3] = ARMOR_SETTINGS.boots.shouldRender;
     }
 }

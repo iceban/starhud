@@ -14,47 +14,47 @@ public class Settings implements ConfigData {
 
     @ConfigEntry.Category("armor")
     @ConfigEntry.Gui.TransitiveObject
-    public ArmorSetting armorSetting = new ArmorSetting();
+    public ArmorSettings armorSettings = new ArmorSettings();
 
     @ConfigEntry.Category("fps")
     @ConfigEntry.Gui.TransitiveObject
-    public FPSSetting fpsSetting = new FPSSetting();
+    public FPSSettings fpsSettings = new FPSSettings();
 
     @ConfigEntry.Category("coord")
     @ConfigEntry.Gui.TransitiveObject
-    public CoordSetting coordSetting = new CoordSetting();
+    public CoordSettings coordSettings = new CoordSettings();
 
     @ConfigEntry.Category("direction")
     @ConfigEntry.Gui.TransitiveObject
-    public DirectionSetting directionSetting = new DirectionSetting();
+    public DirectionSettings directionSettings = new DirectionSettings();
 
     @ConfigEntry.Category("ping")
     @ConfigEntry.Gui.TransitiveObject
-    public PingSetting pingSetting = new PingSetting();
+    public PingSettings pingSettings = new PingSettings();
 
     @ConfigEntry.Category("clock")
     @ConfigEntry.Gui.TransitiveObject
-    public ClockSetting clockSetting = new ClockSetting();
+    public ClockSettings clockSettings = new ClockSettings();
 
-    public static class ClockSetting {
+    public static class ClockSettings {
         @ConfigEntry.Gui.CollapsibleObject
-        public ClockSystemSetting systemSetting = new ClockSystemSetting();
+        public ClockSystemSettings systemSetting = new ClockSystemSettings();
 
         @ConfigEntry.Gui.CollapsibleObject
-        public ClockInGameSetting inGameSetting = new ClockInGameSetting();
+        public ClockInGameSettings inGameSetting = new ClockInGameSettings();
     }
 
     @ConfigEntry.Category("day")
     @ConfigEntry.Gui.TransitiveObject
-    public DaySetting daySetting = new DaySetting();
+    public DaySettings daySettings = new DaySettings();
 
     @ConfigEntry.Category("biome")
     @ConfigEntry.Gui.TransitiveObject
-    public BiomeSetting biomeSetting = new BiomeSetting();
+    public BiomeSettings biomeSettings = new BiomeSettings();
 
     @ConfigEntry.Category("inventory")
     @ConfigEntry.Gui.TransitiveObject
-    public InventorySetting inventorySetting = new InventorySetting();
+    public InventorySettings inventorySettings = new InventorySettings();
 
     @ConfigEntry.Category("hand")
     @ConfigEntry.Gui.TransitiveObject
@@ -62,9 +62,9 @@ public class Settings implements ConfigData {
 
     public static class HandSettings {
         @ConfigEntry.Gui.CollapsibleObject
-        public HandSetting leftHandSetting = new HandSetting(true, -108, -25, ScreenAlignmentX.CENTER, ScreenAlignmentY.BOTTOM, GrowthDirectionX.LEFT, 0xffb3b3);
+        public fin.starhud.config.hud.HandSettings leftHandSettings = new fin.starhud.config.hud.HandSettings(true, -108, -25, ScreenAlignmentX.CENTER, ScreenAlignmentY.BOTTOM, GrowthDirectionX.LEFT, 0xffb3b3);
 
         @ConfigEntry.Gui.CollapsibleObject
-        public HandSetting rightHandSetting = new HandSetting(true, 108, -25, ScreenAlignmentX.CENTER, ScreenAlignmentY.BOTTOM, GrowthDirectionX.RIGHT, 0x87ceeb);
+        public fin.starhud.config.hud.HandSettings rightHandSettings = new fin.starhud.config.hud.HandSettings(true, 108, -25, ScreenAlignmentX.CENTER, ScreenAlignmentY.BOTTOM, GrowthDirectionX.RIGHT, 0x87ceeb);
     }
 }

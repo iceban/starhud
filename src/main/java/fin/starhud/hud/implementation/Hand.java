@@ -1,7 +1,7 @@
 package fin.starhud.hud.implementation;
 
 import fin.starhud.Helper;
-import fin.starhud.config.hud.HandSetting;
+import fin.starhud.config.hud.HandSettings;
 import fin.starhud.hud.AbstractHUD;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
@@ -33,11 +33,11 @@ public abstract class Hand extends AbstractHUD {
 
     private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
 
-    private final HandSetting handSetting;
+    private final HandSettings handSettings;
 
-    public Hand(HandSetting handSetting) {
-        super(handSetting.base);
-        this.handSetting = handSetting;
+    public Hand(HandSettings handSettings) {
+        super(handSettings.base);
+        this.handSettings = handSettings;
     }
 
     public void renderHandHUD(DrawContext context, Arm arm, int x, int y) {
@@ -52,12 +52,12 @@ public abstract class Hand extends AbstractHUD {
         if (item.isEmpty()) return;
 
         // either draw the durability or the amount of item in the inventory.
-        if (handSetting.showDurability && item.isDamageable()) {
-            x -= handSetting.textureGrowth.getGrowthDirection(DURABILITY_WIDTH);
-            Helper.renderItemDurabilityHUD(context, HAND_TEXTURE, item, x, y, startV(), COUNT_WIDTH + TEXTURE_WIDTH, 27, handSetting.color | 0xFF000000);
-        } else if (handSetting.showCount) {
-            x -= handSetting.textureGrowth.getGrowthDirection(COUNT_WIDTH);
-            renderItemCountHUD(context, CLIENT.textRenderer, playerInventory, item, x, y, startV(), handSetting.color | 0xFF000000);
+        if (handSettings.showDurability && item.isDamageable()) {
+            x -= handSettings.textureGrowth.getGrowthDirection(DURABILITY_WIDTH);
+            Helper.renderItemDurabilityHUD(context, HAND_TEXTURE, item, x, y, startV(), COUNT_WIDTH + TEXTURE_WIDTH, 27, handSettings.color | 0xFF000000);
+        } else if (handSettings.showCount) {
+            x -= handSettings.textureGrowth.getGrowthDirection(COUNT_WIDTH);
+            renderItemCountHUD(context, CLIENT.textRenderer, playerInventory, item, x, y, startV(), handSettings.color | 0xFF000000);
         }
     }
 

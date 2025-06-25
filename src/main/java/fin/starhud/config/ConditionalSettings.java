@@ -2,7 +2,7 @@ package fin.starhud.config;
 
 import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
 
-public class ConditionalSetting {
+public class ConditionalSettings {
 
     @Comment("Enable this HUD To be Rendered")
     public boolean shouldRender;
@@ -13,7 +13,7 @@ public class ConditionalSetting {
     @Comment("Shifts this HUD in the Y Axis")
     public int yOffset;
 
-    public ConditionalSetting(boolean shouldRender, int xOffset, int yOffset) {
+    public ConditionalSettings(boolean shouldRender, int xOffset, int yOffset) {
         this.shouldRender = shouldRender;
         this.xOffset = xOffset;
         this.yOffset = yOffset;

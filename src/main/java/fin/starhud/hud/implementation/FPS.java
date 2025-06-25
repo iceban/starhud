@@ -1,7 +1,7 @@
 package fin.starhud.hud.implementation;
 
 import fin.starhud.Main;
-import fin.starhud.config.hud.FPSSetting;
+import fin.starhud.config.hud.FPSSettings;
 import fin.starhud.hud.AbstractHUD;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.RenderPipelines;
@@ -10,7 +10,7 @@ import net.minecraft.util.Identifier;
 
 public class FPS extends AbstractHUD {
 
-    private static final FPSSetting fpsSetting = Main.settings.fpsSetting;
+    private static final FPSSettings FPS_SETTINGS = Main.settings.fpsSettings;
 
     private static final Identifier FPS_TEXTURE = Identifier.of("starhud", "hud/fps.png");
 
@@ -20,13 +20,13 @@ public class FPS extends AbstractHUD {
     private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
 
     public FPS() {
-        super(fpsSetting.base);
+        super(FPS_SETTINGS.base);
     }
 
     @Override
     public void renderHUD(DrawContext context) {
         String fpsStr = CLIENT.getCurrentFps() + " FPS";
-        int color = fpsSetting.color | 0xFF000000;
+        int color = FPS_SETTINGS.color | 0xFF000000;
 
         context.drawTexture(RenderPipelines.GUI_TEXTURED, FPS_TEXTURE, x, y, 0.0F, 0.0F, TEXTURE_WIDTH, TEXTURE_HEIGHT, TEXTURE_WIDTH, TEXTURE_HEIGHT, color);
         context.drawText(CLIENT.textRenderer, fpsStr, x + 19, y + 3, color, false);

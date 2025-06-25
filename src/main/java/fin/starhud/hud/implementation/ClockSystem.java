@@ -1,7 +1,7 @@
 package fin.starhud.hud.implementation;
 
 import fin.starhud.Main;
-import fin.starhud.config.hud.ClockSystemSetting;
+import fin.starhud.config.hud.ClockSystemSettings;
 import fin.starhud.hud.AbstractHUD;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.RenderPipelines;
@@ -13,7 +13,7 @@ import java.util.Date;
 
 public class ClockSystem extends AbstractHUD {
 
-    private static final ClockSystemSetting clockSystemSetting = Main.settings.clockSetting.systemSetting;
+    private static final ClockSystemSettings CLOCK_SYSTEM_SETTINGS = Main.settings.clockSettings.systemSetting;
 
     private static final Identifier CLOCK_12_TEXTURE = Identifier.of("starhud", "hud/clock_12.png");
     private static final Identifier CLOCK_24_TEXTURE = Identifier.of("starhud", "hud/clock_24.png");
@@ -25,7 +25,7 @@ public class ClockSystem extends AbstractHUD {
 
     private static String cachedSystemTimeString = buildSystemTime24String(System.currentTimeMillis());
     private static long cachedSystemMinute = -1;
-    private static boolean cachedSystemUse12Hour = clockSystemSetting.use12Hour;
+    private static boolean cachedSystemUse12Hour = CLOCK_SYSTEM_SETTINGS.use12Hour;
 
     private static final int TEXTURE_SYSTEM_12_WIDTH = 65;
     private static final int TEXTURE_SYSTEM_24_WIDTH = 49;
@@ -33,7 +33,7 @@ public class ClockSystem extends AbstractHUD {
     private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
 
     public ClockSystem() {
-        super(clockSystemSetting.base);
+        super(CLOCK_SYSTEM_SETTINGS.base);
     }
 
     @Override
@@ -42,7 +42,7 @@ public class ClockSystem extends AbstractHUD {
         long currentTime = System.currentTimeMillis();
         long minute = currentTime / 60000;
 
-        boolean use12Hour = clockSystemSetting.use12Hour;
+        boolean use12Hour = CLOCK_SYSTEM_SETTINGS.use12Hour;
 
         // update on either a new minute or user updated the config
         if (minute != cachedSystemMinute || use12Hour != cachedSystemUse12Hour) {
@@ -54,7 +54,7 @@ public class ClockSystem extends AbstractHUD {
                     buildSystemTime24String(currentTime);
         }
 
-        int color = clockSystemSetting.color | 0xFF000000;
+        int color = CLOCK_SYSTEM_SETTINGS.color | 0xFF000000;
 
         if (use12Hour) {
             context.drawTexture(RenderPipelines.GUI_TEXTURED, CLOCK_12_TEXTURE, x, y, 0.0F, 0.0F, TEXTURE_SYSTEM_12_WIDTH, TEXTURE_HEIGHT, TEXTURE_SYSTEM_12_WIDTH, TEXTURE_HEIGHT * 5, color);
@@ -75,7 +75,7 @@ public class ClockSystem extends AbstractHUD {
 
     @Override
     public int getTextureWidth() {
-        return clockSystemSetting.use12Hour ? TEXTURE_SYSTEM_12_WIDTH : TEXTURE_SYSTEM_24_WIDTH;
+        return CLOCK_SYSTEM_SETTINGS.use12Hour ? TEXTURE_SYSTEM_12_WIDTH : TEXTURE_SYSTEM_24_WIDTH;
     }
 
     @Override

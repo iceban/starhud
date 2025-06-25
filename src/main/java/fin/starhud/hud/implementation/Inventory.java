@@ -1,7 +1,7 @@
 package fin.starhud.hud.implementation;
 
 import fin.starhud.Main;
-import fin.starhud.config.hud.InventorySetting;
+import fin.starhud.config.hud.InventorySettings;
 import fin.starhud.hud.AbstractHUD;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.RenderPipelines;
@@ -12,7 +12,7 @@ import net.minecraft.util.Identifier;
 
 public class Inventory extends AbstractHUD {
 
-    private static final InventorySetting inventorySetting = Main.settings.inventorySetting;
+    private static final InventorySettings INVENTORY_SETTINGS = Main.settings.inventorySettings;
     private static final Identifier INVENTORY_TEXTURE = Identifier.of("starhud", "hud/inventory.png");
     private static final Identifier INVENTORY_TEXTURE_VERTICAL = Identifier.of("starhud", "hud/inventory_vertical.png");
 
@@ -37,12 +37,12 @@ public class Inventory extends AbstractHUD {
     }
 
     public Inventory() {
-        super(inventorySetting.base);
+        super(INVENTORY_SETTINGS.base);
     }
 
     @Override
     public void renderHUD(DrawContext context) {
-        if (inventorySetting.drawVertical) {
+        if (INVENTORY_SETTINGS.drawVertical) {
             drawInventoryVertical(context, x, y);
         } else {
             drawInventoryHorizontal(context, x, y);
@@ -137,11 +137,11 @@ public class Inventory extends AbstractHUD {
 
     @Override
     public int getTextureWidth() {
-        return inventorySetting.drawVertical ? TEXTURE_WIDTH_VERTICAL : TEXTURE_WIDTH_HORIZONTAL;
+        return INVENTORY_SETTINGS.drawVertical ? TEXTURE_WIDTH_VERTICAL : TEXTURE_WIDTH_HORIZONTAL;
     }
 
     @Override
     public int getTextureHeight() {
-        return inventorySetting.drawVertical ? TEXTURE_HEIGHT_VERTICAL : TEXTURE_HEIGHT_HORIZONTAL;
+        return INVENTORY_SETTINGS.drawVertical ? TEXTURE_HEIGHT_VERTICAL : TEXTURE_HEIGHT_HORIZONTAL;
     }
 }

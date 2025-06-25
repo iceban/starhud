@@ -2,7 +2,7 @@ package fin.starhud.hud.implementation;
 
 import fin.starhud.Helper;
 import fin.starhud.Main;
-import fin.starhud.config.hud.BiomeSetting;
+import fin.starhud.config.hud.BiomeSettings;
 import fin.starhud.hud.AbstractHUD;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
@@ -16,7 +16,7 @@ import net.minecraft.world.World;
 
 public class Biome extends AbstractHUD {
 
-    private static final BiomeSetting biomeSetting = Main.settings.biomeSetting;
+    private static final BiomeSettings BIOME_SETTINGS = Main.settings.biomeSettings;
 
     private static final Identifier DIMENSION_TEXTURE = Identifier.of("starhud", "hud/biome.png");
 
@@ -30,7 +30,7 @@ public class Biome extends AbstractHUD {
     private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
 
     public Biome() {
-        super(biomeSetting.base);
+        super(BIOME_SETTINGS.base);
     }
 
     @Override
@@ -49,7 +49,7 @@ public class Biome extends AbstractHUD {
         int dimensionIcon = getDimensionIcon(CLIENT.world.getRegistryKey());
         int color = getTextColorFromDimension(dimensionIcon) | 0xFF000000;
 
-        int xTemp = x - biomeSetting.textGrowth.getGrowthDirection(cachedTextWidth);
+        int xTemp = x - BIOME_SETTINGS.textGrowth.getGrowthDirection(cachedTextWidth);
 
         context.drawTexture(RenderPipelines.GUI_TEXTURED, DIMENSION_TEXTURE, xTemp, y, 0.0F, dimensionIcon * TEXTURE_HEIGHT, 13, TEXTURE_HEIGHT, 13, 52);
         Helper.fillRoundedRightSide(context, xTemp + 14, y, xTemp + 14 + cachedTextWidth + 9, y + TEXTURE_HEIGHT, 0x80000000);
@@ -65,10 +65,10 @@ public class Biome extends AbstractHUD {
 
     private static int getTextColorFromDimension(int dimension) {
         return switch (dimension) {
-            case 0 -> biomeSetting.color.overworld;
-            case 1 -> biomeSetting.color.nether;
-            case 2 -> biomeSetting.color.end;
-            default -> biomeSetting.color.custom;
+            case 0 -> BIOME_SETTINGS.color.overworld;
+            case 1 -> BIOME_SETTINGS.color.nether;
+            case 2 -> BIOME_SETTINGS.color.end;
+            default -> BIOME_SETTINGS.color.custom;
         };
     }
 

@@ -1,15 +1,15 @@
 package fin.starhud.config.hud;
 
-import fin.starhud.config.BaseHUDSetting;
+import fin.starhud.config.BaseHUDSettings;
 import fin.starhud.helper.ScreenAlignmentX;
 import fin.starhud.helper.ScreenAlignmentY;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
 
-public class PingSetting {
+public class PingSettings {
 
     @ConfigEntry.Gui.TransitiveObject
-    public BaseHUDSetting base = new BaseHUDSetting(true, -57, -5, ScreenAlignmentX.RIGHT, ScreenAlignmentY.BOTTOM);
+    public BaseHUDSettings base = new BaseHUDSettings(true, -57, -5, ScreenAlignmentX.RIGHT, ScreenAlignmentY.BOTTOM);
 
     @Comment("Ping update interval, in seconds.")
     public double updateInterval = 5.0;

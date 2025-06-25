@@ -1,7 +1,7 @@
 package fin.starhud.hud.implementation;
 
 import fin.starhud.Main;
-import fin.starhud.config.hud.DirectionSetting;
+import fin.starhud.config.hud.DirectionSettings;
 import fin.starhud.hud.AbstractHUD;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.RenderPipelines;
@@ -11,7 +11,7 @@ import net.minecraft.util.math.MathHelper;
 
 public class Direction extends AbstractHUD {
 
-    private static final DirectionSetting directionSetting = Main.settings.directionSetting;
+    private static final DirectionSettings DIRECTION_SETTINGS = Main.settings.directionSettings;
 
     private static final Identifier DIRECTION_CARDINAL_TEXTURE = Identifier.of("starhud", "hud/direction.png");
     private static final Identifier DIRECTION_ORDINAL_TEXTURE = Identifier.of("starhud", "hud/direction_ordinal.png");
@@ -30,14 +30,14 @@ public class Direction extends AbstractHUD {
     private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
 
     public Direction() {
-        super(directionSetting.base);
+        super(DIRECTION_SETTINGS.base);
     }
 
     @Override
     public void renderHUD(DrawContext context) {
         float yaw = Math.round(MathHelper.wrapDegrees(CLIENT.cameraEntity.getYaw()) * 10.0F) / 10.0F;
 
-        if (directionSetting.includeOrdinal) {
+        if (DIRECTION_SETTINGS.includeOrdinal) {
             int icon = getOrdinalDirectionIcon(yaw);
             int color = getDirectionColor(icon) | 0xFF000000;
 
@@ -74,21 +74,21 @@ public class Direction extends AbstractHUD {
 
     private static int getDirectionColor(int icon) {
         return switch (icon) {
-            case 0 -> directionSetting.directionColor.s;
-            case 1 -> directionSetting.directionColor.sw;
-            case 2 -> directionSetting.directionColor.w;
-            case 3 -> directionSetting.directionColor.nw;
-            case 4 -> directionSetting.directionColor.n;
-            case 5 -> directionSetting.directionColor.ne;
-            case 6 -> directionSetting.directionColor.e;
-            case 7 -> directionSetting.directionColor.se;
+            case 0 -> DIRECTION_SETTINGS.directionColor.s;
+            case 1 -> DIRECTION_SETTINGS.directionColor.sw;
+            case 2 -> DIRECTION_SETTINGS.directionColor.w;
+            case 3 -> DIRECTION_SETTINGS.directionColor.nw;
+            case 4 -> DIRECTION_SETTINGS.directionColor.n;
+            case 5 -> DIRECTION_SETTINGS.directionColor.ne;
+            case 6 -> DIRECTION_SETTINGS.directionColor.e;
+            case 7 -> DIRECTION_SETTINGS.directionColor.se;
             default -> 0xFFFFFF;
         };
     }
 
     @Override
     public int getTextureWidth() {
-        return directionSetting.includeOrdinal ? TEXTURE_ORDINAL_WIDTH : TEXTURE_CARDINAL_WIDTH;
+        return DIRECTION_SETTINGS.includeOrdinal ? TEXTURE_ORDINAL_WIDTH : TEXTURE_CARDINAL_WIDTH;
     }
 
     @Override

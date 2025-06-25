@@ -1,7 +1,7 @@
 package fin.starhud.hud.implementation;
 
 import fin.starhud.Main;
-import fin.starhud.config.hud.PingSetting;
+import fin.starhud.config.hud.PingSettings;
 import fin.starhud.hud.AbstractHUD;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.RenderPipelines;
@@ -13,7 +13,7 @@ import net.minecraft.world.World;
 
 public class Ping extends AbstractHUD {
 
-    private static final PingSetting pingSetting = Main.settings.pingSetting;
+    private static final PingSettings PING_SETTINGS = Main.settings.pingSettings;
 
     private static final Identifier PING_TEXTURE = Identifier.of("starhud", "hud/ping.png");
 
@@ -27,7 +27,7 @@ public class Ping extends AbstractHUD {
     private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
 
     public Ping() {
-        super(pingSetting.base);
+        super(PING_SETTINGS.base);
     }
 
     @Override
@@ -62,10 +62,10 @@ public class Ping extends AbstractHUD {
 
     public static int getPingColor(int step) {
         return switch (step) {
-            case 0 -> pingSetting.pingColor.first;
-            case 1 -> pingSetting.pingColor.second;
-            case 2 -> pingSetting.pingColor.third;
-            case 3 -> pingSetting.pingColor.fourth;
+            case 0 -> PING_SETTINGS.pingColor.first;
+            case 1 -> PING_SETTINGS.pingColor.second;
+            case 2 -> PING_SETTINGS.pingColor.third;
+            case 3 -> PING_SETTINGS.pingColor.fourth;
             default -> 0xFFFFFFFF;
         };
     }
@@ -73,7 +73,7 @@ public class Ping extends AbstractHUD {
     // update pingLog every n seconds. Because this is quite expensive.
     private static void updatePingLog() {
         long currentTimeMillis = System.currentTimeMillis();
-        if (currentTimeMillis - LAST_PING_UPDATE >= 1000 * pingSetting.updateInterval) {
+        if (currentTimeMillis - LAST_PING_UPDATE >= 1000 * PING_SETTINGS.updateInterval) {
             LAST_PING_UPDATE = currentTimeMillis;
             cachedPingMeasurer.ping();
         }

@@ -2,7 +2,7 @@ package fin.starhud.hud.implementation;
 
 import fin.starhud.Helper;
 import fin.starhud.Main;
-import fin.starhud.config.hud.DaySetting;
+import fin.starhud.config.hud.DaySettings;
 import fin.starhud.hud.AbstractHUD;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.RenderPipelines;
@@ -11,7 +11,7 @@ import net.minecraft.util.Identifier;
 
 public class Day extends AbstractHUD {
 
-    private static final DaySetting daySetting = Main.settings.daySetting;
+    private static final DaySettings DAY_SETTINGS = Main.settings.daySettings;
 
     private static final Identifier DAY_TEXTURE = Identifier.of("starhud", "hud/day.png");
 
@@ -24,7 +24,7 @@ public class Day extends AbstractHUD {
     private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
 
     public Day() {
-        super(daySetting.base);
+        super(DAY_SETTINGS.base);
     }
 
     @Override
@@ -41,8 +41,8 @@ public class Day extends AbstractHUD {
             cachedTextWidth = CLIENT.textRenderer.getWidth(dayStr);
         }
 
-        int xTemp = x - daySetting.textGrowth.getGrowthDirection(cachedTextWidth);
-        int color = daySetting.color | 0xFF000000;
+        int xTemp = x - DAY_SETTINGS.textGrowth.getGrowthDirection(cachedTextWidth);
+        int color = DAY_SETTINGS.color | 0xFF000000;
 
         context.drawTexture(RenderPipelines.GUI_TEXTURED, DAY_TEXTURE, xTemp, y, 0.0F, 0, 13, TEXTURE_HEIGHT, 13,  TEXTURE_HEIGHT);
         Helper.fillRoundedRightSide(context, xTemp + 14, y, xTemp + 14 + cachedTextWidth + 9, y + TEXTURE_HEIGHT, 0x80000000);

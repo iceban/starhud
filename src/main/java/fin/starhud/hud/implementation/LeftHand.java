@@ -1,16 +1,16 @@
 package fin.starhud.hud.implementation;
 
 import fin.starhud.Main;
-import fin.starhud.config.hud.HandSetting;
+import fin.starhud.config.hud.HandSettings;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.util.Arm;
 
 public class LeftHand extends Hand{
 
-    private static final HandSetting leftHandSetting = Main.settings.handSettings.leftHandSetting;
+    private static final HandSettings LEFT_HAND_SETTINGS = Main.settings.handSettings.leftHandSettings;
 
     public LeftHand() {
-        super(leftHandSetting);
+        super(LEFT_HAND_SETTINGS);
     }
 
     @Override

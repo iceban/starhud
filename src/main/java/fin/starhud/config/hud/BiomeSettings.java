@@ -1,16 +1,16 @@
 package fin.starhud.config.hud;
 
-import fin.starhud.config.BaseHUDSetting;
+import fin.starhud.config.BaseHUDSettings;
 import fin.starhud.helper.GrowthDirectionX;
 import fin.starhud.helper.ScreenAlignmentX;
 import fin.starhud.helper.ScreenAlignmentY;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
 
-public class BiomeSetting {
+public class BiomeSettings {
 
     @ConfigEntry.Gui.TransitiveObject
-    public BaseHUDSetting base = new BaseHUDSetting(true, 0, 5, ScreenAlignmentX.CENTER, ScreenAlignmentY.TOP);
+    public BaseHUDSettings base = new BaseHUDSettings(true, 0, 5, ScreenAlignmentX.CENTER, ScreenAlignmentY.TOP);
 
     @Comment("Which way should the HUD goes when a the texture increases?")
     @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)

@@ -1,7 +1,7 @@
 package fin.starhud.hud.implementation;
 
 import fin.starhud.Main;
-import fin.starhud.config.hud.ClockInGameSetting;
+import fin.starhud.config.hud.ClockInGameSettings;
 import fin.starhud.hud.AbstractHUD;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.RenderPipelines;
@@ -11,7 +11,7 @@ import net.minecraft.util.Identifier;
 
 public class ClockInGame extends AbstractHUD {
 
-    private static final ClockInGameSetting clockInGameSetting = Main.settings.clockSetting.inGameSetting;
+    private static final ClockInGameSettings CLOCK_IN_GAME_SETTINGS = Main.settings.clockSettings.inGameSetting;
 
     private static final Identifier CLOCK_12_TEXTURE = Identifier.of("starhud", "hud/clock_12.png");
     private static final Identifier CLOCK_24_TEXTURE = Identifier.of("starhud", "hud/clock_24.png");
@@ -20,7 +20,7 @@ public class ClockInGame extends AbstractHUD {
 
     private static String cachedMinecraftTimeString = "";
     private static int cachedMinecraftMinute = -1;
-    private static boolean cachedInGameUse12Hour = clockInGameSetting.use12Hour;
+    private static boolean cachedInGameUse12Hour = CLOCK_IN_GAME_SETTINGS.use12Hour;
 
     private static final int TEXTURE_INGAME_12_WIDTH = 65;
     private static final int TEXTURE_INGAME_24_WIDTH = 49;
@@ -28,7 +28,7 @@ public class ClockInGame extends AbstractHUD {
     private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
 
     public ClockInGame() {
-        super(clockInGameSetting.base);
+        super(CLOCK_IN_GAME_SETTINGS.base);
     }
 
     @Override
@@ -39,7 +39,7 @@ public class ClockInGame extends AbstractHUD {
 
         long time = world.getTimeOfDay() % 24000;
 
-        boolean use12Hour = clockInGameSetting.use12Hour;
+        boolean use12Hour = CLOCK_IN_GAME_SETTINGS.use12Hour;
 
         int minutes = (int) ((time % 1000) * 3 / 50);
         int hours = (int) ((time / 1000) + 6) % 24;
@@ -66,10 +66,10 @@ public class ClockInGame extends AbstractHUD {
 
     private static int getIconColor(int icon) {
         return switch (icon) {
-            case 1 -> clockInGameSetting.color.day;
-            case 2 -> clockInGameSetting.color.night;
-            case 3 -> clockInGameSetting.color.rain;
-            case 4 -> clockInGameSetting.color.thunder;
+            case 1 -> CLOCK_IN_GAME_SETTINGS.color.day;
+            case 2 -> CLOCK_IN_GAME_SETTINGS.color.night;
+            case 3 -> CLOCK_IN_GAME_SETTINGS.color.rain;
+            case 4 -> CLOCK_IN_GAME_SETTINGS.color.thunder;
             default -> 0xFFFFFF;
         };
     }
@@ -109,7 +109,7 @@ public class ClockInGame extends AbstractHUD {
 
     @Override
     public int getTextureWidth() {
-        return clockInGameSetting.use12Hour ? TEXTURE_INGAME_12_WIDTH : TEXTURE_INGAME_24_WIDTH;
+        return CLOCK_IN_GAME_SETTINGS.use12Hour ? TEXTURE_INGAME_12_WIDTH : TEXTURE_INGAME_24_WIDTH;
     }
 
     @Override

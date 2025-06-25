@@ -7,7 +7,7 @@ import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
 import net.minecraft.client.MinecraftClient;
 
-public class BaseHUDSetting implements ConfigData {
+public class BaseHUDSettings implements ConfigData {
     @Comment("Toggle HUD")
     public boolean shouldRender;
 
@@ -27,23 +27,23 @@ public class BaseHUDSetting implements ConfigData {
     public int scale = 0;
 
     @ConfigEntry.Gui.CollapsibleObject
-    public BaseHUDSetting.Conditional on = new Conditional();
+    public BaseHUDSettings.Conditional on = new Conditional();
 
     public static class Conditional {
         @ConfigEntry.Gui.CollapsibleObject
-        public ConditionalSetting f3 = new ConditionalSetting(true, 0, 0);
+        public ConditionalSettings f3 = new ConditionalSettings(true, 0, 0);
 
         @ConfigEntry.Gui.CollapsibleObject
-        public ConditionalSetting chat = new ConditionalSetting(true, 0, 0);
+        public ConditionalSettings chat = new ConditionalSettings(true, 0, 0);
 
         @ConfigEntry.Gui.CollapsibleObject
-        public ConditionalSetting bossBar = new ConditionalSetting(true, 0, 0);
+        public ConditionalSettings bossBar = new ConditionalSettings(true, 0, 0);
 
         @ConfigEntry.Gui.CollapsibleObject
-        public ConditionalSetting scoreBoard = new ConditionalSetting(true, 0, 0);
+        public ConditionalSettings scoreBoard = new ConditionalSettings(true, 0, 0);
     }
 
-    public BaseHUDSetting(boolean shouldRender, int x, int y, ScreenAlignmentX originX, ScreenAlignmentY originY) {
+    public BaseHUDSettings(boolean shouldRender, int x, int y, ScreenAlignmentX originX, ScreenAlignmentY originY) {
         this.shouldRender = shouldRender;
         this.x = x;
         this.y = y;
