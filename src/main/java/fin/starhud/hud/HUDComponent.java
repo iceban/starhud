@@ -14,6 +14,7 @@ public class HUDComponent {
         huds.add(new Biome());
         huds.add(new ClockInGame());
         huds.add(new ClockSystem());
+        huds.add(new Day());
         huds.add(new Coordinate());
         huds.add(new Direction());
         huds.add(new FPS());
@@ -35,9 +36,4 @@ public class HUDComponent {
             hud.onUpdate();
         }
     }
-
-
-
-
-
 }

@@ -38,6 +38,9 @@ public class BaseHUDSetting implements ConfigData {
 
         @ConfigEntry.Gui.CollapsibleObject
         public ConditionalSetting bossBar = new ConditionalSetting(true, 0, 0);
+
+        @ConfigEntry.Gui.CollapsibleObject
+        public ConditionalSetting scoreBoard = new ConditionalSetting(true, 0, 0);
     }
 
     public BaseHUDSetting(boolean shouldRender, int x, int y, ScreenAlignmentX originX, ScreenAlignmentY originY) {
@@ -48,43 +51,6 @@ public class BaseHUDSetting implements ConfigData {
         this.originY = originY;
     }
 
-    // adjust position based on alignment
-    // if RIGHT, place HUD on the right side of the screen, basically.
-    public int getAlignmentXPos(int scaledWidth) {
-        return switch (this.originX) {
-            case LEFT -> 0;
-            case CENTER -> scaledWidth / 2;
-            case RIGHT -> scaledWidth;
-        };
-    }
-
-    // if MIDDLE, place HUD in the middle of the screen
-    public int getAlignmentYPos(int scaledHeight) {
-        return switch (this.originY) {
-            case TOP -> 0;
-            case MIDDLE -> scaledHeight / 2;
-            case BOTTOM -> scaledHeight;
-        };
-    }
-
-    // IF RIGHT, shift hud to the left a bit so that no pixel is leaving the screen (supposed you have set x:0, y:0)
-    public int getTextureOffsetX(int textureWidth) {
-        return switch (this.originX) {
-            case LEFT -> 0;
-            case CENTER -> textureWidth / 2;
-            case RIGHT -> textureWidth;
-        };
-    }
-
-    // IF BOTTOM, prevent HUD from leaving the screen if you set x:0, y:0
-    public int getTextureOffsetY(int textureHeight) {
-        return switch (this.originY) {
-            case TOP -> 0;
-            case MIDDLE -> textureHeight / 2;
-            case BOTTOM -> textureHeight;
-        };
-    }
-
     // get the scaled factor
     // this can either make your HUD bigger or smaller.
     public float getScaledFactor() {
@@ -93,23 +59,11 @@ public class BaseHUDSetting implements ConfigData {
 
     // this shifts your HUD based on your x point, and alignment on X axis, and place them accordingly in your screen.
     public int getCalculatedPosX(int HUDWidth) {
-        return this.x + (int) (getAlignmentXPos(MinecraftClient.getInstance().getWindow().getScaledWidth()) * getScaledFactor()) - getTextureOffsetX(HUDWidth);
+        return this.x + (int) (this.originX.getAlignmentXPos(MinecraftClient.getInstance().getWindow().getScaledWidth()) * getScaledFactor()) - this.originX.getTextureOffsetX(HUDWidth);
     }
 
     // this also shifts your HUD based on your y point, and alignment on Y axis, and place them accordingly in your screen.
     public int getCalculatedPosY(int HUDHeight) {
-        return this.y + (int) (getAlignmentYPos(MinecraftClient.getInstance().getWindow().getScaledHeight()) * getScaledFactor()) - getTextureOffsetY(HUDHeight);
-    }
-
-    public static class ConditionalSetting {
-        public boolean shouldRender;
-        public int xOffset;
-        public int yOffset;
-
-        public ConditionalSetting(boolean shouldRender, int xOffset, int yOffset) {
-            this.shouldRender = shouldRender;
-            this.xOffset = xOffset;
-            this.yOffset = yOffset;
-        }
+        return this.y + (int) (this.originY.getAlignmentYPos(MinecraftClient.getInstance().getWindow().getScaledHeight()) * getScaledFactor()) - this.originY.getTextureOffsetY(HUDHeight);
     }
 }

@@ -49,7 +49,7 @@ public class Biome extends AbstractHUD {
         int dimensionIcon = getDimensionIcon(CLIENT.world.getRegistryKey());
         int color = getTextColorFromDimension(dimensionIcon) | 0xFF000000;
 
-        int xTemp = x - Helper.getGrowthDirection(biomeSetting.textGrowth, cachedTextWidth);
+        int xTemp = x - biomeSetting.textGrowth.getGrowthDirection(cachedTextWidth);
 
         context.drawTexture(RenderPipelines.GUI_TEXTURED, DIMENSION_TEXTURE, xTemp, y, 0.0F, dimensionIcon * TEXTURE_HEIGHT, 13, TEXTURE_HEIGHT, 13, 52);
         Helper.fillRoundedRightSide(context, xTemp + 14, y, xTemp + 14 + cachedTextWidth + 9, y + TEXTURE_HEIGHT, 0x80000000);

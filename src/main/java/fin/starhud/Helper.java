@@ -1,13 +1,11 @@
 package fin.starhud;
 
-import fin.starhud.helper.GrowthDirectionX;
-import fin.starhud.helper.ScreenAlignmentX;
-import fin.starhud.helper.ScreenAlignmentY;
 import fin.starhud.mixin.accessor.AccessorBossBarHud;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.scoreboard.ScoreboardDisplaySlot;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 
@@ -17,14 +15,6 @@ public class Helper {
     private static final Identifier DURABILITY_TEXTURE = Identifier.of("starhud", "hud/durability.png");
     private static final Identifier DURABILITY_BACKGROUND_TEXTURE = Identifier.of("starhud", "hud/durability_background.png");
     private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
-
-    public static int getGrowthDirection(GrowthDirectionX growthDirection, int growableWidth) {
-        return switch (growthDirection) {
-            case LEFT -> growableWidth;
-            case CENTER -> growableWidth / 2;
-            case RIGHT -> 0;
-        };
-    }
 
     public static void fillRoundedRightSide(DrawContext context, int x1, int y1, int x2, int y2, int color) {
         context.fill(x1, y1, x2 - 1, y2, color);
@@ -63,5 +53,9 @@ public class Helper {
 
     public static boolean isBossBarShown() {
         return !((AccessorBossBarHud) CLIENT.inGameHud.getBossBarHud()).getBossBars().isEmpty();
+    }
+
+    public static boolean isScoreBoardShown() {
+        return CLIENT.world.getScoreboard().getObjectiveForSlot(ScoreboardDisplaySlot.SIDEBAR) != null;
     }
 }

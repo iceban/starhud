@@ -11,8 +11,11 @@ public abstract class AbstractHUD implements HUDInterface {
 
     protected final BaseHUDSetting baseSetting;
 
+    // the actual x and y point we use in HUDs
     protected int x;
     protected int y;
+
+    // temporary x and y point.
     private int xTemp;
     private int yTemp;
 
@@ -20,11 +23,9 @@ public abstract class AbstractHUD implements HUDInterface {
         this.baseSetting = baseSetting;
     }
 
-    public boolean shouldHide() {
-        return  (!baseSetting.on.f3.shouldRender && Helper.isDebugHUDOpen()) ||
-                (!baseSetting.on.chat.shouldRender && Helper.isChatFocused()) ||
-                (!baseSetting.on.bossBar.shouldRender && Helper.isBossBarShown());
-    }
+    public abstract int getTextureWidth();
+
+    public abstract int getTextureHeight();
 
     public void updateX() {
         xTemp = baseSetting.getCalculatedPosX(getTextureWidth());
@@ -36,13 +37,17 @@ public abstract class AbstractHUD implements HUDInterface {
         y = yTemp;
     }
 
-    public abstract int getTextureWidth();
-
-    public abstract int getTextureHeight();
-
+    // we update every HUD's x and y points here.
     public void onUpdate() {
         updateX();
         updateY();
+    }
+
+    public boolean shouldHide() {
+        return  (!baseSetting.on.f3.shouldRender && Helper.isDebugHUDOpen()) ||
+                (!baseSetting.on.chat.shouldRender && Helper.isChatFocused()) ||
+                (!baseSetting.on.bossBar.shouldRender && Helper.isBossBarShown() ||
+                (!baseSetting.on.scoreBoard.shouldRender && Helper.isScoreBoardShown()));
     }
 
     @Override
@@ -73,13 +78,15 @@ public abstract class AbstractHUD implements HUDInterface {
         x =     xTemp +
                 (Helper.isChatFocused() ? baseSetting.on.chat.xOffset : 0) +
                 (Helper.isDebugHUDOpen() ? baseSetting.on.f3.xOffset : 0) +
-                (Helper.isBossBarShown() ? baseSetting.on.bossBar.xOffset : 0);
+                (Helper.isBossBarShown() ? baseSetting.on.bossBar.xOffset : 0) +
+                (Helper.isScoreBoardShown() ? baseSetting.on.scoreBoard.xOffset : 0);
     }
 
     public void modifyY() {
         y =     yTemp +
                 (Helper.isChatFocused() ? baseSetting.on.chat.yOffset : 0) +
                 (Helper.isDebugHUDOpen() ? baseSetting.on.f3.yOffset : 0) +
-                (Helper.isBossBarShown() ? baseSetting.on.bossBar.yOffset : 0);
+                (Helper.isBossBarShown() ? baseSetting.on.bossBar.yOffset : 0) +
+                (Helper.isScoreBoardShown() ? baseSetting.on.scoreBoard.yOffset : 0);
     }
 }

@@ -44,6 +44,10 @@ public class Settings implements ConfigData {
         public ClockInGameSetting inGameSetting = new ClockInGameSetting();
     }
 
+    @ConfigEntry.Category("day")
+    @ConfigEntry.Gui.TransitiveObject
+    public DaySetting daySetting = new DaySetting();
+
     @ConfigEntry.Category("biome")
     @ConfigEntry.Gui.TransitiveObject
     public BiomeSetting biomeSetting = new BiomeSetting();

@@ -48,8 +48,8 @@ public class ClockInGame extends AbstractHUD {
             cachedInGameUse12Hour = use12Hour;
 
             cachedMinecraftTimeString = use12Hour ?
-                    buildMinecraftCivilianTimeString(hours, minutes) :
-                    buildMinecraftMilitaryTimeString(hours, minutes);
+                    buildMinecraftTime12String(hours, minutes) :
+                    buildMinecraftTime24String(hours, minutes);
         }
 
         int icon = getWeatherOrTime(world);
@@ -81,7 +81,7 @@ public class ClockInGame extends AbstractHUD {
         else return 1;
     }
 
-    private static String buildMinecraftMilitaryTimeString(int hours, int minutes) {
+    private static String buildMinecraftTime24String(int hours, int minutes) {
         StringBuilder timeBuilder = new StringBuilder();
 
         if (hours < 10) timeBuilder.append('0');
@@ -93,7 +93,7 @@ public class ClockInGame extends AbstractHUD {
         return timeBuilder.toString();
     }
 
-    private static String buildMinecraftCivilianTimeString(int hours, int minutes) {
+    private static String buildMinecraftTime12String(int hours, int minutes) {
         StringBuilder timeBuilder = new StringBuilder();
 
         String period = hours >= 12 ? " PM" : " AM";
@@ -102,7 +102,7 @@ public class ClockInGame extends AbstractHUD {
         hours %= 12;
         if (hours == 0) hours = 12;
 
-        timeBuilder.append(buildMinecraftMilitaryTimeString(hours, minutes)).append(period);
+        timeBuilder.append(buildMinecraftTime24String(hours, minutes)).append(period);
 
         return timeBuilder.toString();
     }

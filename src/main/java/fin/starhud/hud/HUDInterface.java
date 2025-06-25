@@ -11,7 +11,7 @@ public interface HUDInterface {
         // modifyX and modifyY will add our xOffset and yOffset to our initial x position.
         modifyXY();
 
-        if (!isScaled()) { // if the HUD' scale is set to default, don't... change the scale...? whatever this is faster than the one below.
+        if (!isScaled()) { // if the HUD' scale is set to default, don't... change the scale...? whatever, this is faster than the one below.
             renderHUD(context);
             return;
         }

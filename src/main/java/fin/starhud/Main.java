@@ -6,10 +6,7 @@ import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.ConfigHolder;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.ActionResult;
-import org.lwjgl.glfw.GLFW;
 
 public class Main implements ClientModInitializer {
 

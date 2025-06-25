@@ -20,10 +20,10 @@ public class ClockSystem extends AbstractHUD {
 
     private static final int TEXTURE_HEIGHT = 13;
 
-    private static final SimpleDateFormat MILITARY_TIME_FORMAT = new SimpleDateFormat("HH:mm");
-    private static final SimpleDateFormat CIVILIAN_TIME_FORMAT = new SimpleDateFormat("hh:mm a");
+    private static final SimpleDateFormat CLOCK_24_FORMAT = new SimpleDateFormat("HH:mm");
+    private static final SimpleDateFormat CLOCK_12_FORMAT = new SimpleDateFormat("hh:mm a");
 
-    private static String cachedSystemTimeString = buildSystemMilitaryTimeString(System.currentTimeMillis());
+    private static String cachedSystemTimeString = buildSystemTime24String(System.currentTimeMillis());
     private static long cachedSystemMinute = -1;
     private static boolean cachedSystemUse12Hour = clockSystemSetting.use12Hour;
 
@@ -50,8 +50,8 @@ public class ClockSystem extends AbstractHUD {
             cachedSystemUse12Hour = use12Hour;
 
             cachedSystemTimeString = use12Hour ?
-                    buildSystemCivilianTimeString(currentTime) :
-                    buildSystemMilitaryTimeString(currentTime);
+                    buildSystemTime12String(currentTime) :
+                    buildSystemTime24String(currentTime);
         }
 
         int color = clockSystemSetting.color | 0xFF000000;
@@ -65,12 +65,12 @@ public class ClockSystem extends AbstractHUD {
         }
     }
 
-    private static String buildSystemMilitaryTimeString(long time) {
-        return MILITARY_TIME_FORMAT.format(new Date(time));
+    private static String buildSystemTime24String(long time) {
+        return CLOCK_24_FORMAT.format(new Date(time));
     }
 
-    private static String buildSystemCivilianTimeString(long time) {
-        return CIVILIAN_TIME_FORMAT.format(new Date(time));
+    private static String buildSystemTime12String(long time) {
+        return CLOCK_12_FORMAT.format(new Date(time));
     }
 
     @Override
