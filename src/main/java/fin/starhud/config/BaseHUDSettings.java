@@ -1,11 +1,15 @@
 package fin.starhud.config;
 
+import fin.starhud.helper.Condition;
 import fin.starhud.helper.ScreenAlignmentX;
 import fin.starhud.helper.ScreenAlignmentY;
 import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
 import net.minecraft.client.MinecraftClient;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class BaseHUDSettings implements ConfigData {
     @Comment("Toggle HUD")
@@ -26,22 +30,7 @@ public class BaseHUDSettings implements ConfigData {
     @Comment("Set to 0 for default GUI Scale")
     public int scale = 0;
 
-    @ConfigEntry.Gui.CollapsibleObject
-    public BaseHUDSettings.Conditional on = new Conditional();
-
-    public static class Conditional {
-        @ConfigEntry.Gui.CollapsibleObject
-        public ConditionalSettings f3 = new ConditionalSettings(true, 0, 0);
-
-        @ConfigEntry.Gui.CollapsibleObject
-        public ConditionalSettings chat = new ConditionalSettings(true, 0, 0);
-
-        @ConfigEntry.Gui.CollapsibleObject
-        public ConditionalSettings bossBar = new ConditionalSettings(true, 0, 0);
-
-        @ConfigEntry.Gui.CollapsibleObject
-        public ConditionalSettings scoreBoard = new ConditionalSettings(true, 0, 0);
-    }
+    public List<ConditionalSettings> conditions = new ArrayList<>();
 
     public BaseHUDSettings(boolean shouldRender, int x, int y, ScreenAlignmentX originX, ScreenAlignmentY originY) {
         this.shouldRender = shouldRender;

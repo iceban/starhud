@@ -51,10 +51,10 @@ public abstract class Hand extends AbstractHUD {
 
         // either draw the durability or the amount of item in the inventory.
         if (handSettings.showDurability && item.isDamageable()) {
-            RenderUtils.renderDurabilityHUD(context, HAND_TEXTURE, item, x, y, startV(), COUNT_WIDTH + TEXTURE_WIDTH, 27, handSettings.color | 0xFF000000, handSettings.drawBar, handSettings.textureGrowth);
+            RenderUtils.renderDurabilityHUD(context, HAND_TEXTURE, item, x, y, getV(), COUNT_WIDTH + TEXTURE_WIDTH, 27, handSettings.color | 0xFF000000, handSettings.drawBar, handSettings.textureGrowth);
         } else if (handSettings.showCount) {
             x -= handSettings.textureGrowth.getGrowthDirection(COUNT_WIDTH);
-            renderItemCountHUD(context, CLIENT.textRenderer, playerInventory, item, x, y, startV(), handSettings.color | 0xFF000000);
+            renderItemCountHUD(context, CLIENT.textRenderer, playerInventory, item, x, y, getV(), handSettings.color | 0xFF000000);
         }
     }
 
@@ -89,6 +89,6 @@ public abstract class Hand extends AbstractHUD {
 
     // V as in the texture, where does left texture y point starts?
     // in the texture, i placed both Left and Right hand texture in the same file, but in a different place. this is just to differentiate them
-    abstract int startV();
+    abstract int getV();
 
 }

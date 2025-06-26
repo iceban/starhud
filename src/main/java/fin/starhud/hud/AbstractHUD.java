@@ -2,6 +2,8 @@ package fin.starhud.hud;
 
 import fin.starhud.Helper;
 import fin.starhud.config.BaseHUDSettings;
+import fin.starhud.config.ConditionalSettings;
+import fin.starhud.helper.Condition;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.util.Window;
@@ -61,24 +63,11 @@ public abstract class AbstractHUD implements HUDInterface {
     public void modifyXY() {
         int tempX = 0, tempY = 0;
 
-        if (Helper.isChatFocused()) {
-            tempX += baseHUDSettings.on.chat.xOffset;
-            tempY += baseHUDSettings.on.chat.yOffset;
-        }
-
-        if (Helper.isDebugHUDOpen()) {
-            tempX += baseHUDSettings.on.f3.xOffset;
-            tempY += baseHUDSettings.on.f3.yOffset;
-        }
-
-        if (Helper.isBossBarShown()) {
-            tempX += baseHUDSettings.on.bossBar.xOffset;
-            tempY += baseHUDSettings.on.bossBar.yOffset;
-        }
-
-        if (Helper.isScoreBoardShown()) {
-            tempX += baseHUDSettings.on.scoreBoard.xOffset;
-            tempY += baseHUDSettings.on.scoreBoard.yOffset;
+        for (ConditionalSettings condition : baseHUDSettings.conditions) {
+            if (condition.isConditionMet()) {
+                tempX += condition.xOffset;
+                tempY += condition.yOffset;
+            }
         }
 
         x = baseX + tempX;
@@ -107,10 +96,11 @@ public abstract class AbstractHUD implements HUDInterface {
     }
 
     public boolean shouldHide() {
-        return  (!baseHUDSettings.on.f3.shouldRender && Helper.isDebugHUDOpen()) ||
-                (!baseHUDSettings.on.chat.shouldRender && Helper.isChatFocused()) ||
-                (!baseHUDSettings.on.bossBar.shouldRender && Helper.isBossBarShown()) ||
-                (!baseHUDSettings.on.scoreBoard.shouldRender && Helper.isScoreBoardShown());
+        for (ConditionalSettings condition: baseHUDSettings.conditions) {
+            if (!condition.shouldRender && condition.isConditionMet())
+                return true;
+        }
+        return false;
     }
 
     @Override

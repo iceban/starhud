@@ -14,7 +14,7 @@ public class RightHand extends Hand {
     }
 
     @Override
-    int startV() {
+    int getV() {
         return 14;
     }
 

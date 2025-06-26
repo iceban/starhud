@@ -37,7 +37,8 @@ public class ArmorSettings {
 
         public boolean drawBar;
 
-        @Comment("Which way should the HUD goes when a the texture width increases?")
+        @Comment("Which way should the HUD goes when a the texture increases?")
+        @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
         public GrowthDirectionX textureGrowth;
 
         public ArmorPieceSetting(boolean shouldRender, int xOffset, int yOffset, boolean drawBar, GrowthDirectionX textureGrowth) {
