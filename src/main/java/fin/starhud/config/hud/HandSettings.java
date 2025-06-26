@@ -19,6 +19,8 @@ public class HandSettings {
     public boolean showCount = true;
     public boolean showDurability = true;
 
+    public boolean drawBar = true;
+
     @ConfigEntry.ColorPicker
     public int color;
 

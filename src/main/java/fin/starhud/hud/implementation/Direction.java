@@ -87,12 +87,12 @@ public class Direction extends AbstractHUD {
     }
 
     @Override
-    public int getTextureWidth() {
+    public int getBaseHUDWidth() {
         return DIRECTION_SETTINGS.includeOrdinal ? TEXTURE_ORDINAL_WIDTH : TEXTURE_CARDINAL_WIDTH;
     }
 
     @Override
-    public int getTextureHeight() {
+    public int getBaseHUDHeight() {
         return TEXTURE_HEIGHT;
     }
 }

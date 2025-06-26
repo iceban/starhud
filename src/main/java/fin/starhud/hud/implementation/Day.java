@@ -1,8 +1,8 @@
 package fin.starhud.hud.implementation;
 
-import fin.starhud.Helper;
 import fin.starhud.Main;
 import fin.starhud.config.hud.DaySettings;
+import fin.starhud.helper.RenderUtils;
 import fin.starhud.hud.AbstractHUD;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.RenderPipelines;
@@ -18,8 +18,9 @@ public class Day extends AbstractHUD {
     private static final int TEXTURE_HEIGHT = 13;
     private static final int TEXTURE_WIDTH = 13 + 1 + 5 + 5;
 
-    private int cachedTextLength = -1;
+    private long lastDay = -1;
     private int cachedTextWidth;
+    private String cachedDayString;
 
     private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
 
@@ -31,31 +32,30 @@ public class Day extends AbstractHUD {
     public void renderHUD(DrawContext context) {
 
         long day = CLIENT.world.getTimeOfDay() / 24000L;
-        String dayStr = Long.toString(day);
-        int textLength = dayStr.length();
 
         // I cached these because textRendered.getWidth() is expensive.
         // And since day count hardly updates at all, doing this is reasonable.
-        if (textLength != cachedTextLength) {
-            cachedTextLength = textLength;
-            cachedTextWidth = CLIENT.textRenderer.getWidth(dayStr);
+        if (day != lastDay) {
+            lastDay = day;
+            cachedDayString = Long.toString(day);
+            cachedTextWidth = CLIENT.textRenderer.getWidth(cachedDayString);
         }
 
         int xTemp = x - DAY_SETTINGS.textGrowth.getGrowthDirection(cachedTextWidth);
         int color = DAY_SETTINGS.color | 0xFF000000;
 
         context.drawTexture(RenderPipelines.GUI_TEXTURED, DAY_TEXTURE, xTemp, y, 0.0F, 0, 13, TEXTURE_HEIGHT, 13,  TEXTURE_HEIGHT);
-        Helper.fillRoundedRightSide(context, xTemp + 14, y, xTemp + 14 + cachedTextWidth + 9, y + TEXTURE_HEIGHT, 0x80000000);
-        context.drawText(CLIENT.textRenderer, dayStr, xTemp + 19, y + 3, color, false);
+        RenderUtils.fillRoundedRightSide(context, xTemp + 14, y, xTemp + 14 + cachedTextWidth + 9, y + TEXTURE_HEIGHT, 0x80000000);
+        context.drawText(CLIENT.textRenderer, cachedDayString, xTemp + 19, y + 3, color, false);
     }
 
     @Override
-    public int getTextureWidth() {
+    public int getBaseHUDWidth() {
         return TEXTURE_WIDTH;
     }
 
     @Override
-    public int getTextureHeight() {
+    public int getBaseHUDHeight() {
         return TEXTURE_HEIGHT;
     }
 }

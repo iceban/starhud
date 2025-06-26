@@ -1,0 +1,82 @@
+package fin.starhud.helper;
+
+import fin.starhud.Helper;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gl.RenderPipelines;
+import net.minecraft.client.gui.DrawContext;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.math.MathHelper;
+
+public class RenderUtils {
+
+    private static final Identifier DURABILITY_TEXTURE = Identifier.of("starhud", "hud/durability.png");
+    private static final Identifier DURABILITY_BACKGROUND_TEXTURE = Identifier.of("starhud", "hud/durability_background.png");
+
+    // 10 bars + 9 gaps.
+    private static final int DURABILITY_TEXTURE_WIDTH = (3 * 10) + 9;
+
+    private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
+
+    public static void fillRoundedRightSide(DrawContext context, int x1, int y1, int x2, int y2, int color) {
+        context.fill(x1, y1, x2 - 1, y2, color);
+        context.fill(x2 - 1, y1 + 1, x2, y2 - 1, color);
+    }
+
+    // get the durability "steps" or progress.
+    public static int getItemBarStep(ItemStack stack, int maxStep) {
+        return MathHelper.clamp(Math.round(maxStep - (float) stack.getDamage() * maxStep / (float) stack.getMaxDamage()), 0, maxStep);
+    }
+
+    // color transition from pastel (red to green).
+    public static int getItemBarColor(int stackStep, int maxStep) {
+        return MathHelper.hsvToRgb(0.35F * stackStep / (float) maxStep, 0.45F, 0.95F);
+    }
+
+    public static void renderDurabilityHUD(DrawContext context, Identifier ICON, ItemStack stack, int x, int y, float v, int textureWidth, int textureHeight, int color, boolean drawBar, GrowthDirectionX textureGrowth) {
+        if (drawBar) {
+            renderDurabilityBar(context, ICON, stack, x, y, v, textureWidth, textureHeight, color, textureGrowth);
+        } else {
+            renderDurabilityNumber(context, ICON, stack, x, y, v, textureWidth, textureHeight, color, textureGrowth);
+        }
+    }
+
+    public static void renderDurabilityBar(DrawContext context, Identifier ICON, ItemStack stack, int x, int y, float v, int textureWidth, int textureHeight, int color, GrowthDirectionX textureGrowth) {
+        int step = getItemBarStep(stack, 10);
+        int durabilityColor = getItemBarColor(step, 10) | 0xFF000000;
+
+        x -= textureGrowth.getGrowthDirection(DURABILITY_TEXTURE_WIDTH);
+
+        // draw the icon
+        context.drawTexture(RenderPipelines.GUI_TEXTURED, ICON, x, y, 0.0F, v, 13, 13, textureWidth, textureHeight, color);
+
+        // draw the durability background and steps
+        context.drawTexture(RenderPipelines.GUI_TEXTURED, DURABILITY_BACKGROUND_TEXTURE, x + 14, y, 0.0F, 0.0F, 49, 13, 49, 13);
+        if (step != 0) context.drawTexture(RenderPipelines.GUI_TEXTURED, DURABILITY_TEXTURE, x + 19, y + 3, 0, 0, 4 * step, 7, 40, 7, durabilityColor);
+    }
+
+    // example render: ¹²³⁴/₅₆₇₈
+    public static void renderDurabilityNumber(DrawContext context, Identifier ICON, ItemStack stack, int x, int y, float v, int textureWidth, int textureHeight, int color, GrowthDirectionX textureGrowth) {
+        int damage = stack.getDamage();
+        int maxDamage = stack.getMaxDamage();
+        int remaining = maxDamage - damage;
+
+        String remainingStr = Helper.toSuperscript(Integer.toString(remaining)) + '/';
+        String maxDamageStr = Helper.toSubscript(Integer.toString(maxDamage));
+
+        int remainingTextWidth = CLIENT.textRenderer.getWidth(remainingStr);
+        int maxDamageTextWidth = CLIENT.textRenderer.getWidth(maxDamageStr);
+
+        int textColor = getItemBarColor(remaining, maxDamage) | 0xFF000000;
+
+        x -= textureGrowth.getGrowthDirection(remainingTextWidth + maxDamageTextWidth);
+
+        context.drawTexture(RenderPipelines.GUI_TEXTURED, ICON, x, y, 0.0F, v, 13 , 13, textureWidth, textureHeight, color);
+        fillRoundedRightSide(context, x + 14,  y, x + 14 + remainingTextWidth + maxDamageTextWidth + 10, y + 13, 0x80000000);
+
+        // this is gore of my comfort character, call drawText twice except the second one has a -1 pixel offset.
+        // Minecraft default subscript's font is 1 pixel to deep for my liking, so I have to shift them up.
+        context.drawText(CLIENT.textRenderer, remainingStr, x + 14 + 5, y + 3, textColor, false);
+        context.drawText(CLIENT.textRenderer, maxDamageStr, x + 14 + 5 + remainingTextWidth, y + 3 - 1, textColor, false);
+    }
+}

@@ -33,7 +33,7 @@ public class HUDComponent {
 
     public static void updateAll() {
         for (HUDInterface hud : huds) {
-            hud.onUpdate();
+            hud.update();
         }
     }
 }

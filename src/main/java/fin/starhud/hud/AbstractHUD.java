@@ -16,29 +16,92 @@ public abstract class AbstractHUD implements HUDInterface {
     protected int y;
 
     // temporary x and y point.
-    private int xTemp;
-    private int yTemp;
+    private int baseX;
+    private int baseY;
 
     public AbstractHUD(BaseHUDSettings baseHUDSettings) {
         this.baseHUDSettings = baseHUDSettings;
     }
 
-    public abstract int getTextureWidth();
+    @Override
+    public void render(DrawContext context) {
+        // I hate this piece of code
+        // if Condition is triggered, the X will be modified with xOffset on that condition.
+        // example: when bossbar is present, we want to move our hud under the bossbar, or avoid the bossbar.
+        // modifyX and modifyY will add our xOffset and yOffset to our initial x position.
+        modifyXY();
 
-    public abstract int getTextureHeight();
+        // if the HUD' scale is set to default, don't... change the scale...? whatever, this is faster than the one below.
+        if (baseHUDSettings.scale == 0) {
+            renderHUD(context);
+            return;
+        }
+
+        // this is so we can change the scale for one hud but not the others.
+        context.getMatrices().pushMatrix();
+        setHUDScale(context);
+
+        try {
+            renderHUD(context);
+        } finally {
+            context.getMatrices().popMatrix();
+        }
+
+    }
+
+    public abstract void renderHUD(DrawContext context);
+
+    public void setHUDScale(DrawContext context) {
+        float scaleFactor = baseHUDSettings.scale / (float) WINDOW.getScaleFactor();
+        if (scaleFactor == 1) return;
+
+        context.getMatrices().scale(scaleFactor, scaleFactor);
+    }
+
+    public void modifyXY() {
+        int tempX = 0, tempY = 0;
+
+        if (Helper.isChatFocused()) {
+            tempX += baseHUDSettings.on.chat.xOffset;
+            tempY += baseHUDSettings.on.chat.yOffset;
+        }
+
+        if (Helper.isDebugHUDOpen()) {
+            tempX += baseHUDSettings.on.f3.xOffset;
+            tempY += baseHUDSettings.on.f3.yOffset;
+        }
+
+        if (Helper.isBossBarShown()) {
+            tempX += baseHUDSettings.on.bossBar.xOffset;
+            tempY += baseHUDSettings.on.bossBar.yOffset;
+        }
+
+        if (Helper.isScoreBoardShown()) {
+            tempX += baseHUDSettings.on.scoreBoard.xOffset;
+            tempY += baseHUDSettings.on.scoreBoard.yOffset;
+        }
+
+        x = baseX + tempX;
+        y = baseY + tempY;
+    }
+
+    public abstract int getBaseHUDWidth();
+
+    public abstract int getBaseHUDHeight();
 
     public void updateX() {
-        xTemp = baseHUDSettings.getCalculatedPosX(getTextureWidth());
-        x = xTemp;
+        baseX = baseHUDSettings.getCalculatedPosX(getBaseHUDWidth());
+        x = baseX;
     }
 
     public void updateY() {
-        yTemp = baseHUDSettings.getCalculatedPosY(getTextureHeight());
-        y = yTemp;
+        baseY = baseHUDSettings.getCalculatedPosY(getBaseHUDHeight());
+        y = baseY;
     }
 
     // we update every HUD's x and y points here.
-    public void onUpdate() {
+    @Override
+    public void update() {
         updateX();
         updateY();
     }
@@ -53,40 +116,5 @@ public abstract class AbstractHUD implements HUDInterface {
     @Override
     public boolean shouldRender() {
         return baseHUDSettings.shouldRender && !shouldHide();
-    }
-
-    @Override
-    public boolean isScaled() {
-        return baseHUDSettings.scale != 0;
-    }
-
-    @Override
-    public void setHUDScale(DrawContext context) {
-        float scaleFactor = baseHUDSettings.scale / (float) WINDOW.getScaleFactor();
-        if (scaleFactor == 1) return;
-
-        context.getMatrices().scale(scaleFactor, scaleFactor);
-    }
-
-    @Override
-    public void modifyXY() {
-        modifyX();
-        modifyY();
-    }
-
-    public void modifyX() {
-        x =     xTemp +
-                (Helper.isChatFocused() ? baseHUDSettings.on.chat.xOffset : 0) +
-                (Helper.isDebugHUDOpen() ? baseHUDSettings.on.f3.xOffset : 0) +
-                (Helper.isBossBarShown() ? baseHUDSettings.on.bossBar.xOffset : 0) +
-                (Helper.isScoreBoardShown() ? baseHUDSettings.on.scoreBoard.xOffset : 0);
-    }
-
-    public void modifyY() {
-        y =     yTemp +
-                (Helper.isChatFocused() ? baseHUDSettings.on.chat.yOffset : 0) +
-                (Helper.isDebugHUDOpen() ? baseHUDSettings.on.f3.yOffset : 0) +
-                (Helper.isBossBarShown() ? baseHUDSettings.on.bossBar.yOffset : 0) +
-                (Helper.isScoreBoardShown() ? baseHUDSettings.on.scoreBoard.yOffset : 0);
     }
 }

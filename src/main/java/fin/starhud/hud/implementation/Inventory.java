@@ -132,16 +132,13 @@ public class Inventory extends AbstractHUD {
             y1 += 23;
         }
     }
-
-    // if vertical, flip the width with the height.
-
     @Override
-    public int getTextureWidth() {
+    public int getBaseHUDWidth() {
         return INVENTORY_SETTINGS.drawVertical ? TEXTURE_WIDTH_VERTICAL : TEXTURE_WIDTH_HORIZONTAL;
     }
 
     @Override
-    public int getTextureHeight() {
+    public int getBaseHUDHeight() {
         return INVENTORY_SETTINGS.drawVertical ? TEXTURE_HEIGHT_VERTICAL : TEXTURE_HEIGHT_HORIZONTAL;
     }
 }

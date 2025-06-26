@@ -1,8 +1,8 @@
 package fin.starhud.hud.implementation;
 
-import fin.starhud.Helper;
 import fin.starhud.Main;
 import fin.starhud.config.hud.BiomeSettings;
+import fin.starhud.helper.RenderUtils;
 import fin.starhud.hud.AbstractHUD;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
@@ -46,25 +46,25 @@ public class Biome extends AbstractHUD {
             cachedTextWidth = textRenderer.getWidth(cachedFormattedBiomeStr);
         }
 
-        int dimensionIcon = getDimensionIcon(CLIENT.world.getRegistryKey());
-        int color = getTextColorFromDimension(dimensionIcon) | 0xFF000000;
+        int dimensionIndex = getDimensionIndex(CLIENT.world.getRegistryKey());
+        int color = getTextColorFromDimension(dimensionIndex) | 0xFF000000;
 
         int xTemp = x - BIOME_SETTINGS.textGrowth.getGrowthDirection(cachedTextWidth);
 
-        context.drawTexture(RenderPipelines.GUI_TEXTURED, DIMENSION_TEXTURE, xTemp, y, 0.0F, dimensionIcon * TEXTURE_HEIGHT, 13, TEXTURE_HEIGHT, 13, 52);
-        Helper.fillRoundedRightSide(context, xTemp + 14, y, xTemp + 14 + cachedTextWidth + 9, y + TEXTURE_HEIGHT, 0x80000000);
+        context.drawTexture(RenderPipelines.GUI_TEXTURED, DIMENSION_TEXTURE, xTemp, y, 0.0F, dimensionIndex * TEXTURE_HEIGHT, 13, TEXTURE_HEIGHT, 13, 52);
+        RenderUtils.fillRoundedRightSide(context, xTemp + 14, y, xTemp + 14 + cachedTextWidth + 9, y + TEXTURE_HEIGHT, 0x80000000);
         context.drawText(CLIENT.textRenderer, cachedFormattedBiomeStr, xTemp + 19, y + 3, color, false);
     }
 
-    private static int getDimensionIcon(RegistryKey<World> registryKey) {
+    private static int getDimensionIndex(RegistryKey<World> registryKey) {
         if (registryKey == World.OVERWORLD) return 0;
         else if (registryKey == World.NETHER) return 1;
         else if (registryKey == World.END) return 2;
         else return 3;
     }
 
-    private static int getTextColorFromDimension(int dimension) {
-        return switch (dimension) {
+    private static int getTextColorFromDimension(int dimensionIndex) {
+        return switch (dimensionIndex) {
             case 0 -> BIOME_SETTINGS.color.overworld;
             case 1 -> BIOME_SETTINGS.color.nether;
             case 2 -> BIOME_SETTINGS.color.end;
@@ -97,12 +97,12 @@ public class Biome extends AbstractHUD {
     }
 
     @Override
-    public int getTextureWidth() {
+    public int getBaseHUDWidth() {
         return TEXTURE_WIDTH;
     }
 
     @Override
-    public int getTextureHeight() {
+    public int getBaseHUDHeight() {
         return TEXTURE_HEIGHT;
     }
 }

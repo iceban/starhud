@@ -108,12 +108,12 @@ public class ClockInGame extends AbstractHUD {
     }
 
     @Override
-    public int getTextureWidth() {
+    public int getBaseHUDWidth() {
         return CLOCK_IN_GAME_SETTINGS.use12Hour ? TEXTURE_INGAME_12_WIDTH : TEXTURE_INGAME_24_WIDTH;
     }
 
     @Override
-    public int getTextureHeight() {
+    public int getBaseHUDHeight() {
         return TEXTURE_HEIGHT;
     }
 }

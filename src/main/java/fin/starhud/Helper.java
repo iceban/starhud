@@ -2,45 +2,43 @@ package fin.starhud;
 
 import fin.starhud.mixin.accessor.AccessorBossBarHud;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gl.RenderPipelines;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.item.ItemStack;
 import net.minecraft.scoreboard.ScoreboardDisplaySlot;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.MathHelper;
 
 
 public class Helper {
 
-    private static final Identifier DURABILITY_TEXTURE = Identifier.of("starhud", "hud/durability.png");
-    private static final Identifier DURABILITY_BACKGROUND_TEXTURE = Identifier.of("starhud", "hud/durability_background.png");
     private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
 
-    public static void fillRoundedRightSide(DrawContext context, int x1, int y1, int x2, int y2, int color) {
-        context.fill(x1, y1, x2 - 1, y2, color);
-        context.fill(x2 - 1, y1 + 1, x2, y2 - 1, color);
+    private static final char[] superscripts = "⁰¹²³⁴⁵⁶⁷⁸⁹".toCharArray();
+    private static final char[] subscripts = "₀₁₂₃₄₅₆₇₈₉".toCharArray();
+
+    // only convert numbers.
+    public static String toSuperscript(String str) {
+        char[] chars = str.toCharArray();
+
+        int len = str.length();
+        for (int i = 0; i < len; ++i) {
+            char c = chars[i];
+
+            if (c >= '0' && c <= '9')
+                chars[i] = superscripts[c - '0'];
+        }
+
+        return String.valueOf(chars);
     }
 
-    // get the durability "steps" or progress.
-    public static int getItemBarStep(ItemStack stack) {
-        return MathHelper.clamp(Math.round(10 - (float) stack.getDamage() * 10 / (float) stack.getMaxDamage()), 0, 10);
-    }
+    public static String toSubscript(String str) {
+        char[] chars = str.toCharArray();
 
-    // color transition from pastel (red to green).
-    public static int getItemBarColor(int stackStep) {
-        return MathHelper.hsvToRgb(0.35F * stackStep / 10.0F, 0.45F, 0.95F);
-    }
+        int len = str.length();
+        for (int i = 0; i < len; ++i) {
+            char c = chars[i];
 
-    public static void renderItemDurabilityHUD(DrawContext context, Identifier ICON, ItemStack stack, int x, int y, float v, int textureWidth, int textureHeight, int color) {
-        int step = getItemBarStep(stack);
-        int durabilityColor = getItemBarColor(step) | 0xFF000000;
+            if (c >= '0' && c <= '9')
+                chars[i] = subscripts[c - '0'];
+        }
 
-        // draw the icon
-        context.drawTexture(RenderPipelines.GUI_TEXTURED, ICON, x, y, 0.0F, v, 13, 13, textureWidth, textureHeight, color);
-
-        // draw the durability background and steps
-        context.drawTexture(RenderPipelines.GUI_TEXTURED, DURABILITY_BACKGROUND_TEXTURE, x + 14, y, 0.0F, 0.0F, 49, 13, 49, 13);
-        context.drawTexture(RenderPipelines.GUI_TEXTURED, DURABILITY_TEXTURE, x + 19, y + 3, 0, 0, 4 * step, 7, 40, 7, durabilityColor);
+        return String.valueOf(chars);
     }
 
     public static boolean isChatFocused() {

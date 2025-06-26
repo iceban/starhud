@@ -1,6 +1,7 @@
 package fin.starhud.config.hud;
 
 import fin.starhud.config.BaseHUDSettings;
+import fin.starhud.helper.GrowthDirectionX;
 import fin.starhud.helper.ScreenAlignmentX;
 import fin.starhud.helper.ScreenAlignmentY;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
@@ -12,16 +13,16 @@ public class ArmorSettings {
     public BaseHUDSettings base = new BaseHUDSettings(true, 5, -20, ScreenAlignmentX.LEFT, ScreenAlignmentY.MIDDLE);
 
     @ConfigEntry.Gui.CollapsibleObject
-    public ArmorPieceSetting helmet = new ArmorPieceSetting(true, 0, 0);
+    public ArmorPieceSetting helmet = new ArmorPieceSetting(true, 0, 0, true, GrowthDirectionX.RIGHT);
 
     @ConfigEntry.Gui.CollapsibleObject
-    public ArmorPieceSetting chestplate = new ArmorPieceSetting(true, 0, 14);
+    public ArmorPieceSetting chestplate = new ArmorPieceSetting(true, 0, 14, true, GrowthDirectionX.RIGHT);
 
     @ConfigEntry.Gui.CollapsibleObject
-    public ArmorPieceSetting leggings = new ArmorPieceSetting(true, 0, 28);
+    public ArmorPieceSetting leggings = new ArmorPieceSetting(true, 0, 28, true, GrowthDirectionX.RIGHT);
 
     @ConfigEntry.Gui.CollapsibleObject
-    public ArmorPieceSetting boots = new ArmorPieceSetting(true, 0, 42);
+    public ArmorPieceSetting boots = new ArmorPieceSetting(true, 0, 42, true, GrowthDirectionX.RIGHT);
 
     public static class ArmorPieceSetting {
 
@@ -34,10 +35,17 @@ public class ArmorSettings {
         @Comment("Y Offset to origin Y location")
         public int yOffset;
 
-        public ArmorPieceSetting(boolean shouldRender, int xOffset, int yOffset) {
+        public boolean drawBar;
+
+        @Comment("Which way should the HUD goes when a the texture width increases?")
+        public GrowthDirectionX textureGrowth;
+
+        public ArmorPieceSetting(boolean shouldRender, int xOffset, int yOffset, boolean drawBar, GrowthDirectionX textureGrowth) {
             this.shouldRender = shouldRender;
             this.xOffset = xOffset;
             this.yOffset = yOffset;
+            this.drawBar = drawBar;
+            this.textureGrowth = textureGrowth;
         }
     }
 }

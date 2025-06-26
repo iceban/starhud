@@ -74,12 +74,12 @@ public class ClockSystem extends AbstractHUD {
     }
 
     @Override
-    public int getTextureWidth() {
+    public int getBaseHUDWidth() {
         return CLOCK_SYSTEM_SETTINGS.use12Hour ? TEXTURE_SYSTEM_12_WIDTH : TEXTURE_SYSTEM_24_WIDTH;
     }
 
     @Override
-    public int getTextureHeight() {
+    public int getBaseHUDHeight() {
         return TEXTURE_HEIGHT;
     }
 }

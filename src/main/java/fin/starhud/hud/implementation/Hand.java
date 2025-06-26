@@ -1,7 +1,7 @@
 package fin.starhud.hud.implementation;
 
-import fin.starhud.Helper;
 import fin.starhud.config.hud.HandSettings;
+import fin.starhud.helper.RenderUtils;
 import fin.starhud.hud.AbstractHUD;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
@@ -22,9 +22,7 @@ public abstract class Hand extends AbstractHUD {
     // base HUD Width (Icon width = 13, 1 for the gap between icon and text, 5 for the gap on left side of the attribute, 5 for the gap on the right of the attribute).
     // guys i legit forgot what the "10 for the padding at left / right edge" meant help.
     private static final int TEXTURE_WIDTH = 13 + 1 + 5 + 5;
-    // 3 x 10 (10 durability bars) + 9 for each gap.
-    // durability adds 39 additional width.
-    private static final int DURABILITY_WIDTH = 39;
+
     // count string is at max 4 digits, each digit may have 5 pixels.
     // 5 + 1 + 5 + 1 + 5 + 1 + 5 = 23.
     // count string adds 23 additional width.
@@ -53,8 +51,7 @@ public abstract class Hand extends AbstractHUD {
 
         // either draw the durability or the amount of item in the inventory.
         if (handSettings.showDurability && item.isDamageable()) {
-            x -= handSettings.textureGrowth.getGrowthDirection(DURABILITY_WIDTH);
-            Helper.renderItemDurabilityHUD(context, HAND_TEXTURE, item, x, y, startV(), COUNT_WIDTH + TEXTURE_WIDTH, 27, handSettings.color | 0xFF000000);
+            RenderUtils.renderDurabilityHUD(context, HAND_TEXTURE, item, x, y, startV(), COUNT_WIDTH + TEXTURE_WIDTH, 27, handSettings.color | 0xFF000000, handSettings.drawBar, handSettings.textureGrowth);
         } else if (handSettings.showCount) {
             x -= handSettings.textureGrowth.getGrowthDirection(COUNT_WIDTH);
             renderItemCountHUD(context, CLIENT.textRenderer, playerInventory, item, x, y, startV(), handSettings.color | 0xFF000000);
@@ -81,12 +78,12 @@ public abstract class Hand extends AbstractHUD {
     }
 
     @Override
-    public int getTextureWidth() {
+    public int getBaseHUDWidth() {
         return TEXTURE_WIDTH;
     }
 
     @Override
-    public int getTextureHeight() {
+    public int getBaseHUDHeight() {
         return TEXTURE_HEIGHT;
     }
 

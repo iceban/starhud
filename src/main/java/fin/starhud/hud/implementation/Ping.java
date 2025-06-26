@@ -31,9 +31,12 @@ public class Ping extends AbstractHUD {
     }
 
     @Override
-    public void renderHUD(DrawContext context) {
-        if (CLIENT.isInSingleplayer()) return;
+    public boolean shouldRender() {
+        return baseHUDSettings.shouldRender && !  CLIENT.isInSingleplayer() && !shouldHide();
+    }
 
+    @Override
+    public void renderHUD(DrawContext context) {
         MultiValueDebugSampleLogImpl pingLog = CLIENT.getDebugHud().getPingLog();
 
         // different world and server checking for PingMeasurer renewal.
@@ -80,12 +83,12 @@ public class Ping extends AbstractHUD {
     }
 
     @Override
-    public int getTextureWidth() {
+    public int getBaseHUDWidth() {
         return TEXTURE_WIDTH;
     }
 
     @Override
-    public int getTextureHeight() {
+    public int getBaseHUDHeight() {
         return TEXTURE_HEIGHT;
     }
 }
