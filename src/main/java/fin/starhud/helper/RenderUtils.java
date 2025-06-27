@@ -10,7 +10,7 @@ import net.minecraft.util.math.MathHelper;
 
 public class RenderUtils {
 
-    private static final Identifier DURABILITY_TEXTURE = Identifier.of("starhud", "hud/durability.png");
+    private static final Identifier DURABILITY_TEXTURE = Identifier.of("starhud", "hud/durability_bar.png");
     private static final Identifier DURABILITY_BACKGROUND_TEXTURE = Identifier.of("starhud", "hud/durability_background.png");
 
     // 10 bars + 9 gaps.
@@ -71,7 +71,7 @@ public class RenderUtils {
 
         x -= textureGrowth.getGrowthDirection(remainingTextWidth + maxDamageTextWidth);
 
-        context.drawTexture(RenderPipelines.GUI_TEXTURED, ICON, x, y, 0.0F, v, 13 , 13, textureWidth, textureHeight, color);
+        context.drawTexture(RenderPipelines.GUI_TEXTURED, ICON, x, y, 0.0F, v, 13, 13, textureWidth, textureHeight, color);
         fillRoundedRightSide(context, x + 14,  y, x + 14 + remainingTextWidth + maxDamageTextWidth + 10, y + 13, 0x80000000);
 
         // this is gore of my comfort character, call drawText twice except the second one has a -1 pixel offset.

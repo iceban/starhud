@@ -39,11 +39,11 @@ public class Coordinate extends AbstractHUD {
         int colorZ = COORD_SETTINGS.Z.color | 0xFF000000;
 
         if (COORD_SETTINGS.X.shouldRender)
-            renderEachCoordinate(context, textRenderer, coordX, x + COORD_SETTINGS.X.xOffset, y + COORD_SETTINGS.X.yOffset, 0.0F, TEXTURE_WIDTH, TEXTURE_HEIGHT, colorX);
+            renderEachCoordinate(context, coordX, x + COORD_SETTINGS.X.xOffset, y + COORD_SETTINGS.X.yOffset, 0.0F, TEXTURE_WIDTH, TEXTURE_HEIGHT, colorX);
         if (COORD_SETTINGS.Y.shouldRender)
-            renderEachCoordinate(context, textRenderer, coordY, x + COORD_SETTINGS.Y.xOffset, y + COORD_SETTINGS.Y.yOffset, 14.0F, TEXTURE_WIDTH, TEXTURE_HEIGHT, colorY);
+            renderEachCoordinate(context, coordY, x + COORD_SETTINGS.Y.xOffset, y + COORD_SETTINGS.Y.yOffset, 14.0F, TEXTURE_WIDTH, TEXTURE_HEIGHT, colorY);
         if (COORD_SETTINGS.Z.shouldRender)
-            renderEachCoordinate(context, textRenderer, coordZ, x + COORD_SETTINGS.Z.xOffset, y + COORD_SETTINGS.Z.yOffset, 28.0F, TEXTURE_WIDTH, TEXTURE_HEIGHT, colorZ);
+            renderEachCoordinate(context, coordZ, x + COORD_SETTINGS.Z.xOffset, y + COORD_SETTINGS.Z.yOffset, 28.0F, TEXTURE_WIDTH, TEXTURE_HEIGHT, colorZ);
 
     }
 
@@ -57,8 +57,8 @@ public class Coordinate extends AbstractHUD {
         return TEXTURE_HEIGHT;
     }
 
-    public static void renderEachCoordinate(DrawContext context, TextRenderer textRenderer, String str, int x, int y, float v, int width, int height, int color) {
+    public static void renderEachCoordinate(DrawContext context, String str, int x, int y, float v, int width, int height, int color) {
         context.drawTexture(RenderPipelines.GUI_TEXTURED, COORD_TEXTURE, x, y, 0.0F, v, width, height, width, 41, color);
-        context.drawText(textRenderer, str, x + 19, y + 3, color, false);
+        context.drawText(CLIENT.textRenderer, str, x + 19, y + 3, color, false);
     }
 }

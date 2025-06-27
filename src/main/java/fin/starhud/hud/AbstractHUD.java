@@ -1,9 +1,7 @@
 package fin.starhud.hud;
 
-import fin.starhud.Helper;
 import fin.starhud.config.BaseHUDSettings;
 import fin.starhud.config.ConditionalSettings;
-import fin.starhud.helper.Condition;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.util.Window;
@@ -18,8 +16,8 @@ public abstract class AbstractHUD implements HUDInterface {
     protected int y;
 
     // temporary x and y point.
-    private int baseX;
-    private int baseY;
+    protected int baseX;
+    protected int baseY;
 
     public AbstractHUD(BaseHUDSettings baseHUDSettings) {
         this.baseHUDSettings = baseHUDSettings;
@@ -95,16 +93,16 @@ public abstract class AbstractHUD implements HUDInterface {
         updateY();
     }
 
-    public boolean shouldHide() {
+    public boolean shouldRenderOnCondition() {
         for (ConditionalSettings condition: baseHUDSettings.conditions) {
-            if (!condition.shouldRender && condition.isConditionMet())
+            if (!condition.shouldRender & condition.isConditionMet())
                 return true;
         }
-        return false;
+        return true;
     }
 
     @Override
     public boolean shouldRender() {
-        return baseHUDSettings.shouldRender && !shouldHide();
+        return baseHUDSettings.shouldRender && shouldRenderOnCondition();
     }
 }

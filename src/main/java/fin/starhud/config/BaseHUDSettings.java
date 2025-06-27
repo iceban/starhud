@@ -1,6 +1,5 @@
 package fin.starhud.config;
 
-import fin.starhud.helper.Condition;
 import fin.starhud.helper.ScreenAlignmentX;
 import fin.starhud.helper.ScreenAlignmentY;
 import me.shedaniel.autoconfig.ConfigData;

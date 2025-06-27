@@ -10,7 +10,7 @@ import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
 public class DaySettings {
 
     @ConfigEntry.Gui.TransitiveObject
-    public BaseHUDSettings base = new BaseHUDSettings(true, 47, 5, ScreenAlignmentX.LEFT, ScreenAlignmentY.TOP);
+    public BaseHUDSettings base = new BaseHUDSettings(true, 5, 47, ScreenAlignmentX.LEFT, ScreenAlignmentY.TOP);
 
     @Comment("Which way should the HUD goes when a the texture increases?")
     @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)

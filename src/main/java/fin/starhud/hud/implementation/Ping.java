@@ -32,7 +32,7 @@ public class Ping extends AbstractHUD {
 
     @Override
     public boolean shouldRender() {
-        return baseHUDSettings.shouldRender && !  CLIENT.isInSingleplayer() && !shouldHide();
+        return baseHUDSettings.shouldRender && !CLIENT.isInSingleplayer() && shouldRenderOnCondition();
     }
 
     @Override

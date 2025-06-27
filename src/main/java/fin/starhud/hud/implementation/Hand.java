@@ -54,15 +54,15 @@ public abstract class Hand extends AbstractHUD {
             RenderUtils.renderDurabilityHUD(context, HAND_TEXTURE, item, x, y, getV(), COUNT_WIDTH + TEXTURE_WIDTH, 27, handSettings.color | 0xFF000000, handSettings.drawBar, handSettings.textureGrowth);
         } else if (handSettings.showCount) {
             x -= handSettings.textureGrowth.getGrowthDirection(COUNT_WIDTH);
-            renderItemCountHUD(context, CLIENT.textRenderer, playerInventory, item, x, y, getV(), handSettings.color | 0xFF000000);
+            renderItemCountHUD(context, playerInventory, item, x, y, getV(), handSettings.color | 0xFF000000);
         }
     }
 
-    private static void renderItemCountHUD(DrawContext context, TextRenderer textRenderer, PlayerInventory playerInventory, ItemStack stack, int x, int y, float v, int color) {
+    private static void renderItemCountHUD(DrawContext context, PlayerInventory playerInventory, ItemStack stack, int x, int y, float v, int color) {
         int stackAmount = getItemCount(playerInventory, stack);
 
         context.drawTexture(RenderPipelines.GUI_TEXTURED, HAND_TEXTURE, x, y, 0.0F, v, COUNT_WIDTH + TEXTURE_WIDTH, TEXTURE_HEIGHT, COUNT_WIDTH + TEXTURE_WIDTH, 27, color);
-        context.drawText(textRenderer, Integer.toString(stackAmount), x + 19, y + 3, color, false);
+        context.drawText(CLIENT.textRenderer, Integer.toString(stackAmount), x + 19, y + 3, color, false);
     }
 
     private static int getItemCount(PlayerInventory inventory, ItemStack stack) {

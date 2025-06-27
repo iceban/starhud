@@ -67,4 +67,8 @@ public class Settings implements ConfigData {
         @ConfigEntry.Gui.CollapsibleObject
         public fin.starhud.config.hud.HandSettings rightHandSettings = new fin.starhud.config.hud.HandSettings(true, 108, -25, ScreenAlignmentX.CENTER, ScreenAlignmentY.BOTTOM, GrowthDirectionX.RIGHT, 0x87ceeb);
     }
+
+    @ConfigEntry.Category("effect")
+    @ConfigEntry.Gui.TransitiveObject
+    public EffectSettings effectSettings = new EffectSettings();
 }

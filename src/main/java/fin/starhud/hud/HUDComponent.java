@@ -22,6 +22,7 @@ public class HUDComponent {
         huds.add(new Ping());
         huds.add(new LeftHand());
         huds.add(new RightHand());
+        huds.add(new Effect());
     }
 
     public static void renderAll(DrawContext context) {
