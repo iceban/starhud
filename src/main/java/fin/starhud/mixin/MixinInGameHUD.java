@@ -1,7 +1,6 @@
 package fin.starhud.mixin;
 
 import fin.starhud.hud.HUDComponent;
-import fin.starhud.hud.implementation.Effect;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.client.render.RenderTickCounter;
@@ -20,7 +19,8 @@ public class MixinInGameHUD {
 
     @Inject(at = @At("HEAD"), method = "renderStatusEffectOverlay", cancellable = true)
     private void renderStatusEffectOverlay(DrawContext context, RenderTickCounter tickCounter, CallbackInfo ci) {
-        if (Effect.shouldStatusEffectRender()) {
+        if (HUDComponent.effectHUD.shouldRender()) {
+            HUDComponent.effectHUD.render(context);
             ci.cancel();
         }
     }

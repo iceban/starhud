@@ -2,7 +2,6 @@ package fin.starhud.hud.implementation;
 
 import fin.starhud.Helper;
 import fin.starhud.Main;
-import fin.starhud.config.ConditionalSettings;
 import fin.starhud.config.hud.EffectSettings;
 import fin.starhud.helper.RenderUtils;
 import fin.starhud.hud.AbstractHUD;
@@ -17,6 +16,8 @@ import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.util.Identifier;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 // WIP
 public class Effect extends AbstractHUD {
@@ -34,19 +35,11 @@ public class Effect extends AbstractHUD {
     private static final int STATUS_EFFECT_BAR_TEXTURE_WIDTH = 21;
     private static final int STATUS_EFFECT_BAR_TEXTURE_HEIGHT = 3;
 
+    private static final Map<RegistryEntry<StatusEffect>, StatusEffectAttribute> STATUS_EFFECT_ATTRIBUTE_MAP = new HashMap<>();
+    private static final Map<RegistryEntry<StatusEffect>, Identifier> STATUS_EFFECT_TEXTURE_MAP = new HashMap<>();
+
     public Effect() {
         super(effectSettings.base);
-    }
-
-    public static boolean shouldStatusEffectRender() {
-        if (effectSettings.base.shouldRender) return true;
-
-        for (ConditionalSettings condition : effectSettings.base.conditions) {
-            if (!condition.shouldRender & condition.isConditionMet())
-                return true;
-        }
-
-        return false;
     }
 
     @Override
@@ -61,94 +54,182 @@ public class Effect extends AbstractHUD {
         int beneficialIndex = 0;
         int harmIndex = 0;
 
+        int sameTypeGap = effectSettings.sameTypeGap;
+
+        int beneficialSize = getBeneficialSize();
+        int harmSize = collection.size() - beneficialSize;
+
+        int xBeneficial = x - effectSettings.growthDirectionX.getGrowthDirection(getDynamicWidth(true, beneficialSize, harmSize));
+        int yBeneficial = y - effectSettings.growthDirectionY.getGrowthDirection(getDynamicHeight(true, beneficialSize, harmSize));
+
+        int xHarm = x - effectSettings.growthDirectionX.getGrowthDirection(getDynamicWidth(false, beneficialSize, harmSize));
+        int yHarm = y - effectSettings.growthDirectionY.getGrowthDirection(getDynamicHeight(false, beneficialSize, harmSize));
+
         for (StatusEffectInstance statusEffectInstance : collection) {
             if (!statusEffectInstance.shouldShowIcon())
                 continue;
 
             RegistryEntry<StatusEffect> registryEntry = statusEffectInstance.getEffectType();
+            StatusEffectAttribute statusEffectAttribute = getStatusEffectAttribute(statusEffectInstance);
 
-            int xTemp = x;
-            int yTemp = y;
+            int x2;
+            int y2;
 
             if (registryEntry.value().isBeneficial()) {
-                xTemp += effectSettings.beneficialGapX * beneficialIndex;
-                yTemp += effectSettings.beneficialGapY * beneficialIndex;
+                x2 = (xBeneficial) + ((effectSettings.drawVertical ? 0 : sameTypeGap) * beneficialIndex);
+                y2 = (yBeneficial) + ((effectSettings.drawVertical ? sameTypeGap : 0) * beneficialIndex);
                 ++beneficialIndex;
             } else {
-                xTemp += effectSettings.gapX + (effectSettings.harmGapX * harmIndex);
-                yTemp += effectSettings.gapY + (effectSettings.harmGapY * harmIndex);
+                x2 = (xHarm) + (effectSettings.drawVertical ? effectSettings.differentTypeGap : 0)  + ((effectSettings.drawVertical ? 0 : sameTypeGap) * harmIndex);
+                y2 = (yHarm) + (effectSettings.drawVertical ? 0 : effectSettings.differentTypeGap) + ((effectSettings.drawVertical ? sameTypeGap : 0) * harmIndex);
                 ++harmIndex;
             }
 
             if (statusEffectInstance.isAmbient()) {
 
-                // draw Soft blue bar and blue outline.
-
+                // draw soft blue outlined background...
                 context.drawTexture(
                         RenderPipelines.GUI_TEXTURED,
                         STATUS_EFFECT_AMBIENT_TEXTURE,
-                        xTemp, yTemp,
+                        x2, y2,
                         0, 0,
                         STATUS_EFFECT_TEXTURE_WIDTH, STATUS_EFFECT_TEXTURE_HEIGHT,
-                        STATUS_EFFECT_TEXTURE_WIDTH, STATUS_EFFECT_TEXTURE_HEIGHT
+                        STATUS_EFFECT_TEXTURE_WIDTH, STATUS_EFFECT_TEXTURE_HEIGHT,
+                        effectSettings.ambientColor | 0xFF000000
                 );
 
             } else {
-                // draw Timer Bar.
-                int duration = statusEffectInstance.getDuration();
-                int maxDuration = 20 * 60; // getMaxDuration() WIP
-
-                int step = Helper.getStep(duration, maxDuration, 7);
-                int color = RenderUtils.getItemBarColor(step, 7) | 0xFF000000;
 
                 // draw background
                 context.drawTexture(
                         RenderPipelines.GUI_TEXTURED,
                         STATUS_EFFECT_BACKGROUND_TEXTURE,
-                        xTemp, yTemp,
+                        x2, y2,
                         0, 0,
                         STATUS_EFFECT_TEXTURE_WIDTH, STATUS_EFFECT_TEXTURE_HEIGHT,
                         STATUS_EFFECT_TEXTURE_WIDTH, STATUS_EFFECT_TEXTURE_HEIGHT
                 );
-
-                // draw bar
-                context.drawTexture(
-                        RenderPipelines.GUI_TEXTURED,
-                        STATUS_EFFECT_BAR_TEXTURE,
-                        xTemp + 2, yTemp + 27,
-                        0, 0,
-                        3 * step, STATUS_EFFECT_BAR_TEXTURE_HEIGHT,
-                        STATUS_EFFECT_BAR_TEXTURE_WIDTH, STATUS_EFFECT_BAR_TEXTURE_HEIGHT,
-                        color
-                );
             }
+
+            int step, color;
+            if (statusEffectInstance.isInfinite()) {
+                step = 7;
+                color = effectSettings.infiniteColor | 0xFF000000;
+            } else {
+                int duration = statusEffectInstance.getDuration();
+                int maxDuration = statusEffectAttribute.maxDuration;
+
+                step = Helper.getStep(duration, maxDuration, 7);
+                color = RenderUtils.getItemBarColor(step, 7) | 0xFF000000;
+            }
+
+            // draw timer bar
+            context.drawTexture(
+                    RenderPipelines.GUI_TEXTURED,
+                    STATUS_EFFECT_BAR_TEXTURE,
+                    x2 + 2, y2 + 27,
+                    0, 0,
+                    3 * step, STATUS_EFFECT_BAR_TEXTURE_HEIGHT,
+                    STATUS_EFFECT_BAR_TEXTURE_WIDTH, STATUS_EFFECT_BAR_TEXTURE_HEIGHT,
+                    color
+            );
 
             // draw effect texture.
             context.drawTexture(
                     RenderPipelines.GUI_TEXTURED,
-                    getEffectTexture(registryEntry),
-                    xTemp + 3, yTemp + 3,
+                    getStatusEffectTexture(registryEntry),
+                    x2 + 3, y2 + 3,
                     0,0,
                     18, 18,
                     18,18
             );
+
+            // draw amplifier text.
+            int amplifier = statusEffectAttribute.amplifier + 1;
+            if (amplifier == 1)
+                continue;
+
+            String amplifierStr = Helper.toSubscript(Integer.toString(amplifier));
+
+            context.drawText(
+                    CLIENT.textRenderer,
+                    amplifierStr,
+                    x2 + 3 + 18 - CLIENT.textRenderer.getWidth(amplifierStr) + 1, y2 + 2 + 18 - 7,
+                    0xFFFFFFFF,
+                    true
+            );
+
         }
     }
 
-    public static Identifier getEffectTexture(RegistryEntry<StatusEffect> effect) {
-        return effect.getKey()
-                .map(RegistryKey::getValue)
-                .map(id -> Identifier.of(id.getNamespace(), "textures/mob_effect/" + id.getPath() + ".png"))
-                .orElseGet(MissingSprite::getMissingSpriteId);
+    public int getDynamicWidth(boolean isBeneficial, int beneficialSize, int harmSize) {
+         return effectSettings.drawVertical ? STATUS_EFFECT_TEXTURE_WIDTH : (isBeneficial ? beneficialSize : harmSize) * effectSettings.sameTypeGap;
     }
+
+    public int getDynamicHeight(boolean isBeneficial, int beneficialSize, int harmSize) {
+        return effectSettings.drawVertical ? (isBeneficial ? beneficialSize : harmSize) * effectSettings.sameTypeGap : STATUS_EFFECT_TEXTURE_HEIGHT;
+    }
+
+    public int getBeneficialSize() {
+        int size = 0;
+        for (StatusEffectInstance collection : CLIENT.player.getStatusEffects()) {
+            if (collection.getEffectType().value().isBeneficial())
+                ++size;
+        }
+        return size;
+    }
+
+    // 0 because the width is dependent to how many status effect are present.
 
     @Override
     public int getBaseHUDWidth() {
-        return STATUS_EFFECT_TEXTURE_WIDTH;
+        return 0;
     }
 
     @Override
     public int getBaseHUDHeight() {
-        return STATUS_EFFECT_TEXTURE_HEIGHT;
+        return 0;
+    }
+
+    public static Identifier getStatusEffectTexture(RegistryEntry<StatusEffect> effect) {
+        return STATUS_EFFECT_TEXTURE_MAP.computeIfAbsent(
+                effect,
+                e -> e.getKey()
+                        .map(RegistryKey::getValue)
+                        .map(id -> Identifier.of(id.getNamespace(), "textures/mob_effect/" + id.getPath() + ".png"))
+                        .orElseGet(MissingSprite::getMissingSpriteId)
+        );
+    }
+
+    // ---------------------------------------------------------------------------------------------- //
+    // this Implementation is inspired from @SoRadGaming Simple-HUD-Enhanced StatusEffectTracker class
+    // see: https://github.com/SoRadGaming/Simple-HUD-Enhanced/blob/main/src/main/java/com/soradgaming/simplehudenhanced/utli/StatusEffectsTracker.java
+
+    // maxDuration for maxDuration, amplifier and isAmbient to help updating the map.
+    public record StatusEffectAttribute(int maxDuration, int amplifier, boolean isAmbient) {}
+
+    public static StatusEffectAttribute getStatusEffectAttribute(StatusEffectInstance effect) {
+        return STATUS_EFFECT_ATTRIBUTE_MAP.computeIfAbsent(effect.getEffectType(), key ->
+                new StatusEffectAttribute(
+                        effect.getDuration(),
+                        effect.getAmplifier(),
+                        effect.isAmbient()
+                )
+        );
+    }
+
+    public static StatusEffectAttribute updateStatusEffectAttribute(RegistryEntry<StatusEffect> effect, int maxDuration, int amplifier, boolean isAmbient) {
+        StatusEffectAttribute newEffect = new StatusEffectAttribute(
+                maxDuration,
+                amplifier,
+                isAmbient
+        );
+
+        return STATUS_EFFECT_ATTRIBUTE_MAP.put(effect, newEffect);
+    }
+
+    // used when status effect no longer present in player's status effect list.
+    public static StatusEffectAttribute removeStatusEffectAttribute(RegistryEntry<StatusEffect> effectRegistry) {
+        return STATUS_EFFECT_ATTRIBUTE_MAP.remove(effectRegistry);
     }
 }

@@ -9,6 +9,9 @@ public class HUDComponent {
 
     public static final ArrayList<HUDInterface> huds = new ArrayList<>();
 
+    // separate status effect hud as they are rendered in a different place.
+    public static final HUDInterface effectHUD = new Effect();
+
     static {
         huds.add(new Armor());
         huds.add(new Biome());
@@ -22,7 +25,6 @@ public class HUDComponent {
         huds.add(new Ping());
         huds.add(new LeftHand());
         huds.add(new RightHand());
-        huds.add(new Effect());
     }
 
     public static void renderAll(DrawContext context) {
@@ -36,5 +38,7 @@ public class HUDComponent {
         for (HUDInterface hud : huds) {
             hud.update();
         }
+
+        effectHUD.update();
     }
 }

@@ -7,7 +7,7 @@ public enum ScreenAlignmentX {
 
     // adjust position based on alignment
     // if RIGHT, place HUD on the right side of the screen, basically.
-    public int getAlignmentXPos(int scaledWidth) {
+    public int getAlignmentPos(int scaledWidth) {
         return switch (this) {
             case LEFT -> 0;
             case CENTER -> scaledWidth / 2;
@@ -16,7 +16,7 @@ public enum ScreenAlignmentX {
     }
 
     // IF RIGHT, shift hud to the left a bit so that no pixel is leaving the screen (supposed you have set x:0, y:0)
-    public int getTextureOffsetX(int textureWidth) {
+    public int getTextureOffset(int textureWidth) {
         return switch (this) {
             case LEFT -> 0;
             case CENTER -> textureWidth / 2;

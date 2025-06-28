@@ -5,10 +5,10 @@ public enum GrowthDirectionX {
     CENTER,
     RIGHT;
 
-    public int getGrowthDirection(int growableWidth) {
+    public int getGrowthDirection(int dynamicWidth) {
         return switch (this) {
-            case LEFT -> growableWidth;
-            case CENTER -> growableWidth / 2;
+            case LEFT -> dynamicWidth;
+            case CENTER -> dynamicWidth / 2;
             case RIGHT -> 0;
         };
     }

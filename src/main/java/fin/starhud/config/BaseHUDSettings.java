@@ -47,11 +47,11 @@ public class BaseHUDSettings implements ConfigData {
 
     // this shifts your HUD based on your x point, and alignment on X axis, and place them accordingly in your screen.
     public int getCalculatedPosX(int HUDWidth) {
-        return this.x + (int) (this.originX.getAlignmentXPos(MinecraftClient.getInstance().getWindow().getScaledWidth()) * getScaledFactor()) - this.originX.getTextureOffsetX(HUDWidth);
+        return this.x + (int) (this.originX.getAlignmentPos(MinecraftClient.getInstance().getWindow().getScaledWidth()) * getScaledFactor()) - this.originX.getTextureOffset(HUDWidth);
     }
 
     // this also shifts your HUD based on your y point, and alignment on Y axis, and place them accordingly in your screen.
     public int getCalculatedPosY(int HUDHeight) {
-        return this.y + (int) (this.originY.getAlignmentYPos(MinecraftClient.getInstance().getWindow().getScaledHeight()) * getScaledFactor()) - this.originY.getTextureOffsetY(HUDHeight);
+        return this.y + (int) (this.originY.getAlignmentPos(MinecraftClient.getInstance().getWindow().getScaledHeight()) * getScaledFactor()) - this.originY.getTextureOffset(HUDHeight);
     }
 }
