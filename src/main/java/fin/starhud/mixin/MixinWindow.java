@@ -14,6 +14,6 @@ public class MixinWindow {
     // although quite silly, but This is the best performance we can get.
     @Inject(method = "setScaleFactor", at = @At("TAIL"))
     public void onScaleChanged(int scaleFactor, CallbackInfo ci) {
-        HUDComponent.updateAll();
+        HUDComponent.getInstance().updateAll();
     }
 }

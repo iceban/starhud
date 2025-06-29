@@ -7,12 +7,15 @@ import java.util.ArrayList;
 
 public class HUDComponent {
 
-    public static final ArrayList<HUDInterface> huds = new ArrayList<>();
+    static HUDComponent instance;
+
+    public final ArrayList<HUDInterface> huds = new ArrayList<>();
 
     // separate status effect hud as they are rendered in a different place.
-    public static final HUDInterface effectHUD = new Effect();
+    public HUDInterface effectHUD;
 
-    static {
+    // singleton
+    private HUDComponent() {
         huds.add(new Armor());
         huds.add(new Biome());
         huds.add(new ClockInGame());
@@ -25,16 +28,25 @@ public class HUDComponent {
         huds.add(new Ping());
         huds.add(new LeftHand());
         huds.add(new RightHand());
+
+        effectHUD = new Effect();
     }
 
-    public static void renderAll(DrawContext context) {
+    public static HUDComponent getInstance() {
+        if (instance == null) {
+            instance = new HUDComponent();
+        }
+        return instance;
+    }
+
+    public void renderAll(DrawContext context) {
         for (HUDInterface hud : huds) {
             if (hud.shouldRender())
                 hud.render(context);
         }
     }
 
-    public static void updateAll() {
+    public void updateAll() {
         for (HUDInterface hud : huds) {
             hud.update();
         }

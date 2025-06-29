@@ -20,7 +20,7 @@ public class Main implements ClientModInitializer {
     }
 
     private ActionResult onConfigSaved(ConfigHolder<Settings> holder, Settings config) {
-        HUDComponent.updateAll();
+        HUDComponent.getInstance().updateAll();
         return ActionResult.SUCCESS;
     }
 }
