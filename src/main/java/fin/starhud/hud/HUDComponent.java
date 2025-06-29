@@ -12,7 +12,7 @@ public class HUDComponent {
     public final ArrayList<HUDInterface> huds = new ArrayList<>();
 
     // separate status effect hud as they are rendered in a different place.
-    public HUDInterface effectHUD;
+    public final HUDInterface effectHUD;
 
     // singleton
     private HUDComponent() {
