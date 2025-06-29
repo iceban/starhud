@@ -68,8 +68,9 @@ public class Helper {
         return CLIENT.world.getScoreboard().getObjectiveForSlot(ScoreboardDisplaySlot.SIDEBAR) != null;
     }
 
-    public static boolean isStatusEffectOverlayShown() {
-        return !CLIENT.player.getStatusEffects().isEmpty();
+    public static boolean isBeneficialEffectOverlayShown() {
+        return CLIENT.player.getStatusEffects().stream()
+                .anyMatch(effect -> effect.getEffectType().value().isBeneficial());
     }
 
     public static boolean isHarmEffectOverlayShown() {

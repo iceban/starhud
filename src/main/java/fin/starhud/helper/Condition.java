@@ -7,7 +7,7 @@ public enum Condition {
     CHAT_HUD_OPENED,
     BOSSBAR_SHOWN,
     SCOREBOARD_SHOWN,
-    STATUS_EFFECT_SHOWN,
+    BENEFICIAL_EFFECT_SHOWN,
     HARM_EFFECT_SHOWN,
     OFFHAND_SHOWN;
 
@@ -17,7 +17,7 @@ public enum Condition {
             case CHAT_HUD_OPENED -> Helper.isChatFocused();
             case BOSSBAR_SHOWN -> Helper.isBossBarShown();
             case SCOREBOARD_SHOWN -> Helper.isScoreBoardShown();
-            case STATUS_EFFECT_SHOWN -> Helper.isStatusEffectOverlayShown();
+            case BENEFICIAL_EFFECT_SHOWN -> Helper.isBeneficialEffectOverlayShown();
             case HARM_EFFECT_SHOWN -> Helper.isHarmEffectOverlayShown();
             case OFFHAND_SHOWN -> Helper.isOffHandOverlayShown();
         };
