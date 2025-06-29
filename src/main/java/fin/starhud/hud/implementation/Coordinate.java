@@ -2,10 +2,10 @@ package fin.starhud.hud.implementation;
 
 import fin.starhud.Main;
 import fin.starhud.config.hud.CoordSettings;
+import fin.starhud.helper.RenderUtils;
 import fin.starhud.hud.AbstractHUD;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
@@ -58,7 +58,7 @@ public class Coordinate extends AbstractHUD {
     }
 
     public static void renderEachCoordinate(DrawContext context, String str, int x, int y, float v, int width, int height, int color) {
-        context.drawTexture(RenderPipelines.GUI_TEXTURED, COORD_TEXTURE, x, y, 0.0F, v, width, height, width, 41, color);
-        context.drawText(CLIENT.textRenderer, str, x + 19, y + 3, color, false);
+        RenderUtils.drawTextureHUD(context, COORD_TEXTURE, x, y, 0.0F, v, width, height, width, 41, color);
+        RenderUtils.drawTextHUD(context, str, x + 19, y + 3, color, false);
     }
 }

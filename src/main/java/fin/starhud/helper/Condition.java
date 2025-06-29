@@ -6,7 +6,9 @@ public enum Condition {
     DEBUG_HUD_OPENED,
     CHAT_HUD_OPENED,
     BOSSBAR_SHOWN,
-    SCOREBOARD_SHOWN;
+    SCOREBOARD_SHOWN,
+    STATUS_EFFECT_SHOWN,
+    OFFHAND_SHOWN;
 
     public boolean isConditionMet() {
         return switch (this) {
@@ -14,6 +16,8 @@ public enum Condition {
             case CHAT_HUD_OPENED -> Helper.isChatFocused();
             case BOSSBAR_SHOWN -> Helper.isBossBarShown();
             case SCOREBOARD_SHOWN -> Helper.isScoreBoardShown();
+            case STATUS_EFFECT_SHOWN -> Helper.isStatusEffectOverlayShown();
+            case OFFHAND_SHOWN -> Helper.isOffHandOverlayShown();
         };
     }
 }

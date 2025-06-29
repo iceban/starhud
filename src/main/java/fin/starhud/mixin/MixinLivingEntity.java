@@ -1,6 +1,6 @@
 package fin.starhud.mixin;
 
-import fin.starhud.hud.implementation.Effect;
+import fin.starhud.helper.StatusEffectAttribute;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffect;
@@ -20,21 +20,16 @@ public class MixinLivingEntity {
 
     @Inject(method = "setStatusEffect", at = @At("HEAD"))
     private void onSetStatusEffect(StatusEffectInstance effect, Entity source, CallbackInfo ci) {
-        Effect.StatusEffectAttribute statusEffectAttribute = Effect.getStatusEffectAttribute(effect);
+        StatusEffectAttribute statusEffectAttribute = StatusEffectAttribute.getStatusEffectAttribute(effect);
 
-        if (effect.getAmplifier() != statusEffectAttribute.amplifier()) { // different amplifier: update
-            Effect.updateStatusEffectAttribute(effect.getEffectType(), effect.getDuration(), effect.getAmplifier(), effect.isAmbient());
-        } else if (effect.isAmbient() != statusEffectAttribute.isAmbient()) { // different ambient: update
-            Effect.updateStatusEffectAttribute(effect.getEffectType(), effect.getDuration(), effect.getAmplifier(), effect.isAmbient());
-        } else if (effect.getDuration() > statusEffectAttribute.maxDuration()) { // higher duration than maxDuration: update
-            Effect.updateStatusEffectAttribute(effect.getEffectType(), effect.getDuration(), effect.getAmplifier(), effect.isAmbient());
-        }
+        if (StatusEffectAttribute.shouldUpdate(effect, statusEffectAttribute))
+            StatusEffectAttribute.updateStatusEffectAttribute(effect.getEffectType(), effect.getDuration(), effect.getAmplifier(), effect.isAmbient());
     }
 
     // using removeStatusEffectInternal() instead of removeStatusEffect() because the former worked and the latter didn't, I don't know why.
     // remove status effect from the player status effect list. Reason is just to delete unused effect from the map.
     @Inject(method = "removeStatusEffectInternal", at = @At("RETURN"))
     private void onStatusEffectRemoved(RegistryEntry<StatusEffect> effect, CallbackInfoReturnable<StatusEffectInstance> cir) {
-        Effect.removeStatusEffectAttribute(effect);
+        StatusEffectAttribute.removeStatusEffectAttribute(effect);
     }
 }

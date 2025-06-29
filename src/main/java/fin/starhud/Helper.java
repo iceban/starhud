@@ -2,6 +2,7 @@ package fin.starhud;
 
 import fin.starhud.mixin.accessor.AccessorBossBarHud;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.scoreboard.ScoreboardDisplaySlot;
 import net.minecraft.util.math.MathHelper;
 
@@ -60,5 +61,13 @@ public class Helper {
 
     public static boolean isScoreBoardShown() {
         return CLIENT.world.getScoreboard().getObjectiveForSlot(ScoreboardDisplaySlot.SIDEBAR) != null;
+    }
+
+    public static boolean isStatusEffectOverlayShown() {
+        return !CLIENT.player.getStatusEffects().isEmpty();
+    }
+
+    public static boolean isOffHandOverlayShown() {
+        return !CLIENT.player.getEquippedStack(EquipmentSlot.OFFHAND).isEmpty();
     }
 }

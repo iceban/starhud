@@ -2,9 +2,9 @@ package fin.starhud.hud.implementation;
 
 import fin.starhud.Main;
 import fin.starhud.config.hud.PingSettings;
+import fin.starhud.helper.RenderUtils;
 import fin.starhud.hud.AbstractHUD;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.network.PingMeasurer;
 import net.minecraft.util.Identifier;
@@ -59,8 +59,8 @@ public class Ping extends AbstractHUD {
         int step = Math.min((int) currentPing / 150, 3);
         int color = getPingColor(step) | 0xFF000000;
 
-        context.drawTexture(RenderPipelines.GUI_TEXTURED, PING_TEXTURE, x, y, 0.0F, step * 13, TEXTURE_WIDTH, TEXTURE_HEIGHT, TEXTURE_WIDTH, TEXTURE_HEIGHT * 4, color);
-        context.drawText(CLIENT.textRenderer, pingStr, x + 19, y + 3, color, false);
+        RenderUtils.drawTextureHUD(context, PING_TEXTURE, x, y, 0.0F, step * 13, TEXTURE_WIDTH, TEXTURE_HEIGHT, TEXTURE_WIDTH, TEXTURE_HEIGHT * 4, color);
+        RenderUtils.drawTextHUD(context, pingStr, x + 19, y + 3, color, false);
     }
 
     public static int getPingColor(int step) {

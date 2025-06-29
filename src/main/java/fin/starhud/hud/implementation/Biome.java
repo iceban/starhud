@@ -6,7 +6,6 @@ import fin.starhud.helper.RenderUtils;
 import fin.starhud.hud.AbstractHUD;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.entry.RegistryEntry;
@@ -51,9 +50,9 @@ public class Biome extends AbstractHUD {
 
         int xTemp = x - BIOME_SETTINGS.textGrowth.getGrowthDirection(cachedTextWidth);
 
-        context.drawTexture(RenderPipelines.GUI_TEXTURED, DIMENSION_TEXTURE, xTemp, y, 0.0F, dimensionIndex * TEXTURE_HEIGHT, 13, TEXTURE_HEIGHT, 13, 52);
+        RenderUtils.drawTextureHUD(context, DIMENSION_TEXTURE, xTemp, y, 0.0F, dimensionIndex * TEXTURE_HEIGHT, 13, TEXTURE_HEIGHT, 13, 52);
         RenderUtils.fillRoundedRightSide(context, xTemp + 14, y, xTemp + 14 + cachedTextWidth + 9, y + TEXTURE_HEIGHT, 0x80000000);
-        context.drawText(CLIENT.textRenderer, cachedFormattedBiomeStr, xTemp + 19, y + 3, color, false);
+        RenderUtils.drawTextHUD(context, cachedFormattedBiomeStr, xTemp + 19, y + 3, color, false);
     }
 
     private static int getDimensionIndex(RegistryKey<World> registryKey) {

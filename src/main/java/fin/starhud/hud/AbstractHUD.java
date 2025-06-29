@@ -95,8 +95,8 @@ public abstract class AbstractHUD implements HUDInterface {
 
     public boolean shouldRenderOnCondition() {
         for (ConditionalSettings condition: baseHUDSettings.conditions) {
-            if (!condition.shouldRender & condition.isConditionMet())
-                return true;
+            if (!condition.shouldRender && condition.isConditionMet())
+                return false;
         }
         return true;
     }

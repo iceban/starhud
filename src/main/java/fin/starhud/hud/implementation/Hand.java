@@ -4,7 +4,6 @@ import fin.starhud.config.hud.HandSettings;
 import fin.starhud.helper.RenderUtils;
 import fin.starhud.hud.AbstractHUD;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerInventory;
@@ -60,8 +59,8 @@ public abstract class Hand extends AbstractHUD {
     private static void renderItemCountHUD(DrawContext context, PlayerInventory playerInventory, ItemStack stack, int x, int y, float v, int color) {
         int stackAmount = getItemCount(playerInventory, stack);
 
-        context.drawTexture(RenderPipelines.GUI_TEXTURED, HAND_TEXTURE, x, y, 0.0F, v, COUNT_WIDTH + TEXTURE_WIDTH, TEXTURE_HEIGHT, COUNT_WIDTH + TEXTURE_WIDTH, 27, color);
-        context.drawText(CLIENT.textRenderer, Integer.toString(stackAmount), x + 19, y + 3, color, false);
+        RenderUtils.drawTextureHUD(context, HAND_TEXTURE, x, y, 0.0F, v, COUNT_WIDTH + TEXTURE_WIDTH, TEXTURE_HEIGHT, COUNT_WIDTH + TEXTURE_WIDTH, 27, color);
+        RenderUtils.drawTextHUD(context, Integer.toString(stackAmount), x + 19, y + 3, color, false);
     }
 
     private static int getItemCount(PlayerInventory inventory, ItemStack stack) {

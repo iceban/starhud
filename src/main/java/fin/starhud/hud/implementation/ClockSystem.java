@@ -2,9 +2,9 @@ package fin.starhud.hud.implementation;
 
 import fin.starhud.Main;
 import fin.starhud.config.hud.ClockSystemSettings;
+import fin.starhud.helper.RenderUtils;
 import fin.starhud.hud.AbstractHUD;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.util.Identifier;
 
@@ -57,11 +57,11 @@ public class ClockSystem extends AbstractHUD {
         int color = CLOCK_SYSTEM_SETTINGS.color | 0xFF000000;
 
         if (use12Hour) {
-            context.drawTexture(RenderPipelines.GUI_TEXTURED, CLOCK_12_TEXTURE, x, y, 0.0F, 0.0F, TEXTURE_SYSTEM_12_WIDTH, TEXTURE_HEIGHT, TEXTURE_SYSTEM_12_WIDTH, TEXTURE_HEIGHT * 5, color);
-            context.drawText(CLIENT.textRenderer, cachedSystemTimeString, x + 19, y + 3, color, false);
+            RenderUtils.drawTextureHUD(context, CLOCK_12_TEXTURE, x, y, 0.0F, 0.0F, TEXTURE_SYSTEM_12_WIDTH, TEXTURE_HEIGHT, TEXTURE_SYSTEM_12_WIDTH, TEXTURE_HEIGHT * 5, color);
+            RenderUtils.drawTextHUD(context, cachedSystemTimeString, x + 19, y + 3, color, false);
         } else {
-            context.drawTexture(RenderPipelines.GUI_TEXTURED, CLOCK_24_TEXTURE, x, y, 0.0F, 0.0F, TEXTURE_SYSTEM_24_WIDTH, TEXTURE_HEIGHT, TEXTURE_SYSTEM_24_WIDTH, TEXTURE_HEIGHT * 5, color);
-            context.drawText(CLIENT.textRenderer, cachedSystemTimeString, x + 19, y + 3, color, false);
+            RenderUtils.drawTextureHUD(context, CLOCK_24_TEXTURE, x, y, 0.0F, 0.0F, TEXTURE_SYSTEM_24_WIDTH, TEXTURE_HEIGHT, TEXTURE_SYSTEM_24_WIDTH, TEXTURE_HEIGHT * 5, color);
+            RenderUtils.drawTextHUD(context, cachedSystemTimeString, x + 19, y + 3, color, false);
         }
     }
 

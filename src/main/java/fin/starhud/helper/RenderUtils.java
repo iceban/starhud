@@ -48,11 +48,11 @@ public class RenderUtils {
         x -= textureGrowth.getGrowthDirection(DURABILITY_TEXTURE_WIDTH);
 
         // draw the icon
-        context.drawTexture(RenderPipelines.GUI_TEXTURED, ICON, x, y, 0.0F, v, 13, 13, textureWidth, textureHeight, color);
+        RenderUtils.drawTextureHUD(context, ICON, x, y, 0.0F, v, 13, 13, textureWidth, textureHeight, color);
 
         // draw the durability background and steps
-        context.drawTexture(RenderPipelines.GUI_TEXTURED, DURABILITY_BACKGROUND_TEXTURE, x + 14, y, 0.0F, 0.0F, 49, 13, 49, 13);
-        if (step != 0) context.drawTexture(RenderPipelines.GUI_TEXTURED, DURABILITY_TEXTURE, x + 19, y + 3, 0, 0, 4 * step, 7, 40, 7, durabilityColor);
+        RenderUtils.drawTextureHUD(context, DURABILITY_BACKGROUND_TEXTURE, x + 14, y, 0.0F, 0.0F, 49, 13, 49, 13);
+        if (step != 0) RenderUtils.drawTextureHUD(context, DURABILITY_TEXTURE, x + 19, y + 3, 0, 0, 4 * step, 7, 40, 7, durabilityColor);
     }
 
     // example render: ¹²³⁴/₅₆₇₈
@@ -71,12 +71,26 @@ public class RenderUtils {
 
         x -= textureGrowth.getGrowthDirection(remainingTextWidth + maxDamageTextWidth);
 
-        context.drawTexture(RenderPipelines.GUI_TEXTURED, ICON, x, y, 0.0F, v, 13, 13, textureWidth, textureHeight, color);
+        RenderUtils.drawTextureHUD(context, ICON, x, y, 0.0F, v, 13, 13, textureWidth, textureHeight, color);
         fillRoundedRightSide(context, x + 14,  y, x + 14 + remainingTextWidth + maxDamageTextWidth + 10, y + 13, 0x80000000);
 
         // this is gore of my comfort character, call drawText twice except the second one has a -1 pixel offset.
         // Minecraft default subscript's font is 1 pixel to deep for my liking, so I have to shift them up.
-        context.drawText(CLIENT.textRenderer, remainingStr, x + 14 + 5, y + 3, textColor, false);
-        context.drawText(CLIENT.textRenderer, maxDamageStr, x + 14 + 5 + remainingTextWidth, y + 3 - 1, textColor, false);
+        RenderUtils.drawTextHUD(context, remainingStr, x + 14 + 5, y + 3, textColor, false);
+        RenderUtils.drawTextHUD(context, maxDamageStr, x + 14 + 5 + remainingTextWidth, y + 3 - 1, textColor, false);
+    }
+
+    // for easier version porting.
+
+    public static void drawTextureHUD(DrawContext context, Identifier identifier, int x, int y, float u, float v, int width, int height, int textureWidth, int textureHeight, int color) {
+        context.drawTexture(RenderPipelines.GUI_TEXTURED, identifier, x, y, u, v, width, height, textureWidth, textureHeight, color);
+    }
+
+    public static void drawTextureHUD(DrawContext context, Identifier identifier, int x, int y, float u, float v, int width, int height, int textureWidth, int textureHeight) {
+        context.drawTexture(RenderPipelines.GUI_TEXTURED, identifier, x, y, u, v, width, height, textureWidth, textureHeight);
+    }
+
+    public static void drawTextHUD(DrawContext context, String str, int x, int y, int color, boolean shadow) {
+        context.drawText(CLIENT.textRenderer, str, x , y, color, shadow);
     }
 }

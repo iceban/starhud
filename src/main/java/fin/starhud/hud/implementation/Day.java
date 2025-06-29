@@ -5,7 +5,6 @@ import fin.starhud.config.hud.DaySettings;
 import fin.starhud.helper.RenderUtils;
 import fin.starhud.hud.AbstractHUD;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.util.Identifier;
 
@@ -44,9 +43,9 @@ public class Day extends AbstractHUD {
         int xTemp = x - DAY_SETTINGS.textGrowth.getGrowthDirection(cachedTextWidth);
         int color = DAY_SETTINGS.color | 0xFF000000;
 
-        context.drawTexture(RenderPipelines.GUI_TEXTURED, DAY_TEXTURE, xTemp, y, 0.0F, 0, 13, TEXTURE_HEIGHT, 13,  TEXTURE_HEIGHT);
+        RenderUtils.drawTextureHUD(context, DAY_TEXTURE, xTemp, y, 0.0F, 0, 13, TEXTURE_HEIGHT, 13,  TEXTURE_HEIGHT);
         RenderUtils.fillRoundedRightSide(context, xTemp + 14, y, xTemp + 14 + cachedTextWidth + 9, y + TEXTURE_HEIGHT, 0x80000000);
-        context.drawText(CLIENT.textRenderer, cachedDayString, xTemp + 19, y + 3, color, false);
+        RenderUtils.drawTextHUD(context, cachedDayString, xTemp + 19, y + 3, color, false);
     }
 
     @Override

@@ -4,9 +4,9 @@ import fin.starhud.Helper;
 import fin.starhud.Main;
 import fin.starhud.config.hud.EffectSettings;
 import fin.starhud.helper.RenderUtils;
+import fin.starhud.helper.StatusEffectAttribute;
 import fin.starhud.hud.AbstractHUD;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.texture.MissingSprite;
 import net.minecraft.entity.effect.StatusEffect;
@@ -35,7 +35,6 @@ public class Effect extends AbstractHUD {
     private static final int STATUS_EFFECT_BAR_TEXTURE_WIDTH = 21;
     private static final int STATUS_EFFECT_BAR_TEXTURE_HEIGHT = 3;
 
-    private static final Map<RegistryEntry<StatusEffect>, StatusEffectAttribute> STATUS_EFFECT_ATTRIBUTE_MAP = new HashMap<>();
     private static final Map<RegistryEntry<StatusEffect>, Identifier> STATUS_EFFECT_TEXTURE_MAP = new HashMap<>();
 
     public Effect() {
@@ -54,8 +53,6 @@ public class Effect extends AbstractHUD {
         int beneficialIndex = 0;
         int harmIndex = 0;
 
-        int sameTypeGap = effectSettings.sameTypeGap;
-
         int beneficialSize = getBeneficialSize();
         int harmSize = collection.size() - beneficialSize;
 
@@ -70,26 +67,26 @@ public class Effect extends AbstractHUD {
                 continue;
 
             RegistryEntry<StatusEffect> registryEntry = statusEffectInstance.getEffectType();
-            StatusEffectAttribute statusEffectAttribute = getStatusEffectAttribute(statusEffectInstance);
+            StatusEffectAttribute statusEffectAttribute = StatusEffectAttribute.getStatusEffectAttribute(statusEffectInstance);
 
             int x2;
             int y2;
 
             if (registryEntry.value().isBeneficial()) {
-                x2 = (xBeneficial) + ((effectSettings.drawVertical ? 0 : sameTypeGap) * beneficialIndex);
-                y2 = (yBeneficial) + ((effectSettings.drawVertical ? sameTypeGap : 0) * beneficialIndex);
+                x2 = (xBeneficial) + ((effectSettings.drawVertical ? 0 : effectSettings.sameTypeGap) * beneficialIndex);
+                y2 = (yBeneficial) + ((effectSettings.drawVertical ? effectSettings.sameTypeGap : 0) * beneficialIndex);
                 ++beneficialIndex;
             } else {
-                x2 = (xHarm) + (effectSettings.drawVertical ? effectSettings.differentTypeGap : 0)  + ((effectSettings.drawVertical ? 0 : sameTypeGap) * harmIndex);
-                y2 = (yHarm) + (effectSettings.drawVertical ? 0 : effectSettings.differentTypeGap) + ((effectSettings.drawVertical ? sameTypeGap : 0) * harmIndex);
+                x2 = (xHarm) + (effectSettings.drawVertical ? effectSettings.differentTypeGap : 0)  + ((effectSettings.drawVertical ? 0 : effectSettings.sameTypeGap) * harmIndex);
+                y2 = (yHarm) + (effectSettings.drawVertical ? 0 : effectSettings.differentTypeGap) + ((effectSettings.drawVertical ? effectSettings.sameTypeGap : 0) * harmIndex);
                 ++harmIndex;
             }
 
             if (statusEffectInstance.isAmbient()) {
 
                 // draw soft blue outlined background...
-                context.drawTexture(
-                        RenderPipelines.GUI_TEXTURED,
+                RenderUtils.drawTextureHUD(
+                        context,
                         STATUS_EFFECT_AMBIENT_TEXTURE,
                         x2, y2,
                         0, 0,
@@ -101,8 +98,8 @@ public class Effect extends AbstractHUD {
             } else {
 
                 // draw background
-                context.drawTexture(
-                        RenderPipelines.GUI_TEXTURED,
+                RenderUtils.drawTextureHUD(
+                        context,
                         STATUS_EFFECT_BACKGROUND_TEXTURE,
                         x2, y2,
                         0, 0,
@@ -117,15 +114,15 @@ public class Effect extends AbstractHUD {
                 color = effectSettings.infiniteColor | 0xFF000000;
             } else {
                 int duration = statusEffectInstance.getDuration();
-                int maxDuration = statusEffectAttribute.maxDuration;
+                int maxDuration = statusEffectAttribute.maxDuration();
 
                 step = Helper.getStep(duration, maxDuration, 7);
                 color = RenderUtils.getItemBarColor(step, 7) | 0xFF000000;
             }
 
             // draw timer bar
-            context.drawTexture(
-                    RenderPipelines.GUI_TEXTURED,
+            RenderUtils.drawTextureHUD(
+                    context,
                     STATUS_EFFECT_BAR_TEXTURE,
                     x2 + 2, y2 + 27,
                     0, 0,
@@ -135,8 +132,8 @@ public class Effect extends AbstractHUD {
             );
 
             // draw effect texture.
-            context.drawTexture(
-                    RenderPipelines.GUI_TEXTURED,
+            RenderUtils.drawTextureHUD(
+                    context,
                     getStatusEffectTexture(registryEntry),
                     x2 + 3, y2 + 3,
                     0,0,
@@ -145,14 +142,14 @@ public class Effect extends AbstractHUD {
             );
 
             // draw amplifier text.
-            int amplifier = statusEffectAttribute.amplifier + 1;
+            int amplifier = statusEffectAttribute.amplifier() + 1;
             if (amplifier == 1)
                 continue;
 
             String amplifierStr = Helper.toSubscript(Integer.toString(amplifier));
 
-            context.drawText(
-                    CLIENT.textRenderer,
+            RenderUtils.drawTextHUD(
+                    context,
                     amplifierStr,
                     x2 + 3 + 18 - CLIENT.textRenderer.getWidth(amplifierStr) + 1, y2 + 2 + 18 - 7,
                     0xFFFFFFFF,
@@ -201,35 +198,4 @@ public class Effect extends AbstractHUD {
         );
     }
 
-    // ---------------------------------------------------------------------------------------------- //
-    // this Implementation is inspired from @SoRadGaming Simple-HUD-Enhanced StatusEffectTracker class
-    // see: https://github.com/SoRadGaming/Simple-HUD-Enhanced/blob/main/src/main/java/com/soradgaming/simplehudenhanced/utli/StatusEffectsTracker.java
-
-    // maxDuration for maxDuration, amplifier and isAmbient to help updating the map.
-    public record StatusEffectAttribute(int maxDuration, int amplifier, boolean isAmbient) {}
-
-    public static StatusEffectAttribute getStatusEffectAttribute(StatusEffectInstance effect) {
-        return STATUS_EFFECT_ATTRIBUTE_MAP.computeIfAbsent(effect.getEffectType(), key ->
-                new StatusEffectAttribute(
-                        effect.getDuration(),
-                        effect.getAmplifier(),
-                        effect.isAmbient()
-                )
-        );
-    }
-
-    public static StatusEffectAttribute updateStatusEffectAttribute(RegistryEntry<StatusEffect> effect, int maxDuration, int amplifier, boolean isAmbient) {
-        StatusEffectAttribute newEffect = new StatusEffectAttribute(
-                maxDuration,
-                amplifier,
-                isAmbient
-        );
-
-        return STATUS_EFFECT_ATTRIBUTE_MAP.put(effect, newEffect);
-    }
-
-    // used when status effect no longer present in player's status effect list.
-    public static StatusEffectAttribute removeStatusEffectAttribute(RegistryEntry<StatusEffect> effectRegistry) {
-        return STATUS_EFFECT_ATTRIBUTE_MAP.remove(effectRegistry);
-    }
 }
