@@ -131,6 +131,7 @@
   "text.autoconfig.starhud.option.clockSettings.inGameSetting.use12Hour": "Use 12-Hour Format",
   "text.autoconfig.starhud.option.clockSettings.inGameSetting.base.conditions": "Conditions",
 
+  "text.autoconfig.starhud.option.clockSettings.inGameSetting.color": "In-Game Clock Color",
   "text.autoconfig.starhud.option.clockSettings.inGameSetting.color.day": "Daytime Color",
   "text.autoconfig.starhud.option.clockSettings.inGameSetting.color.night": "Nighttime Color",
   "text.autoconfig.starhud.option.clockSettings.inGameSetting.color.rain": "Rain Color",
@@ -205,6 +206,21 @@
   "text.autoconfig.starhud.option.ConditionalSettings.condition" : "Condition Type",
   "text.autoconfig.starhud.option.ConditionalSettings.shouldRender" : "Show HUD",
   "text.autoconfig.starhud.option.ConditionalSettings.xOffset" : "X Offset",
-  "text.autoconfig.starhud.option.ConditionalSettings.yOffset" : "Y Offset"
+  "text.autoconfig.starhud.option.ConditionalSettings.yOffset" : "Y Offset",
 
+  "text.autoconfig.starhud.category.effect": "Status Effect",
+  "text.autoconfig.starhud.option.effectSettings.base.shouldRender": "Show HUD",
+  "text.autoconfig.starhud.option.effectSettings.base.x": "X Position",
+  "text.autoconfig.starhud.option.effectSettings.base.y": "Y Position",
+  "text.autoconfig.starhud.option.effectSettings.base.originX": "Horizontal Alignment",
+  "text.autoconfig.starhud.option.effectSettings.base.originY": "Vertical Alignment",
+  "text.autoconfig.starhud.option.effectSettings.base.scale": "HUD Scale",
+  "text.autoconfig.starhud.option.effectSettings.base.conditions": "Conditions",
+  "text.autoconfig.starhud.option.effectSettings.growthDirectionX": "Texture Horizontal Growth Direction",
+  "text.autoconfig.starhud.option.effectSettings.growthDirectionY": "Texture Vertical Growth Direction",
+  "text.autoconfig.starhud.option.effectSettings.drawVertical": "Draw Vertically",
+  "text.autoconfig.starhud.option.effectSettings.differentTypeGap": "Different Type Gap",
+  "text.autoconfig.starhud.option.effectSettings.sameTypeGap": "Same Type Gap",
+  "text.autoconfig.starhud.option.effectSettings.ambientColor": "Ambient Effect Color",
+  "text.autoconfig.starhud.option.effectSettings.infiniteColor": "Infinite Duration Color"
 }

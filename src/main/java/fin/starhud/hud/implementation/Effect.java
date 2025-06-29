@@ -4,6 +4,8 @@ import fin.starhud.Helper;
 import fin.starhud.Main;
 import fin.starhud.config.hud.EffectSettings;
 import fin.starhud.helper.RenderUtils;
+import fin.starhud.helper.ScreenAlignmentX;
+import fin.starhud.helper.ScreenAlignmentY;
 import fin.starhud.helper.StatusEffectAttribute;
 import fin.starhud.hud.AbstractHUD;
 import net.minecraft.client.MinecraftClient;
@@ -53,14 +55,21 @@ public class Effect extends AbstractHUD {
         int beneficialIndex = 0;
         int harmIndex = 0;
 
+        boolean drawVertical = effectSettings.drawVertical;
+        int sameTypeGap = effectSettings.sameTypeGap;
+        int differentTypeGap = ((drawVertical && effectSettings.base.originX == ScreenAlignmentX.RIGHT) || (!drawVertical && effectSettings.base.originY == ScreenAlignmentY.BOTTOM)) ? -effectSettings.differentTypeGap :effectSettings.differentTypeGap;
+
+        // if originX = right, invert differentTypeGap
+        // if originY = down, invert differentTypeGap
+
         int beneficialSize = getBeneficialSize();
         int harmSize = collection.size() - beneficialSize;
 
         int xBeneficial = x - effectSettings.growthDirectionX.getGrowthDirection(getDynamicWidth(true, beneficialSize, harmSize));
         int yBeneficial = y - effectSettings.growthDirectionY.getGrowthDirection(getDynamicHeight(true, beneficialSize, harmSize));
 
-        int xHarm = x - effectSettings.growthDirectionX.getGrowthDirection(getDynamicWidth(false, beneficialSize, harmSize));
-        int yHarm = y - effectSettings.growthDirectionY.getGrowthDirection(getDynamicHeight(false, beneficialSize, harmSize));
+        int xHarm = (beneficialSize == 0 && drawVertical) ? xBeneficial : x - effectSettings.growthDirectionX.getGrowthDirection(getDynamicWidth(false, beneficialSize, harmSize));
+        int yHarm = (beneficialSize == 0 && !drawVertical) ? yBeneficial : y - effectSettings.growthDirectionY.getGrowthDirection(getDynamicHeight(false, beneficialSize, harmSize));
 
         for (StatusEffectInstance statusEffectInstance : collection) {
             if (!statusEffectInstance.shouldShowIcon())
@@ -73,12 +82,12 @@ public class Effect extends AbstractHUD {
             int y2;
 
             if (registryEntry.value().isBeneficial()) {
-                x2 = (xBeneficial) + ((effectSettings.drawVertical ? 0 : effectSettings.sameTypeGap) * beneficialIndex);
-                y2 = (yBeneficial) + ((effectSettings.drawVertical ? effectSettings.sameTypeGap : 0) * beneficialIndex);
+                x2 = (xBeneficial) + ((drawVertical ? 0 : sameTypeGap) * beneficialIndex);
+                y2 = (yBeneficial) + ((drawVertical ? sameTypeGap : 0) * beneficialIndex);
                 ++beneficialIndex;
             } else {
-                x2 = (xHarm) + (effectSettings.drawVertical ? effectSettings.differentTypeGap : 0)  + ((effectSettings.drawVertical ? 0 : effectSettings.sameTypeGap) * harmIndex);
-                y2 = (yHarm) + (effectSettings.drawVertical ? 0 : effectSettings.differentTypeGap) + ((effectSettings.drawVertical ? effectSettings.sameTypeGap : 0) * harmIndex);
+                x2 = (xHarm) + (beneficialSize == 0 ? 0 : (drawVertical ? differentTypeGap : 0)) + ((drawVertical ? 0 : sameTypeGap) * harmIndex);
+                y2 = (yHarm) + (beneficialSize == 0 ? 0 : (drawVertical ? 0 : differentTypeGap)) + ((drawVertical ? sameTypeGap : 0) * harmIndex);
                 ++harmIndex;
             }
 
@@ -160,11 +169,11 @@ public class Effect extends AbstractHUD {
     }
 
     public int getDynamicWidth(boolean isBeneficial, int beneficialSize, int harmSize) {
-         return effectSettings.drawVertical ? STATUS_EFFECT_TEXTURE_WIDTH : (isBeneficial ? beneficialSize : harmSize) * effectSettings.sameTypeGap;
+         return effectSettings.drawVertical ? STATUS_EFFECT_TEXTURE_WIDTH : ((isBeneficial ? beneficialSize : harmSize) * effectSettings.sameTypeGap);
     }
 
     public int getDynamicHeight(boolean isBeneficial, int beneficialSize, int harmSize) {
-        return effectSettings.drawVertical ? (isBeneficial ? beneficialSize : harmSize) * effectSettings.sameTypeGap : STATUS_EFFECT_TEXTURE_HEIGHT;
+        return effectSettings.drawVertical ? ((isBeneficial ? beneficialSize : harmSize) * effectSettings.sameTypeGap) : STATUS_EFFECT_TEXTURE_HEIGHT;
     }
 
     public int getBeneficialSize() {
