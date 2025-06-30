@@ -3,13 +3,8 @@ package fin.starhud;
 import fin.starhud.mixin.accessor.AccessorBossBarHud;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.effect.StatusEffect;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.scoreboard.ScoreboardDisplaySlot;
 import net.minecraft.util.math.MathHelper;
-
-import java.util.Collection;
 
 
 public class Helper {
