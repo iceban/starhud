@@ -27,7 +27,6 @@ public class Coordinate extends AbstractHUD {
 
     @Override
     public void renderHUD(DrawContext context) {
-        TextRenderer textRenderer = CLIENT.textRenderer;
         Vec3d vec3d = CLIENT.player.getPos();
 
         String coordX = Integer.toString((int) vec3d.x);
