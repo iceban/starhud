@@ -2,6 +2,7 @@ package fin.starhud.hud.implementation;
 
 import fin.starhud.Main;
 import fin.starhud.config.hud.ArmorSettings;
+import fin.starhud.hud.HUDId;
 import net.minecraft.util.Identifier;
 
 public class ChestplateHUD extends AbstractArmorHUD{
@@ -18,7 +19,7 @@ public class ChestplateHUD extends AbstractArmorHUD{
     }
 
     @Override
-    public String getId() {
-        return "chestplate";
+    public HUDId getId() {
+        return HUDId.CHESTPLATE;
     }
 }

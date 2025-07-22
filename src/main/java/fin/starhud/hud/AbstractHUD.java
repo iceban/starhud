@@ -8,7 +8,6 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.util.Window;
 
 public abstract class AbstractHUD implements HUDInterface {
-    private static final Window WINDOW = MinecraftClient.getInstance().getWindow();
 
     protected final BaseHUDSettings baseHUDSettings;
 
@@ -79,7 +78,7 @@ public abstract class AbstractHUD implements HUDInterface {
     * */
 
     public void setHUDScale(DrawContext context) {
-        float scaleFactor = getSettings().getScale() / (float) WINDOW.getScaleFactor();
+        float scaleFactor = getSettings().getScale() / (float) MinecraftClient.getInstance().getWindow().getScaleFactor();
         context.getMatrices().scale(scaleFactor, scaleFactor);
     }
 
@@ -106,7 +105,7 @@ public abstract class AbstractHUD implements HUDInterface {
     }
 
     public boolean isScaled() {
-        return this.getSettings().getScale() != 0 && (this.getSettings().getScale() / WINDOW.getScaleFactor()) != 1;
+        return this.getSettings().getScale() != 0 && (this.getSettings().getScale() / MinecraftClient.getInstance().getWindow().getScaleFactor()) != 1;
     }
 
     public BaseHUDSettings getSettings() {

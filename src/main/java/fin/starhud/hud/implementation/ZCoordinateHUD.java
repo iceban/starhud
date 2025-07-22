@@ -2,6 +2,7 @@ package fin.starhud.hud.implementation;
 
 import fin.starhud.Main;
 import fin.starhud.config.hud.CoordSettings;
+import fin.starhud.hud.HUDId;
 import net.minecraft.util.Identifier;
 
 public class ZCoordinateHUD extends AbstractCoordinateHUD {
@@ -23,7 +24,7 @@ public class ZCoordinateHUD extends AbstractCoordinateHUD {
     }
 
     @Override
-    public String getId() {
-        return "z_coordinate";
+    public HUDId getId() {
+        return HUDId.Z_COORDINATE;
     }
 }

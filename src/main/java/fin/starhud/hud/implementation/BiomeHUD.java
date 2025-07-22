@@ -5,6 +5,7 @@ import fin.starhud.Main;
 import fin.starhud.config.hud.BiomeSettings;
 import fin.starhud.helper.RenderUtils;
 import fin.starhud.hud.AbstractHUD;
+import fin.starhud.hud.HUDId;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
@@ -47,8 +48,8 @@ public class  BiomeHUD extends AbstractHUD {
     }
 
     @Override
-    public String getId() {
-        return "biome";
+    public HUDId getId() {
+        return HUDId.BIOME;
     }
 
     @Override

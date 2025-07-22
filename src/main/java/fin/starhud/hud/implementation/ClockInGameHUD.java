@@ -4,6 +4,7 @@ import fin.starhud.Main;
 import fin.starhud.config.hud.ClockInGameSettings;
 import fin.starhud.helper.RenderUtils;
 import fin.starhud.hud.AbstractHUD;
+import fin.starhud.hud.HUDId;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.world.ClientWorld;
@@ -37,8 +38,8 @@ public class ClockInGameHUD extends AbstractHUD {
     }
 
     @Override
-    public String getId() {
-        return "clock_ingame";
+    public HUDId getId() {
+        return HUDId.CLOCK_INGAME;
     }
 
     @Override

@@ -36,7 +36,7 @@ public class EditHUDScreen extends Screen {
     public Screen parent;
 
     private final List<AbstractHUD> huds;
-    private final List<HUDCoordinate> oldSettings;
+    private final List<BaseHUDSettings> oldSettings;
 
     private boolean dragging = false;
     private AbstractHUD selectedHUD = null;
@@ -81,14 +81,16 @@ public class EditHUDScreen extends Screen {
         super(title);
         this.parent = parent;
 
-        HUDComponent.getInstance().setShouldRenderInGameScreen(false);
-        huds = new ArrayList<>(HUDComponent.getInstance().huds);
-        huds.add(HUDComponent.getInstance().effectHUD);
+        HUDComponent.getInstance().setRenderInGameScreen(false);
+        huds = new ArrayList<>(HUDComponent.getInstance().getIndividualHUDs());
+
+        // what about grouped hud? how do we handle group huds?
+        // how do we revert grouped -> individual conversion? the opposite?
 
         oldSettings = new ArrayList<>();
         for (AbstractHUD p : huds) {
             BaseHUDSettings settings = p.getSettings();
-            oldSettings.add(new HUDCoordinate(settings.x, settings.y, settings.originX, settings.originY, settings.growthDirectionX, settings.growthDirectionY, settings.scale));
+            oldSettings.add(new BaseHUDSettings(settings.x, settings.y, settings.originX, settings.originY, settings.growthDirectionX, settings.growthDirectionY, settings.scale));
         }
     }
 
@@ -569,11 +571,11 @@ public class EditHUDScreen extends Screen {
         for (int i = 0; i < huds.size(); i++) {
             AbstractHUD hud = huds.get(i);
             BaseHUDSettings current = hud.getSettings();
-            HUDCoordinate original = oldSettings.get(i);
+            BaseHUDSettings original = oldSettings.get(i);
 
             if (current.x != original.x || current.y != original.y
-                    || current.originX != original.alignmentX
-                    || current.originY != original.alignmentY
+                    || current.originX != original.originX
+                    || current.originY != original.originY
                     || current.scale != original.scale) {
                 return true;
             }
@@ -584,12 +586,12 @@ public class EditHUDScreen extends Screen {
     private void revertChanges() {
         for (int i = 0; i < huds.size(); ++i) {
             BaseHUDSettings current = huds.get(i).getSettings();
-            HUDCoordinate original = oldSettings.get(i);
+            BaseHUDSettings original = oldSettings.get(i);
 
             current.x = original.x;
             current.y = original.y;
-            current.originX = original.alignmentX;
-            current.originY = original.alignmentY;
+            current.originX = original.originX;
+            current.originY = original.originY;
             current.growthDirectionX = original.growthDirectionX;
             current.growthDirectionY = original.growthDirectionY;
             current.scale = original.scale;
@@ -619,7 +621,7 @@ public class EditHUDScreen extends Screen {
 
     public void onClose() {
         this.client.setScreen(this.parent);
-        HUDComponent.getInstance().setShouldRenderInGameScreen(true);
+        HUDComponent.getInstance().setRenderInGameScreen(true);
     }
 
     private void onHelpSwitched() {
@@ -642,25 +644,6 @@ public class EditHUDScreen extends Screen {
             xField.visible = false;
             yField.visible = false;
             scaleButton.visible = false;
-        }
-    }
-
-    private static class HUDCoordinate {
-        int x, y;
-        ScreenAlignmentX alignmentX;
-        ScreenAlignmentY alignmentY;
-        GrowthDirectionX growthDirectionX;
-        GrowthDirectionY growthDirectionY;
-        int scale;
-
-        public HUDCoordinate(int x, int y, ScreenAlignmentX alignmentX, ScreenAlignmentY alignmentY, GrowthDirectionX growthDirectionX, GrowthDirectionY growthDirectionY, int scale) {
-            this.x = x;
-            this.y = y;
-            this.alignmentX = alignmentX;
-            this.alignmentY = alignmentY;
-            this.growthDirectionX = growthDirectionX;
-            this.growthDirectionY = growthDirectionY;
-            this.scale = scale;
         }
     }
 }

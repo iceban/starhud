@@ -4,6 +4,7 @@ import fin.starhud.Main;
 import fin.starhud.config.hud.PingSettings;
 import fin.starhud.helper.RenderUtils;
 import fin.starhud.hud.AbstractHUD;
+import fin.starhud.hud.HUDId;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.network.PingMeasurer;
@@ -38,8 +39,8 @@ public class PingHUD extends AbstractHUD {
     }
 
     @Override
-    public String getId() {
-        return "ping";
+    public HUDId getId() {
+        return HUDId.PING;
     }
 
     @Override

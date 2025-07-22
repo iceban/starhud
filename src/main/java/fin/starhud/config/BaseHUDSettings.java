@@ -51,6 +51,11 @@ public class BaseHUDSettings implements ConfigData {
         this.growthDirectionY = growthDirectionY;
     }
 
+    public BaseHUDSettings(int x, int y, ScreenAlignmentX originX, ScreenAlignmentY originY, GrowthDirectionX growthDirectionX, GrowthDirectionY growthDirectionY, int scale) {
+        this(true, x , y, originX, originY, growthDirectionX, growthDirectionY);
+        this.scale = scale;
+    }
+
     public boolean shouldRender() {
         if (!shouldRender) return false;
 

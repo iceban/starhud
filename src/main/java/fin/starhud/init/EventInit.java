@@ -28,7 +28,7 @@ public class EventInit {
         HudElementRegistry.attachElementBefore(VanillaHudElements.HOTBAR, Identifier.of("starhud"), (context, tickCounter) -> {
             if (SETTINGS.disableHUDRendering) return;
             if (MinecraftClient.getInstance().options.hudHidden) return;
-            if (!HUDComponent.getInstance().shouldRenderInGameScreen()) return;
+            if (!HUDComponent.getInstance().isRenderInGameScreen()) return;
 
             HUDComponent.getInstance().renderAll(context);
         });

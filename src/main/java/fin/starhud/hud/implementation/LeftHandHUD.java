@@ -2,6 +2,7 @@ package fin.starhud.hud.implementation;
 
 import fin.starhud.Main;
 import fin.starhud.config.hud.HandSettings;
+import fin.starhud.hud.HUDId;
 import net.minecraft.util.Arm;
 import net.minecraft.util.Identifier;
 
@@ -20,7 +21,7 @@ public class LeftHandHUD extends AbstractHandHUD {
     }
 
     @Override
-    public String getId() {
-        return "left_hand";
+    public HUDId getId() {
+        return HUDId.LEFT_HAND;
     }
 }

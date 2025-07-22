@@ -4,6 +4,7 @@ import fin.starhud.Main;
 import fin.starhud.config.hud.InventorySettings;
 import fin.starhud.helper.RenderUtils;
 import fin.starhud.hud.AbstractHUD;
+import fin.starhud.hud.HUDId;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.entity.player.PlayerInventory;
@@ -42,8 +43,8 @@ public class InventoryHUD extends AbstractHUD {
     }
 
     @Override
-    public String getId() {
-        return "inventory";
+    public HUDId getId() {
+        return HUDId.INVENTORY;
     }
 
     public InventoryHUD() {

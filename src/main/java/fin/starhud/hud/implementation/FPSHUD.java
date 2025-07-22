@@ -4,6 +4,7 @@ import fin.starhud.Main;
 import fin.starhud.config.hud.FPSSettings;
 import fin.starhud.helper.RenderUtils;
 import fin.starhud.hud.AbstractHUD;
+import fin.starhud.hud.HUDId;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.util.Identifier;
@@ -31,8 +32,8 @@ public class FPSHUD extends AbstractHUD {
     }
 
     @Override
-    public String getId() {
-        return "fps";
+    public HUDId getId() {
+        return HUDId.FPS;
     }
 
     @Override

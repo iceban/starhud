@@ -5,6 +5,7 @@ import fin.starhud.Main;
 import fin.starhud.config.hud.TargetedCrosshairSettings;
 import fin.starhud.helper.RenderUtils;
 import fin.starhud.hud.AbstractHUD;
+import fin.starhud.hud.HUDId;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
@@ -57,8 +58,8 @@ public class TargetedCrosshairHUD extends AbstractHUD {
     }
 
     @Override
-    public String getId() {
-        return "targeted_crosshair";
+    public HUDId getId() {
+        return HUDId.TARGETED_CROSSHAIR;
     }
 
     @Override

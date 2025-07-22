@@ -5,6 +5,7 @@ import fin.starhud.Main;
 import fin.starhud.config.hud.EffectSettings;
 import fin.starhud.helper.*;
 import fin.starhud.hud.AbstractHUD;
+import fin.starhud.hud.HUDId;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.texture.MissingSprite;
@@ -51,8 +52,8 @@ public class EffectHUD extends AbstractHUD {
     }
 
     @Override
-    public String getId() {
-        return "status_effect";
+    public HUDId getId() {
+        return HUDId.EFFECT;
     }
 
     @Override
@@ -270,17 +271,6 @@ public class EffectHUD extends AbstractHUD {
         }
         return size;
     }
-
-    // 0 because the width is dependent to how many status effect are present.
-//    @Override
-//    public int getBaseHUDWidth() {
-//        return 0;
-//    }
-//
-//    @Override
-//    public int getBaseHUDHeight() {
-//        return 0;
-//    }
 
     public static Identifier getStatusEffectTexture(RegistryEntry<StatusEffect> effect) {
         return STATUS_EFFECT_TEXTURE_MAP.computeIfAbsent(

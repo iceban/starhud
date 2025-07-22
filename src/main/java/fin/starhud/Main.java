@@ -1,6 +1,7 @@
 package fin.starhud;
 
 import fin.starhud.config.Settings;
+import fin.starhud.hud.HUDComponent;
 import fin.starhud.init.ConfigInit;
 import fin.starhud.init.EventInit;
 import fin.starhud.init.KeybindInit;
@@ -17,6 +18,7 @@ public class Main implements ClientModInitializer {
         ConfigInit.init();
         KeybindInit.init();
         EventInit.init();
+        HUDComponent.getInstance().init();
     }
 
 }
