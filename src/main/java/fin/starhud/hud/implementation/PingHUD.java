@@ -74,8 +74,8 @@ public class PingHUD extends AbstractHUD {
         int width = ICON_WIDTH + 1 + 5 + strWidth + 5;
         int height = ICON_HEIGHT;
 
-        x -= getSettings().getGrowthDirectionHorizontal(width);
-        y -= getSettings().getGrowthDirectionVertical(height);
+        x -= getGrowthDirectionHorizontal(width);
+        y -= getGrowthDirectionVertical(height);
 
         // 0, 150, 300, 450
         int step = Math.min((int) currentPing / 150, 3);
@@ -117,13 +117,4 @@ public class PingHUD extends AbstractHUD {
         }
     }
 
-//    @Override
-//    public int getBaseHUDWidth() {
-//        return TEXTURE_WIDTH;
-//    }
-//
-//    @Override
-//    public int getBaseHUDHeight() {
-//        return TEXTURE_HEIGHT;
-//    }
 }

@@ -37,8 +37,8 @@ public abstract class AbstractCoordinateHUD extends AbstractHUD {
         int width = ICON_WIDTH + 1 + 5 + strWidth + 5;
         int height = ICON_HEIGHT;
 
-        x += getSettings().getGrowthDirectionHorizontal(width);
-        y -= getSettings().getGrowthDirectionHorizontal(height);
+        x += getGrowthDirectionHorizontal(width);
+        y -= getGrowthDirectionHorizontal(height);
 
         int color = SETTINGS.color | 0xFF000000;
 

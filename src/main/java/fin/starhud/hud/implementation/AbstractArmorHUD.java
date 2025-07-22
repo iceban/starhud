@@ -2,6 +2,8 @@ package fin.starhud.hud.implementation;
 
 import fin.starhud.config.hud.ArmorSettings;
 import fin.starhud.helper.Box;
+import fin.starhud.helper.GrowthDirectionX;
+import fin.starhud.helper.GrowthDirectionY;
 import fin.starhud.helper.RenderUtils;
 import fin.starhud.hud.AbstractHUD;
 import net.minecraft.client.MinecraftClient;
@@ -46,6 +48,9 @@ public abstract class AbstractArmorHUD extends AbstractHUD {
     public boolean renderHUD(DrawContext context, int x, int y) {
         ItemStack armor = getStack();
 
+        GrowthDirectionX growthDirectionX = isInGroup() ? GrowthDirectionX.RIGHT : SETTINGS.base.growthDirectionX;
+        GrowthDirectionY growthDirectionY = isInGroup() ? GrowthDirectionY.DOWN : SETTINGS.base.growthDirectionY;
+
         Box tempBox = RenderUtils.renderDurabilityHUD(
                 context,
                 armor,
@@ -57,7 +62,7 @@ public abstract class AbstractArmorHUD extends AbstractHUD {
                 SETTINGS.color | 0xFF000000,
                 SETTINGS.drawBar,
                 SETTINGS.drawItem,
-                SETTINGS.base.growthDirectionX, SETTINGS.base.growthDirectionY
+                growthDirectionX, growthDirectionY
         );
 
         copyBoundingBox(tempBox);

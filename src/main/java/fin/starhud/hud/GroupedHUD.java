@@ -1,8 +1,6 @@
 package fin.starhud.hud;
 
 import fin.starhud.config.GroupedHUDSettings;
-import fin.starhud.helper.GrowthDirectionX;
-import fin.starhud.helper.GrowthDirectionY;
 import net.minecraft.client.gui.DrawContext;
 
 import java.util.ArrayList;
@@ -23,8 +21,7 @@ public class GroupedHUD extends AbstractHUD {
         for (HUDId id : groupSettings.ids) {
             AbstractHUD hud = HUDComponent.getInstance().getHUD(id);
             huds.add(hud);
-            hud.getSettings().growthDirectionX = GrowthDirectionX.RIGHT;
-            hud.getSettings().growthDirectionY = GrowthDirectionY.DOWN;
+            hud.setInGroup(true);
         }
     }
 
@@ -74,5 +71,17 @@ public class GroupedHUD extends AbstractHUD {
     @Override
     public HUDId getId() {
         return null;
+    }
+
+    @Override
+    public void update() {
+        super.update();
+
+        getBoundingBox().setColor(groupSettings.boxColor | 0xFF000000);
+    }
+
+    public void onUngroup() {
+        for (AbstractHUD hud : huds)
+            hud.setInGroup(false);
     }
 }

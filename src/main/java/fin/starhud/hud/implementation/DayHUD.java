@@ -57,8 +57,8 @@ public class DayHUD extends AbstractHUD {
         int width = ICON_WIDTH + 1 + 5 + cachedTextWidth + 5;
         int height = ICON_HEIGHT;
 
-        x -= getSettings().getGrowthDirectionHorizontal(width);
-        y -= getSettings().getGrowthDirectionVertical(height);
+        x -= getGrowthDirectionHorizontal(width);
+        y -= getGrowthDirectionVertical(height);
 
         int color = DAY_SETTINGS.color | 0xFF000000;
         setBoundingBox(x, y, width, height, color);

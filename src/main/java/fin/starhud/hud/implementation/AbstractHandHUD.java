@@ -2,6 +2,8 @@ package fin.starhud.hud.implementation;
 
 import fin.starhud.config.hud.HandSettings;
 import fin.starhud.helper.Box;
+import fin.starhud.helper.GrowthDirectionX;
+import fin.starhud.helper.GrowthDirectionY;
 import fin.starhud.helper.RenderUtils;
 import fin.starhud.hud.AbstractHUD;
 import net.minecraft.client.MinecraftClient;
@@ -57,6 +59,8 @@ public abstract class AbstractHandHUD extends AbstractHUD {
 
         // either draw the durability or the amount of item in the inventory.
         if (handSettings.showDurability && item.isDamageable()) {
+            GrowthDirectionX growthDirectionX = isInGroup() ? GrowthDirectionX.RIGHT : handSettings.base.growthDirectionX;
+            GrowthDirectionY growthDirectionY = isInGroup() ? GrowthDirectionY.DOWN : handSettings.base.growthDirectionY;
             Box box = RenderUtils.renderDurabilityHUD(
                     context,
                     item,
@@ -68,8 +72,8 @@ public abstract class AbstractHandHUD extends AbstractHUD {
                     handSettings.color | 0xFF000000,
                     handSettings.drawBar,
                     handSettings.drawItem,
-                    handSettings.base.growthDirectionX,
-                    handSettings.base.growthDirectionY
+                    growthDirectionX,
+                    growthDirectionY
             );
             copyBoundingBox(box);
         } else if (handSettings.showCount) {
@@ -96,8 +100,8 @@ public abstract class AbstractHandHUD extends AbstractHUD {
         int width = ITEM_TEXTURE_WIDTH + 1 + 5 + strWidth + 5;
         int height = ITEM_TEXTURE_HEIGHT;
 
-        x -= getSettings().getGrowthDirectionHorizontal(width);
-        y -= getSettings().getGrowthDirectionVertical(height);
+        x -= getGrowthDirectionHorizontal(width);
+        y -= getGrowthDirectionVertical(height);
 
         setBoundingBox(x, y, width, height, color);
 
@@ -116,8 +120,8 @@ public abstract class AbstractHandHUD extends AbstractHUD {
         int width = ICON_WIDTH + 1 + 5 + strWidth + 5;
         int height = ICON_HEIGHT;
 
-        x -= getSettings().getGrowthDirectionHorizontal(width);
-        y -= getSettings().getGrowthDirectionVertical(height);
+        x -= getGrowthDirectionHorizontal(width);
+        y -= getGrowthDirectionVertical(height);
 
         setBoundingBox(x, y, width, height, color);
 

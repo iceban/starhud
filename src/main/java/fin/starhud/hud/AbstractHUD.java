@@ -21,6 +21,8 @@ public abstract class AbstractHUD implements HUDInterface {
 
     protected final Box boundingBox = new Box(0, 0);
 
+    public boolean isInGroup = false;
+
     public AbstractHUD(BaseHUDSettings baseHUDSettings) {
         this.baseHUDSettings = baseHUDSettings;
     }
@@ -108,8 +110,24 @@ public abstract class AbstractHUD implements HUDInterface {
         return this.getSettings().getScale() != 0 && (this.getSettings().getScale() / MinecraftClient.getInstance().getWindow().getScaleFactor()) != 1;
     }
 
+    public boolean isInGroup() {
+        return isInGroup;
+    }
+
+    public void setInGroup(boolean inGroup) {
+        isInGroup = inGroup;
+    }
+
     public BaseHUDSettings getSettings() {
         return baseHUDSettings;
+    }
+
+    public int getGrowthDirectionHorizontal(int dynamicWidth) {
+        return isInGroup() ? 0 : getSettings().getGrowthDirectionX().getGrowthDirection(dynamicWidth);
+    }
+
+    public int getGrowthDirectionVertical(int dynamicHeight) {
+        return isInGroup() ? 0 : getSettings().getGrowthDirectionY().getGrowthDirection(dynamicHeight);
     }
 
     // bounding box attribute will return 0 if HUD is not rendered once.

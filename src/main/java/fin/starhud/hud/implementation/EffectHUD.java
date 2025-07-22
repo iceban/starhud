@@ -97,16 +97,16 @@ public class EffectHUD extends AbstractHUD {
         int harmSize = effectSize - beneficialSize;
 
         // xBeneficial, yBeneficial = Starting point for beneficial effect HUD.
-        int xBeneficial = x - effectSettings.base.growthDirectionX.getGrowthDirection(getDynamicWidth(true, beneficialSize, harmSize));
-        int yBeneficial = y - effectSettings.base.growthDirectionY.getGrowthDirection(getDynamicHeight(true, beneficialSize, harmSize));
+        int xBeneficial = x - getGrowthDirectionHorizontal(getDynamicWidth(true, beneficialSize, harmSize));
+        int yBeneficial = y - getGrowthDirectionVertical(getDynamicHeight(true, beneficialSize, harmSize));
 
         // xHarm, yHarm = Starting point for harm effect HUD.
         // this is just a way to say
         // "if the beneficial effect is empty, we place harm effect in the same place as beneficial effect, yes, replacing its position"
         int xHarm = (beneficialSize == 0 && drawVertical) ? xBeneficial :
-                x - effectSettings.base.growthDirectionX.getGrowthDirection(getDynamicWidth(false, beneficialSize, harmSize));
+                x - getGrowthDirectionHorizontal(getDynamicWidth(false, beneficialSize, harmSize));
         int yHarm = (beneficialSize == 0 && !drawVertical) ? yBeneficial :
-                y - effectSettings.base.growthDirectionY.getGrowthDirection(getDynamicHeight(false, beneficialSize, harmSize));
+                y - getGrowthDirectionVertical(getDynamicHeight(false, beneficialSize, harmSize));
 
         boolean shouldBoxUpdate = (needBoxUpdate || cachedSize != StatusEffectAttribute.getStatusEffectAttributeMap().size());
 

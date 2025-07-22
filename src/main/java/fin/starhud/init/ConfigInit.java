@@ -19,6 +19,8 @@ public class ConfigInit {
         // onConfigSaved we update every HUDs
         holder.registerSaveListener((ignored, ignored1) -> {
             HUDComponent.getInstance().updateAll();
+            Main.settings.hudList.onConfigSaved();
+            HUDComponent.getInstance().updateActiveHUDs();
             return ActionResult.SUCCESS;
         });
     }

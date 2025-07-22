@@ -78,8 +78,8 @@ public class DirectionHUD extends AbstractHUD {
             int width = CARDINAL_ICON_WIDTH + 1 + 5 + yawWidth + 5;
             int height = CARDINAL_ICON_HEIGHT;
 
-            x -= getSettings().getGrowthDirectionHorizontal(width);
-            y -= getSettings().getGrowthDirectionVertical(height);
+            x -= getGrowthDirectionHorizontal(width);
+            y -= getGrowthDirectionVertical(height);
 
             int color = getDirectionColor(iconIndex * 2) | 0xFF000000;
             setBoundingBox(x, y, width, height, color);

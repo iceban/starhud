@@ -18,6 +18,9 @@ public class GroupedHUDSettings {
 
     public boolean alignVertical = false;
 
+    @ConfigEntry.ColorPicker
+    public int boxColor = 0xFFFFFF;
+
     @ConfigEntry.Gui.Excluded
     public List<HUDId> ids = new ArrayList<>();
 

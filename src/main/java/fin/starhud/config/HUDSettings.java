@@ -3,8 +3,7 @@ package fin.starhud.config;
 import fin.starhud.hud.HUDId;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class HUDSettings {
 
@@ -21,4 +20,47 @@ public class HUDSettings {
     public HUDSettings() {
         individualHudIds.addAll(List.of(HUDId.values()));
     }
+
+
+    public void onConfigSaved() {
+        // check each HUD id appearance, if there's more than 1 appearance, we must clear.
+        Map<HUDId, Integer> appearanceMap = new EnumMap<>(HUDId.class);
+
+        for (HUDId id : individualHudIds) {
+            appearanceMap.put(id, appearanceMap.getOrDefault(id, 0) + 1);
+        }
+
+        for (GroupedHUDSettings group : groupedHuds) {
+            for (HUDId id : group.ids) {
+                appearanceMap.put(id, appearanceMap.getOrDefault(id, 0) + 1);
+            }
+        }
+
+        for (GroupedHUDSettings group : groupedHuds) {
+            group.ids.removeIf(id -> {
+                int count = appearanceMap.get(id);
+                if (count > 1) {
+                    appearanceMap.put(id, count - 1);
+                    return true;
+                }
+                return false;
+            });
+        }
+
+        Set<HUDId> seen = new HashSet<>();
+        individualHudIds.removeIf(id -> {
+            if (seen.contains(id)) return true;
+            seen.add(id);
+            return false;
+        });
+
+        for (HUDId id : HUDId.values()) {
+            if (!appearanceMap.containsKey(id) || appearanceMap.get(id) == 0) {
+                individualHudIds.add(id);
+            }
+        }
+
+    }
+
+
 }

@@ -115,8 +115,8 @@ public class TargetedCrosshairHUD extends AbstractHUD {
         int width = ICON_BACKGROUND_WIDTH + 1 + 5 + cachedBlockMaxWidth + 5;
         int height = ICON_BACKGROUND_HEIGHT;
 
-        x -= getSettings().getGrowthDirectionHorizontal(width);
-        y -= getSettings().getGrowthDirectionVertical(height);
+        x -= getGrowthDirectionHorizontal(width);
+        y -= getGrowthDirectionVertical(height);
 
         setBoundingBox(x, y, width, height);
 
@@ -179,8 +179,8 @@ public class TargetedCrosshairHUD extends AbstractHUD {
         int width = ICON_BACKGROUND_WIDTH + 1 + 5 + cachedEntityMaxWidth + 5;
         int height = ICON_BACKGROUND_HEIGHT;
 
-        x -= getSettings().getGrowthDirectionHorizontal(width);
-        y -= getSettings().getGrowthDirectionVertical(height);
+        x -= getGrowthDirectionHorizontal(width);
+        y -= getGrowthDirectionVertical(height);
 
         int color = getEntityIconColor(cachedIndex) | 0xFF000000;
 

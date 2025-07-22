@@ -67,8 +67,8 @@ public class InventoryHUD extends AbstractHUD {
         int width = TEXTURE_WIDTH_VERTICAL;
         int height = TEXTURE_HEIGHT_VERTICAL;
 
-        x -= getSettings().getGrowthDirectionHorizontal(width);
-        y -= getSettings().getGrowthDirectionVertical(height);
+        x -= getGrowthDirectionHorizontal(width);
+        y -= getGrowthDirectionVertical(height);
 
         for (int itemIndex = 0; itemIndex < 27; ++itemIndex) {
 
@@ -100,8 +100,8 @@ public class InventoryHUD extends AbstractHUD {
         int width = TEXTURE_WIDTH_HORIZONTAL;
         int height = TEXTURE_HEIGHT_HORIZONTAL;
 
-        x -= getSettings().getGrowthDirectionHorizontal(width);
-        y -= getSettings().getGrowthDirectionVertical(height);
+        x -= getGrowthDirectionHorizontal(width);
+        y -= getGrowthDirectionVertical(height);
 
         for (int itemIndex = 0; itemIndex < 27; ++itemIndex) {
 

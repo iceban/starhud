@@ -44,8 +44,8 @@ public class FPSHUD extends AbstractHUD {
         int width = TEXTURE_WIDTH + 1 + 5 + strWidth + 5;
         int height = TEXTURE_HEIGHT;
 
-        x -= getSettings().getGrowthDirectionHorizontal(width);
-        y -= getSettings().getGrowthDirectionVertical(height);
+        x -= getGrowthDirectionHorizontal(width);
+        y -= getGrowthDirectionVertical(height);
 
         int color = FPS_SETTINGS.color | 0xFF000000;
 

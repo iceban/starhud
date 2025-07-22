@@ -74,7 +74,7 @@ public class HUDComponent {
         return groupedHUDs;
     }
 
-    private void loadActiveHUDsFromConfig() {
+    public void loadActiveHUDsFromConfig() {
         HUDSettings hudConfig = Main.settings.hudList;
 
         for (HUDId id : hudConfig.individualHudIds) {
@@ -120,6 +120,17 @@ public class HUDComponent {
 
         for (HUDInterface hud : groupedHUDs)
             hud.update();
+    }
+
+    // follow up with the updated config.
+    public void updateActiveHUDs() {
+        removeActiveHUDs();
+        loadActiveHUDsFromConfig();
+    }
+
+    public void removeActiveHUDs() {
+        getGroupedHUDs().clear();
+        getIndividualHUDs().clear();;
     }
 
     public void setRenderInGameScreen(boolean value) {

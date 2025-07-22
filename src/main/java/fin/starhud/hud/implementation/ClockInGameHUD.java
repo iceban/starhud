@@ -68,8 +68,8 @@ public class ClockInGameHUD extends AbstractHUD {
         int width = ICON_WIDTH + 1 + 5 + cachedStrWidth + 5;
         int height = ICON_HEIGHT;
 
-        x -= getSettings().getGrowthDirectionHorizontal(width);
-        y -= getSettings().getGrowthDirectionVertical(height);
+        x -= getGrowthDirectionHorizontal(width);
+        y -= getGrowthDirectionVertical(height);
 
         setBoundingBox(x, y, width, height, color);
 
