@@ -19,18 +19,27 @@ public class HUDComponent {
 
     // singleton
     private HUDComponent() {
-        huds.add(new ArmorHUD());
-        huds.add(new BiomeHUD());
+        huds.add(new HelmetHUD());
+        huds.add(new ChestplateHUD());
+        huds.add(new LeggingsHUD());
+        huds.add(new BootsHUD());
+
+        huds.add(new XCoordinateHUD());
+        huds.add(new YCoordinateHUD());
+        huds.add(new ZCoordinateHUD());
+
+        huds.add(new LeftHandHUD());
+        huds.add(new RightHandHUD());
+
         huds.add(new ClockInGameHUD());
         huds.add(new ClockSystemHUD());
+
+        huds.add(new BiomeHUD());
         huds.add(new DayHUD());
-        huds.add(new CoordinateHUD());
         huds.add(new DirectionHUD());
         huds.add(new FPSHUD());
         huds.add(new InventoryHUD());
         huds.add(new PingHUD());
-        huds.add(new LeftHandHUD());
-        huds.add(new RightHandHUD());
         huds.add(new TargetedCrosshairHUD());
 
         effectHUD = new EffectHUD();

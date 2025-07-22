@@ -175,7 +175,7 @@ public class TargetedCrosshairHUD extends AbstractHUD {
             cachedIndex = getEntityIconIndex(targetedEntity);
         }
 
-        int width = ICON_BACKGROUND_WIDTH + 1 + 5 + cachedBlockMaxWidth + 5;
+        int width = ICON_BACKGROUND_WIDTH + 1 + 5 + cachedEntityMaxWidth + 5;
         int height = ICON_BACKGROUND_HEIGHT;
 
         x -= getSettings().getGrowthDirectionHorizontal(width);

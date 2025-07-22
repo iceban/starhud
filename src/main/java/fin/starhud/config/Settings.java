@@ -19,7 +19,29 @@ public class Settings implements ConfigData {
 
     @ConfigEntry.Category("armor")
     @ConfigEntry.Gui.TransitiveObject
-    public ArmorSettings armorSettings = new ArmorSettings();
+    public Armor armorSettings = new Armor();
+
+    public static class Armor {
+        @ConfigEntry.Gui.CollapsibleObject
+        public ArmorSettings helmet = new ArmorSettings(
+                new BaseHUDSettings(true, 5, 0, ScreenAlignmentX.LEFT, ScreenAlignmentY.MIDDLE, GrowthDirectionX.RIGHT, GrowthDirectionY.MIDDLE)
+        );
+
+        @ConfigEntry.Gui.CollapsibleObject
+        public ArmorSettings chestplate = new ArmorSettings(
+                new BaseHUDSettings(true, 5, 14, ScreenAlignmentX.LEFT, ScreenAlignmentY.MIDDLE, GrowthDirectionX.RIGHT, GrowthDirectionY.MIDDLE)
+        );
+
+        @ConfigEntry.Gui.CollapsibleObject
+        public ArmorSettings leggings = new ArmorSettings(
+                new BaseHUDSettings(true, 5, 14 * 2, ScreenAlignmentX.LEFT, ScreenAlignmentY.MIDDLE, GrowthDirectionX.RIGHT, GrowthDirectionY.MIDDLE)
+        );
+
+        @ConfigEntry.Gui.CollapsibleObject
+        public ArmorSettings boots = new ArmorSettings(
+                new BaseHUDSettings(true, 5, 14 * 3, ScreenAlignmentX.LEFT, ScreenAlignmentY.MIDDLE, GrowthDirectionX.RIGHT, GrowthDirectionY.MIDDLE)
+        );
+    }
 
     @ConfigEntry.Category("fps")
     @ConfigEntry.Gui.TransitiveObject
@@ -27,7 +49,27 @@ public class Settings implements ConfigData {
 
     @ConfigEntry.Category("coord")
     @ConfigEntry.Gui.TransitiveObject
-    public CoordSettings coordSettings = new CoordSettings();
+    public Coord coordSettings = new Coord();
+
+    public static class Coord {
+        @ConfigEntry.Gui.CollapsibleObject
+        public CoordSettings X = new CoordSettings(
+                new BaseHUDSettings(true, 5, 5, ScreenAlignmentX.LEFT, ScreenAlignmentY.TOP, GrowthDirectionX.RIGHT, GrowthDirectionY.DOWN),
+                0xFc7871
+        );
+
+        @ConfigEntry.Gui.CollapsibleObject
+        public CoordSettings Y = new CoordSettings(
+                new BaseHUDSettings(true, 5, 5 + 14, ScreenAlignmentX.LEFT, ScreenAlignmentY.TOP, GrowthDirectionX.RIGHT, GrowthDirectionY.DOWN),
+                0xA6F1AF
+        );
+
+        @ConfigEntry.Gui.CollapsibleObject
+        public CoordSettings Z = new CoordSettings(
+                new BaseHUDSettings(true, 5, 5 + 14 * 2, ScreenAlignmentX.LEFT, ScreenAlignmentY.TOP, GrowthDirectionX.RIGHT, GrowthDirectionY.DOWN),
+                0x6CE1FC
+        );
+    }
 
     @ConfigEntry.Category("direction")
     @ConfigEntry.Gui.TransitiveObject

@@ -63,6 +63,12 @@ public class InventoryHUD extends AbstractHUD {
         PlayerInventory inventory = CLIENT.player.getInventory();
         boolean foundItem = false;
 
+        int width = TEXTURE_WIDTH_VERTICAL;
+        int height = TEXTURE_HEIGHT_VERTICAL;
+
+        x -= getSettings().getGrowthDirectionHorizontal(width);
+        y -= getSettings().getGrowthDirectionVertical(height);
+
         for (int itemIndex = 0; itemIndex < 27; ++itemIndex) {
 
             ItemStack stack = inventory.getMainStacks().get(itemIndex + 9);
@@ -89,6 +95,12 @@ public class InventoryHUD extends AbstractHUD {
     private boolean drawInventoryHorizontal(DrawContext context, int x, int y) {
         PlayerInventory inventory = CLIENT.player.getInventory();
         boolean foundItem = false;
+
+        int width = TEXTURE_WIDTH_HORIZONTAL;
+        int height = TEXTURE_HEIGHT_HORIZONTAL;
+
+        x -= getSettings().getGrowthDirectionHorizontal(width);
+        y -= getSettings().getGrowthDirectionVertical(height);
 
         for (int itemIndex = 0; itemIndex < 27; ++itemIndex) {
 
