@@ -17,12 +17,14 @@ public class PingHUD extends AbstractHUD {
 
     private static final Identifier PING_TEXTURE = Identifier.of("starhud", "hud/ping.png");
 
+    private static final int TEXTURE_WIDTH = 13;
+    private static final int TEXTURE_HEIGHT = 13 * 4;
+    private static final int ICON_WIDTH = 13;
+    private static final int ICON_HEIGHT = 13;
+
     private static long LAST_PING_UPDATE = -1L;
     private static World LAST_WORLD = null;
     private static PingMeasurer cachedPingMeasurer;
-
-    private static final int TEXTURE_WIDTH = 63;
-    private static final int TEXTURE_HEIGHT = 13;
 
     private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
 
@@ -35,6 +37,10 @@ public class PingHUD extends AbstractHUD {
         return "Ping HUD";
     }
 
+    @Override
+    public String getId() {
+        return "ping";
+    }
 
     @Override
     public boolean shouldRender() {
@@ -43,7 +49,7 @@ public class PingHUD extends AbstractHUD {
     }
 
     @Override
-    public boolean renderHUD(DrawContext context) {
+    public boolean renderHUD(DrawContext context, int x, int y) {
         MultiValueDebugSampleLogImpl pingLog = CLIENT.getDebugHud().getPingLog();
 
         // different world and server checking for PingMeasurer renewal.
@@ -62,15 +68,32 @@ public class PingHUD extends AbstractHUD {
         // get the latest updated ping through the last element.
         long currentPing = pingLog.get(pingLogLen - 1);
         String pingStr = currentPing + " ms";
+        int strWidth = CLIENT.textRenderer.getWidth(pingStr) - 1;
+
+        int width = ICON_WIDTH + 1 + 5 + strWidth + 5;
+        int height = ICON_HEIGHT;
+
+        x -= getSettings().getGrowthDirectionHorizontal(width);
+        y -= getSettings().getGrowthDirectionVertical(height);
 
         // 0, 150, 300, 450
         int step = Math.min((int) currentPing / 150, 3);
         int color = getPingColor(step) | 0xFF000000;
 
-        RenderUtils.drawTextureHUD(context, PING_TEXTURE, x, y, 0.0F, step * 13, TEXTURE_WIDTH, TEXTURE_HEIGHT, TEXTURE_WIDTH, TEXTURE_HEIGHT * 4, color);
-        RenderUtils.drawTextHUD(context, pingStr, x + 19, y + 3, color, false);
+        setBoundingBox(x, y, width, height, color);
 
-        setBoundingBox(x, y, TEXTURE_WIDTH, TEXTURE_HEIGHT, color);
+        RenderUtils.drawSmallHUD(
+                context,
+                pingStr,
+                x, y,
+                width, height,
+                PING_TEXTURE,
+                0.0F, ICON_HEIGHT * step,
+                TEXTURE_WIDTH, TEXTURE_HEIGHT,
+                ICON_WIDTH, ICON_HEIGHT,
+                color
+        );
+
         return true;
     }
 
@@ -93,13 +116,13 @@ public class PingHUD extends AbstractHUD {
         }
     }
 
-    @Override
-    public int getBaseHUDWidth() {
-        return TEXTURE_WIDTH;
-    }
-
-    @Override
-    public int getBaseHUDHeight() {
-        return TEXTURE_HEIGHT;
-    }
+//    @Override
+//    public int getBaseHUDWidth() {
+//        return TEXTURE_WIDTH;
+//    }
+//
+//    @Override
+//    public int getBaseHUDHeight() {
+//        return TEXTURE_HEIGHT;
+//    }
 }

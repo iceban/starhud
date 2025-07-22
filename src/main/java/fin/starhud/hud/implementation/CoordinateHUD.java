@@ -14,10 +14,14 @@ public class CoordinateHUD extends AbstractHUD {
 
     private static final CoordSettings COORD_SETTINGS = Main.settings.coordSettings;
 
-    private static final Identifier COORD_TEXTURE = Identifier.of("starhud", "hud/coordinate.png");
+    private static final Identifier COORD_X_TEXTURE = Identifier.of("starhud", "hud/coordinate_x.png");
+    private static final Identifier COORD_Y_TEXTURE = Identifier.of("starhud", "hud/coordinate_y.png");
+    private static final Identifier COORD_Z_TEXTURE = Identifier.of("starhud", "hud/coordinate_z.png");
 
-    private static final int TEXTURE_WIDTH = 65;
+    private static final int TEXTURE_WIDTH = 13;
     private static final int TEXTURE_HEIGHT = 13;
+    private static final int ICON_WIDTH = 13;
+    private static final int ICON_HEIGHT = 13;
 
     private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
 
@@ -40,25 +44,26 @@ public class CoordinateHUD extends AbstractHUD {
     }
 
     @Override
-    public boolean renderHUD(DrawContext context) {
+    public String getId() {
+        return "coordinate";
+    }
+
+    @Override
+    public boolean renderHUD(DrawContext context, int x, int y) {
         Vec3d vec3d = CLIENT.player.getPos();
 
         String coordX = Integer.toString((int) vec3d.x);
         String coordY = Integer.toString((int) vec3d.y);
         String coordZ = Integer.toString((int) vec3d.z);
 
-        int colorX = COORD_SETTINGS.X.color | 0xFF000000;
-        int colorY = COORD_SETTINGS.Y.color | 0xFF000000;
-        int colorZ = COORD_SETTINGS.Z.color | 0xFF000000;
-
         if (COORD_SETTINGS.X.shouldRender)
-            renderEachCoordinate(context, coordX, x + COORD_SETTINGS.X.xOffset, y + COORD_SETTINGS.X.yOffset, 0.0F, TEXTURE_WIDTH, TEXTURE_HEIGHT, colorX);
+            renderEachCoordinate(context, coordX, COORD_X_TEXTURE, x, y, COORD_SETTINGS.X);
 
         if (COORD_SETTINGS.Y.shouldRender)
-            renderEachCoordinate(context, coordY, x + COORD_SETTINGS.Y.xOffset, y + COORD_SETTINGS.Y.yOffset, 14.0F, TEXTURE_WIDTH, TEXTURE_HEIGHT, colorY);
+            renderEachCoordinate(context, coordY, COORD_Y_TEXTURE, x, y, COORD_SETTINGS.Y);
 
         if (COORD_SETTINGS.Z.shouldRender)
-            renderEachCoordinate(context, coordZ, x + COORD_SETTINGS.Z.xOffset, y + COORD_SETTINGS.Z.yOffset, 28.0F, TEXTURE_WIDTH, TEXTURE_HEIGHT, colorZ);
+            renderEachCoordinate(context, coordZ, COORD_Z_TEXTURE, x, y, COORD_SETTINGS.Z);
 
         needBoxUpdate = false;
         return true;
@@ -72,21 +77,31 @@ public class CoordinateHUD extends AbstractHUD {
         super.boundingBox.setEmpty(true);
     }
 
-    @Override
-    public int getBaseHUDWidth() {
-        return TEXTURE_WIDTH;
-    }
+    public void renderEachCoordinate(DrawContext context, String str, Identifier iconTexture, int x, int y, CoordSettings.CoordPieceSetting pieceSetting) {
 
-    @Override
-    public int getBaseHUDHeight() {
-        return TEXTURE_HEIGHT;
-    }
+        int textWidth = CLIENT.textRenderer.getWidth(str) - 1;
+        int width = ICON_WIDTH + 1 + 5 + textWidth + 5;
+        int height = ICON_HEIGHT;
 
-    public void renderEachCoordinate(DrawContext context, String str, int x, int y, float v, int width, int height, int color) {
-        RenderUtils.drawTextureHUD(context, COORD_TEXTURE, x, y, 0.0F, v, width, height, width, 41, color);
-        RenderUtils.drawTextHUD(context, str, x + 19, y + 3, color, false);
+        x += pieceSetting.xOffset - getSettings().getGrowthDirectionHorizontal(width);
+        y += pieceSetting.yOffset - getSettings().getGrowthDirectionVertical(height);
+
+        int color = pieceSetting.color | 0xFF000000;
 
         tempBox.setBoundingBox(x, y, width, height, color);
+
+        RenderUtils.drawSmallHUD(
+                context,
+                str,
+                x, y,
+                width, height,
+                iconTexture,
+                0.0F, 0.0F,
+                TEXTURE_WIDTH, TEXTURE_HEIGHT,
+                ICON_WIDTH, ICON_HEIGHT,
+                color
+        );
+
         if (needBoxUpdate) {
             if (super.boundingBox.isEmpty())
                 super.boundingBox.setBoundingBox(tempBox.getX(), tempBox.getY(), tempBox.getWidth(), tempBox.getHeight(), tempBox.getColor());

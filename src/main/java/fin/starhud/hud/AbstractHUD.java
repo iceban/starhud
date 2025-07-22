@@ -13,12 +13,12 @@ public abstract class AbstractHUD implements HUDInterface {
     protected final BaseHUDSettings baseHUDSettings;
 
     // the actual x and y point we use in HUDs
-    protected int x;
-    protected int y;
+    private int x;
+    private int y;
 
     // temporary x and y point.
-    protected int baseX;
-    protected int baseY;
+    private int baseX;
+    private int baseY;
 
     protected final Box boundingBox = new Box(0, 0);
 
@@ -48,7 +48,7 @@ public abstract class AbstractHUD implements HUDInterface {
 
         // if the HUD' scale is set to default, don't... change the scale...? whatever, this is faster than the one below.
         if (!isScaled()) {
-            return renderHUD(context);
+            return renderHUD(context, x, y);
         }
 
         // this is so we can change the scale for one hud but not the others.
@@ -56,14 +56,14 @@ public abstract class AbstractHUD implements HUDInterface {
         setHUDScale(context);
 
         try {
-            return renderHUD(context);
+            return renderHUD(context, x, y);
         } finally {
             context.getMatrices().popMatrix();
         }
     }
 
     public abstract String getName();
-    public abstract boolean renderHUD(DrawContext context);
+    public abstract boolean renderHUD(DrawContext context, int x, int y);
 
     /*
     * Base HUD Width / Height
@@ -77,8 +77,6 @@ public abstract class AbstractHUD implements HUDInterface {
     *          we can just give the base hud width (ICON_WIDTH + GAP + TEXT_PADDING_LEFT + TEXT_LENGTH_OF_4_DIGITS + TEXT_PADDING_RIGHT).
     *          though yeah it will surely be a problem if the amount of item reaches over 5 digits.
     * */
-    public abstract int getBaseHUDWidth();
-    public abstract int getBaseHUDHeight();
 
     public void setHUDScale(DrawContext context) {
         float scaleFactor = getSettings().getScale() / (float) WINDOW.getScaleFactor();
@@ -100,11 +98,11 @@ public abstract class AbstractHUD implements HUDInterface {
     }
 
     public void updateX() {
-        baseX = getSettings().getCalculatedPosX() - getSettings().getGrowthDirectionX().getGrowthDirection(getBaseHUDWidth());
+        baseX = getSettings().getCalculatedPosX();
     }
 
     public void updateY() {
-        baseY = getSettings().getCalculatedPosY() - getSettings().getGrowthDirectionY().getGrowthDirection(getBaseHUDHeight());
+        baseY = getSettings().getCalculatedPosY();
     }
 
     public boolean isScaled() {

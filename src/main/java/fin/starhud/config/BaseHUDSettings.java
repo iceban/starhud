@@ -129,6 +129,14 @@ public class BaseHUDSettings implements ConfigData {
         return conditions;
     }
 
+    public int getGrowthDirectionHorizontal(int dynamicWidth) {
+        return this.getGrowthDirectionX().getGrowthDirection(dynamicWidth);
+    }
+
+    public int getGrowthDirectionVertical(int dynamicHeight) {
+        return this.getGrowthDirectionY().getGrowthDirection(dynamicHeight);
+    }
+
     // get the scaled factor
     // this can either make your HUD bigger or smaller.
     public float getScaledFactor() {

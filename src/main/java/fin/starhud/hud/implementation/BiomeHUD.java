@@ -23,14 +23,17 @@ public class  BiomeHUD extends AbstractHUD {
 
     private static final BiomeSettings BIOME_SETTINGS = Main.settings.biomeSettings;
 
-    private static final Identifier DIMENSION_TEXTURE = Identifier.of("starhud", "hud/biome.png");
+    private static final Identifier DIMENSION_TEXTURE = Identifier.of("starhud", "hud/dimension.png");
+
+    private static final int TEXTURE_WIDTH = 13;
+    private static final int TEXTURE_HEIGHT = 13 * 4;
+
+    private static final int ICON_WIDTH = 13;
+    private static final int ICON_HEIGHT = 13;
 
     private static Text cachedBiomeNameText;
-    private static RegistryEntry<net.minecraft.world.biome.Biome> cachedBiome;
+    private static RegistryEntry<Biome> cachedBiome;
     private static int cachedTextWidth;
-
-    private static final int TEXTURE_WIDTH = 24;
-    private static final int TEXTURE_HEIGHT = 13;
 
     private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
 
@@ -44,7 +47,12 @@ public class  BiomeHUD extends AbstractHUD {
     }
 
     @Override
-    public boolean renderHUD(DrawContext context) {
+    public String getId() {
+        return "biome";
+    }
+
+    @Override
+    public boolean renderHUD(DrawContext context, int x, int y) {
         TextRenderer textRenderer = CLIENT.textRenderer;
 
         BlockPos blockPos = CLIENT.player.getBlockPos();
@@ -68,19 +76,32 @@ public class  BiomeHUD extends AbstractHUD {
             }
 
             cachedBiome = currentBiome;
-            cachedTextWidth = textRenderer.getWidth(cachedBiomeNameText);
+            cachedTextWidth = textRenderer.getWidth(cachedBiomeNameText) - 1;
         }
 
         int dimensionIndex = getDimensionIndex(CLIENT.world.getRegistryKey());
         int color = getTextColorFromDimension(dimensionIndex) | 0xFF000000;
 
-        int xTemp = x - BIOME_SETTINGS.base.growthDirectionX.getGrowthDirection(cachedTextWidth);
+        int width = ICON_WIDTH + 1 + 5 + cachedTextWidth + 5;
+        int height = ICON_HEIGHT;
 
-        RenderUtils.drawTextureHUD(context, DIMENSION_TEXTURE, xTemp, y, 0.0F, dimensionIndex * TEXTURE_HEIGHT, 13, TEXTURE_HEIGHT, 13, 52);
-        RenderUtils.fillRoundedRightSide(context, xTemp + 14, y, xTemp + 14 + cachedTextWidth + 9, y + TEXTURE_HEIGHT, 0x80000000);
-        RenderUtils.drawTextHUD(context, cachedBiomeNameText.asOrderedText(), xTemp + 19, y + 3, color, false);
+        x -= getSettings().getGrowthDirectionHorizontal(width);
+        y -= getSettings().getGrowthDirectionVertical(height);
 
-        setBoundingBox(xTemp, y, 14 + cachedTextWidth + 9, TEXTURE_HEIGHT, color);
+        setBoundingBox(x, y, width, height, color);
+
+        RenderUtils.drawSmallHUD(
+                context,
+                cachedBiomeNameText.asOrderedText(),
+                x, y,
+                width, height,
+                DIMENSION_TEXTURE,
+                0.0F, ICON_HEIGHT * dimensionIndex,
+                TEXTURE_WIDTH, TEXTURE_HEIGHT,
+                ICON_WIDTH, ICON_HEIGHT,
+                color
+        );
+
         return true;
     }
 
@@ -98,15 +119,5 @@ public class  BiomeHUD extends AbstractHUD {
             case 2 -> BIOME_SETTINGS.color.end;
             default -> BIOME_SETTINGS.color.custom;
         };
-    }
-
-    @Override
-    public int getBaseHUDWidth() {
-        return TEXTURE_WIDTH;
-    }
-
-    @Override
-    public int getBaseHUDHeight() {
-        return TEXTURE_HEIGHT;
     }
 }

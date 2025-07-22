@@ -16,7 +16,13 @@ public class ArmorHUD extends AbstractHUD {
 
     private static final ArmorSettings ARMOR_SETTINGS = Main.settings.armorSettings;
 
-    private static final Identifier ARMOR_BACKGROUND_TEXTURE = Identifier.of("starhud", "hud/armor.png");
+    private static final Identifier[] ARMOR_BACKGROUND_TEXTURE = {
+            Identifier.of("starhud", "hud/helmet.png"),
+            Identifier.of("starhud", "hud/chestplate.png"),
+            Identifier.of("starhud", "hud/leggings.png"),
+            Identifier.of("starhud", "hud/boots.png")
+
+    };
 
     private static final ArmorSettings.ArmorPieceSetting[] PIECE_SETTINGS = {
             ARMOR_SETTINGS.helmet,
@@ -25,11 +31,10 @@ public class ArmorHUD extends AbstractHUD {
             ARMOR_SETTINGS.boots
     };
 
-    private static final int TEXTURE_WIDTH = 13 + 1 + 5 + 5;
+    private static final int TEXTURE_WIDTH = 13;
     private static final int TEXTURE_HEIGHT = 13;
-
-    private static final int ITEM_TEXTURE_WIDTH = 22 + 1 + 5 + 5;
-    private static final int ITEM_TEXTURE_HEIGHT = 3 + 16 + 3;
+    private static final int ICON_WIDTH = 13;
+    private static final int ICON_HEIGHT = 13;
 
     private static boolean needBoxUpdate = true;
 
@@ -45,13 +50,8 @@ public class ArmorHUD extends AbstractHUD {
     }
 
     @Override
-    public int getBaseHUDWidth() {
-        return (PIECE_SETTINGS[0].drawItem || PIECE_SETTINGS[1].drawItem || PIECE_SETTINGS[2].drawItem || PIECE_SETTINGS[3].drawItem) ? ITEM_TEXTURE_WIDTH : TEXTURE_WIDTH;
-    }
-
-    @Override
-    public int getBaseHUDHeight() {
-        return (PIECE_SETTINGS[0].drawItem || PIECE_SETTINGS[1].drawItem || PIECE_SETTINGS[2].drawItem || PIECE_SETTINGS[3].drawItem) ? ITEM_TEXTURE_HEIGHT : TEXTURE_HEIGHT;
+    public String getId() {
+        return "armor";
     }
 
     @Override
@@ -61,7 +61,7 @@ public class ArmorHUD extends AbstractHUD {
     }
 
     @Override
-    public boolean renderHUD(DrawContext context) {
+    public boolean renderHUD(DrawContext context, int x, int y) {
         int armorIndex = 3;
 
         boolean isRendered = false;
@@ -72,17 +72,18 @@ public class ArmorHUD extends AbstractHUD {
                 if (PIECE_SETTINGS[armorIndex].shouldRender && !armor.isEmpty() && armor.isDamageable()) {
                     Box tempBox = RenderUtils.renderDurabilityHUD(
                             context,
-                            ARMOR_BACKGROUND_TEXTURE,
                             armor,
+                            ARMOR_BACKGROUND_TEXTURE[armorIndex],
                             x + PIECE_SETTINGS[armorIndex].xOffset,
                             y + PIECE_SETTINGS[armorIndex].yOffset,
-                            14 * armorIndex,
-                            13,
-                            TEXTURE_HEIGHT * 4 + 3,
+                            0.0F, 0.0F,
+                            TEXTURE_WIDTH, TEXTURE_HEIGHT,
+                            ICON_WIDTH, ICON_HEIGHT,
                             PIECE_SETTINGS[armorIndex].color | 0xFF000000,
                             PIECE_SETTINGS[armorIndex].drawBar,
                             PIECE_SETTINGS[armorIndex].drawItem,
-                            ARMOR_SETTINGS.base.growthDirectionX
+                            ARMOR_SETTINGS.base.growthDirectionX,
+                            ARMOR_SETTINGS.base.growthDirectionY
                     );
                     isRendered = true;
 

@@ -9,4 +9,6 @@ public interface HUDInterface {
     boolean shouldRender();
 
     void update();
+
+    String getId();
 }

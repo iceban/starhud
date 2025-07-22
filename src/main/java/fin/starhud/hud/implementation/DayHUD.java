@@ -14,8 +14,11 @@ public class DayHUD extends AbstractHUD {
 
     private static final Identifier DAY_TEXTURE = Identifier.of("starhud", "hud/day.png");
 
+    private static final int TEXTURE_WIDTH = 13;
     private static final int TEXTURE_HEIGHT = 13;
-    private static final int TEXTURE_WIDTH = 13 + 1 + 5 + 5;
+
+    private static final int ICON_WIDTH = 13;
+    private static final int ICON_HEIGHT = 13;
 
     private long lastDay = -1;
     private int cachedTextWidth;
@@ -33,7 +36,12 @@ public class DayHUD extends AbstractHUD {
     }
 
     @Override
-    public boolean renderHUD(DrawContext context) {
+    public String getId() {
+        return "day";
+    }
+
+    @Override
+    public boolean renderHUD(DrawContext context, int x, int y) {
 
         long day = CLIENT.world.getTimeOfDay() / 24000L;
 
@@ -41,28 +49,30 @@ public class DayHUD extends AbstractHUD {
         // And since day count hardly updates at all, doing this is reasonable.
         if (day != lastDay) {
             lastDay = day;
-            cachedDayString = Long.toString(day);
-            cachedTextWidth = CLIENT.textRenderer.getWidth(cachedDayString);
+            cachedDayString = "Day " + day;
+            cachedTextWidth = CLIENT.textRenderer.getWidth(cachedDayString) - 1;
         }
 
-        int xTemp = x - DAY_SETTINGS.base.growthDirectionX.getGrowthDirection(cachedTextWidth);
+        int width = ICON_WIDTH + 1 + 5 + cachedTextWidth + 5;
+        int height = ICON_HEIGHT;
+
+        x -= getSettings().getGrowthDirectionHorizontal(width);
+        y -= getSettings().getGrowthDirectionVertical(height);
+
         int color = DAY_SETTINGS.color | 0xFF000000;
+        setBoundingBox(x, y, width, height, color);
 
-        RenderUtils.drawTextureHUD(context, DAY_TEXTURE, xTemp, y, 0.0F, 0, 13, TEXTURE_HEIGHT, 13,  TEXTURE_HEIGHT);
-        RenderUtils.fillRoundedRightSide(context, xTemp + 14, y, xTemp + 14 + cachedTextWidth + 9, y + TEXTURE_HEIGHT, 0x80000000);
-        RenderUtils.drawTextHUD(context, cachedDayString, xTemp + 19, y + 3, color, false);
-
-        setBoundingBox(xTemp, y, 14 + cachedTextWidth + 9, TEXTURE_HEIGHT, color);
+        RenderUtils.drawSmallHUD(
+                context,
+                cachedDayString,
+                x, y,
+                width, height,
+                DAY_TEXTURE,
+                0.0F, 0.0F,
+                TEXTURE_WIDTH, TEXTURE_HEIGHT,
+                ICON_WIDTH, ICON_HEIGHT,
+                color
+        );
         return true;
-    }
-
-    @Override
-    public int getBaseHUDWidth() {
-        return TEXTURE_WIDTH;
-    }
-
-    @Override
-    public int getBaseHUDHeight() {
-        return TEXTURE_HEIGHT;
     }
 }

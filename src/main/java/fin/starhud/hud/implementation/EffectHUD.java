@@ -51,6 +51,11 @@ public class EffectHUD extends AbstractHUD {
     }
 
     @Override
+    public String getId() {
+        return "status_effect";
+    }
+
+    @Override
     public boolean shouldRender() {
         return super.shouldRender()
                 && !CLIENT.player.getStatusEffects().isEmpty();
@@ -65,7 +70,7 @@ public class EffectHUD extends AbstractHUD {
     }
 
     @Override
-    public boolean renderHUD(DrawContext context) {
+    public boolean renderHUD(DrawContext context, int x, int y) {
 
         // straight up copied from minecraft's own status effect rendering system.
         // but with 20x more mess!!!!
@@ -267,15 +272,15 @@ public class EffectHUD extends AbstractHUD {
     }
 
     // 0 because the width is dependent to how many status effect are present.
-    @Override
-    public int getBaseHUDWidth() {
-        return 0;
-    }
-
-    @Override
-    public int getBaseHUDHeight() {
-        return 0;
-    }
+//    @Override
+//    public int getBaseHUDWidth() {
+//        return 0;
+//    }
+//
+//    @Override
+//    public int getBaseHUDHeight() {
+//        return 0;
+//    }
 
     public static Identifier getStatusEffectTexture(RegistryEntry<StatusEffect> effect) {
         return STATUS_EFFECT_TEXTURE_MAP.computeIfAbsent(

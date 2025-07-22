@@ -4,6 +4,7 @@ import fin.starhud.Main;
 import fin.starhud.config.hud.ClockSystemSettings;
 import fin.starhud.helper.RenderUtils;
 import fin.starhud.hud.AbstractHUD;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.util.Identifier;
 
@@ -13,20 +14,21 @@ import java.util.Date;
 public class ClockSystemHUD extends AbstractHUD {
 
     private static final ClockSystemSettings CLOCK_SYSTEM_SETTINGS = Main.settings.clockSettings.systemSetting;
+    private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
 
-    private static final Identifier CLOCK_12_TEXTURE = Identifier.of("starhud", "hud/clock_12.png");
-    private static final Identifier CLOCK_24_TEXTURE = Identifier.of("starhud", "hud/clock_24.png");
+    private static final Identifier CLOCK_SYSTEM_TEXTURE = Identifier.of("starhud", "hud/clock_system.png");
 
+    private static final int TEXTURE_WIDTH = 13;
     private static final int TEXTURE_HEIGHT = 13;
+    private static final int ICON_WIDTH = 13;
+    private static final int ICON_HEIGHT = 13;
 
     private static final SimpleDateFormat CLOCK_24_FORMAT = new SimpleDateFormat("HH:mm");
     private static final SimpleDateFormat CLOCK_12_FORMAT = new SimpleDateFormat("hh:mm a");
 
     private static String cachedSystemTimeString = buildSystemTime24String(System.currentTimeMillis());
     private static long cachedSystemMinute = -1;
-
-    private static final int TEXTURE_SYSTEM_12_WIDTH = 65;
-    private static final int TEXTURE_SYSTEM_24_WIDTH = 49;
+    private static int cachedStrWidth = -1;
 
     public ClockSystemHUD() {
         super(CLOCK_SYSTEM_SETTINGS.base);
@@ -38,7 +40,12 @@ public class ClockSystemHUD extends AbstractHUD {
     }
 
     @Override
-    public boolean renderHUD(DrawContext context) {
+    public String getId() {
+        return "clock_system";
+    }
+
+    @Override
+    public boolean renderHUD(DrawContext context, int x, int y) {
         // update each minute
         long currentTime = System.currentTimeMillis();
         long minute = currentTime / 60000;
@@ -52,20 +59,32 @@ public class ClockSystemHUD extends AbstractHUD {
             cachedSystemTimeString = use12Hour ?
                     buildSystemTime12String(currentTime) :
                     buildSystemTime24String(currentTime);
+
+            cachedStrWidth = CLIENT.textRenderer.getWidth(cachedSystemTimeString) - 1;
         }
 
         int color = CLOCK_SYSTEM_SETTINGS.color | 0xFF000000;
-        super.boundingBox.setColor(color);
 
-        if (use12Hour) {
-            RenderUtils.drawTextureHUD(context, CLOCK_12_TEXTURE, x, y, 0.0F, 0.0F, TEXTURE_SYSTEM_12_WIDTH, TEXTURE_HEIGHT, TEXTURE_SYSTEM_12_WIDTH, TEXTURE_HEIGHT * 5, color);
-            RenderUtils.drawTextHUD(context, cachedSystemTimeString, x + 19, y + 3, color, false);
-            setBoundingBox(x, y, TEXTURE_SYSTEM_12_WIDTH, TEXTURE_HEIGHT, color);
-        } else {
-            RenderUtils.drawTextureHUD(context, CLOCK_24_TEXTURE, x, y, 0.0F, 0.0F, TEXTURE_SYSTEM_24_WIDTH, TEXTURE_HEIGHT, TEXTURE_SYSTEM_24_WIDTH, TEXTURE_HEIGHT * 5, color);
-            RenderUtils.drawTextHUD(context, cachedSystemTimeString, x + 19, y + 3, color, false);
-            setBoundingBox(x, y, TEXTURE_SYSTEM_24_WIDTH, TEXTURE_HEIGHT, color);
-        }
+        int width = ICON_WIDTH + 1 + 5 + cachedStrWidth + 5;
+        int height = ICON_HEIGHT;
+
+        x -= getSettings().getGrowthDirectionHorizontal(width);
+        y -= getSettings().getGrowthDirectionVertical(height);
+
+        setBoundingBox(x, y, width, height, color);
+
+        RenderUtils.drawSmallHUD(
+                context,
+                cachedSystemTimeString,
+                x, y,
+                width, height,
+                CLOCK_SYSTEM_TEXTURE,
+                0.0F, 0.0F,
+                TEXTURE_WIDTH, TEXTURE_HEIGHT,
+                ICON_WIDTH, ICON_HEIGHT,
+                color
+        );
+
         return true;
     }
 
@@ -77,15 +96,15 @@ public class ClockSystemHUD extends AbstractHUD {
         return CLOCK_12_FORMAT.format(new Date(time));
     }
 
-    @Override
-    public int getBaseHUDWidth() {
-        return CLOCK_SYSTEM_SETTINGS.use12Hour ? TEXTURE_SYSTEM_12_WIDTH : TEXTURE_SYSTEM_24_WIDTH;
-    }
-
-    @Override
-    public int getBaseHUDHeight() {
-        return TEXTURE_HEIGHT;
-    }
+//    @Override
+//    public int getBaseHUDWidth() {
+//        return CLOCK_SYSTEM_SETTINGS.use12Hour ? TEXTURE_SYSTEM_12_WIDTH : TEXTURE_SYSTEM_24_WIDTH;
+//    }
+//
+//    @Override
+//    public int getBaseHUDHeight() {
+//        return TEXTURE_HEIGHT;
+//    }
 
     @Override
     public void update() {

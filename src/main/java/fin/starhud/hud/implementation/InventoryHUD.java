@@ -41,12 +41,17 @@ public class InventoryHUD extends AbstractHUD {
         return "Inventory HUD";
     }
 
+    @Override
+    public String getId() {
+        return "inventory";
+    }
+
     public InventoryHUD() {
         super(INVENTORY_SETTINGS.base);
     }
 
     @Override
-    public boolean renderHUD(DrawContext context) {
+    public boolean renderHUD(DrawContext context, int x, int y) {
         if (INVENTORY_SETTINGS.drawVertical) {
             return drawInventoryVertical(context, x, y);
         } else {
@@ -143,13 +148,13 @@ public class InventoryHUD extends AbstractHUD {
             y1 += 23;
         }
     }
-    @Override
-    public int getBaseHUDWidth() {
-        return INVENTORY_SETTINGS.drawVertical ? TEXTURE_WIDTH_VERTICAL : TEXTURE_WIDTH_HORIZONTAL;
-    }
-
-    @Override
-    public int getBaseHUDHeight() {
-        return INVENTORY_SETTINGS.drawVertical ? TEXTURE_HEIGHT_VERTICAL : TEXTURE_HEIGHT_HORIZONTAL;
-    }
+//    @Override
+//    public int getBaseHUDWidth() {
+//        return INVENTORY_SETTINGS.drawVertical ? TEXTURE_WIDTH_VERTICAL : TEXTURE_WIDTH_HORIZONTAL;
+//    }
+//
+//    @Override
+//    public int getBaseHUDHeight() {
+//        return INVENTORY_SETTINGS.drawVertical ? TEXTURE_HEIGHT_VERTICAL : TEXTURE_HEIGHT_HORIZONTAL;
+//    }
 }
