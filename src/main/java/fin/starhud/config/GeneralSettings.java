@@ -15,6 +15,9 @@ public class GeneralSettings {
 
         @ConfigEntry.ColorPicker
         public int selectedBoxColor = 0x87ceeb;
+
+        @ConfigEntry.ColorPicker
+        public int selectedGroupBoxColor = 0xFc7871;
     }
 
     public static class InGameHUDSettings {

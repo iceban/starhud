@@ -5,7 +5,6 @@ import fin.starhud.config.ConditionalSettings;
 import fin.starhud.helper.Box;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.util.Window;
 
 public abstract class AbstractHUD implements HUDInterface {
 
@@ -19,7 +18,7 @@ public abstract class AbstractHUD implements HUDInterface {
     private int baseX;
     private int baseY;
 
-    protected final Box boundingBox = new Box(0, 0);
+    protected final Box boundingBox = new Box(-1, -1, -1, -1);
 
     public boolean isInGroup = false;
 
@@ -49,7 +48,10 @@ public abstract class AbstractHUD implements HUDInterface {
 
         // if the HUD' scale is set to default, don't... change the scale...? whatever, this is faster than the one below.
         if (!isScaled()) {
-            return renderHUD(context, x, y);
+            boolean result = renderHUD(context, x, y);
+            if (!result)
+                getBoundingBox().setEmpty(true);
+            return result;
         }
 
         // this is so we can change the scale for one hud but not the others.
@@ -57,7 +59,10 @@ public abstract class AbstractHUD implements HUDInterface {
         setHUDScale(context);
 
         try {
-            return renderHUD(context, x, y);
+            boolean result = renderHUD(context, x, y);
+            if (!result)
+                getBoundingBox().setEmpty(true);
+            return result;
         } finally {
             context.getMatrices().popMatrix();
         }
@@ -107,7 +112,7 @@ public abstract class AbstractHUD implements HUDInterface {
     }
 
     public boolean isScaled() {
-        return this.getSettings().getScale() != 0 && (this.getSettings().getScale() / MinecraftClient.getInstance().getWindow().getScaleFactor()) != 1;
+        return this.getSettings().getScale() != 0 && (this.getSettings().getScale() != MinecraftClient.getInstance().getWindow().getScaleFactor());
     }
 
     public boolean isInGroup() {
@@ -128,6 +133,22 @@ public abstract class AbstractHUD implements HUDInterface {
 
     public int getGrowthDirectionVertical(int dynamicHeight) {
         return isInGroup() ? 0 : getSettings().getGrowthDirectionY().getGrowthDirection(dynamicHeight);
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.y = y;
     }
 
     // bounding box attribute will return 0 if HUD is not rendered once.

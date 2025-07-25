@@ -1,10 +1,6 @@
 package fin.starhud.config.hud;
 
 import fin.starhud.config.BaseHUDSettings;
-import fin.starhud.helper.GrowthDirectionX;
-import fin.starhud.helper.GrowthDirectionY;
-import fin.starhud.helper.ScreenAlignmentX;
-import fin.starhud.helper.ScreenAlignmentY;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
 

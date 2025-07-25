@@ -17,6 +17,10 @@ public class Settings implements ConfigData {
     @ConfigEntry.Gui.TransitiveObject
     public GeneralSettings generalSettings = new GeneralSettings();
 
+    @ConfigEntry.Category("hud")
+    @ConfigEntry.Gui.TransitiveObject
+    public HUDSettings hudList = new HUDSettings();
+
     @ConfigEntry.Category("armor")
     @ConfigEntry.Gui.TransitiveObject
     public Armor armorSettings = new Armor();
@@ -122,8 +126,4 @@ public class Settings implements ConfigData {
     @ConfigEntry.Category("targeted")
     @ConfigEntry.Gui.TransitiveObject
     public TargetedCrosshairSettings targetedCrosshairSettings = new TargetedCrosshairSettings();
-
-    @ConfigEntry.Category("hud")
-    @ConfigEntry.Gui.TransitiveObject
-    public HUDSettings hudList = new HUDSettings();
 }

@@ -63,8 +63,10 @@ public class PingHUD extends AbstractHUD {
         updatePingLog();
 
         int pingLogLen = pingLog.getLength();
-        if (pingLogLen <= 0)
+        if (pingLogLen <= 0) {
+            getBoundingBox().setEmpty(true);
             return false;
+        }
 
         // get the latest updated ping through the last element.
         long currentPing = pingLog.get(pingLogLen - 1);

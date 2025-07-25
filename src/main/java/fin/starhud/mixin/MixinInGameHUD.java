@@ -2,12 +2,10 @@ package fin.starhud.mixin;
 
 import fin.starhud.hud.HUDComponent;
 import fin.starhud.hud.HUDId;
-import fin.starhud.hud.implementation.EffectHUD;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.client.render.RenderTickCounter;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;

@@ -6,7 +6,10 @@ import fin.starhud.config.HUDSettings;
 import fin.starhud.hud.implementation.*;
 import net.minecraft.client.gui.DrawContext;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
 
 public class HUDComponent {
 
@@ -77,14 +80,34 @@ public class HUDComponent {
     public void loadActiveHUDsFromConfig() {
         HUDSettings hudConfig = Main.settings.hudList;
 
+        individualHUDs.removeIf(hud -> !hudConfig.individualHudIds.contains(hud.getId()));
+
         for (HUDId id : hudConfig.individualHudIds) {
-            individualHUDs.add(hudMap.get(id));
+            AbstractHUD hud = hudMap.get(id);
+            if (!individualHUDs.contains(hud)) {
+                hud.setInGroup(false);
+                individualHUDs.add(hud);
+            }
         }
 
-        for (GroupedHUDSettings groupedHud : hudConfig.groupedHuds) {
-            groupedHUDs.add(new GroupedHUD(groupedHud));
+        groupedHUDs.removeIf(group -> !hudConfig.groupedHuds.contains(group.groupSettings));
+
+        for (GroupedHUDSettings settings : hudConfig.groupedHuds) {
+            boolean alreadyExists = false;
+
+            for (GroupedHUD group : groupedHUDs) {
+                if (group.groupSettings.equals(settings)) {
+                    alreadyExists = true;
+                    break;
+                }
+            }
+
+            if (!alreadyExists) {
+                groupedHUDs.add(new GroupedHUD(settings));
+            }
         }
     }
+
 
     private void registerHUD(AbstractHUD hud) {
         hudMap.put(hud.getId(), hud);
@@ -115,7 +138,7 @@ public class HUDComponent {
     }
 
     public void updateAll() {
-        for (HUDInterface hud : individualHUDs)
+        for (HUDInterface hud : hudMap.values())
             hud.update();
 
         for (HUDInterface hud : groupedHUDs)
@@ -124,13 +147,13 @@ public class HUDComponent {
 
     // follow up with the updated config.
     public void updateActiveHUDs() {
-        removeActiveHUDs();
         loadActiveHUDsFromConfig();
+        updateAll();
     }
 
     public void removeActiveHUDs() {
-        getGroupedHUDs().clear();
-        getIndividualHUDs().clear();;
+        individualHUDs.clear();
+        groupedHUDs.clear();
     }
 
     public void setRenderInGameScreen(boolean value) {

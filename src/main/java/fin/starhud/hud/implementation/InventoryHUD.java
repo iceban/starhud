@@ -89,7 +89,10 @@ public class InventoryHUD extends AbstractHUD {
             }
         }
 
-        setBoundingBox(x, y, TEXTURE_WIDTH_VERTICAL, TEXTURE_HEIGHT_VERTICAL);
+        if (!foundItem)
+            getBoundingBox().setEmpty(true);
+        else
+            setBoundingBox(x, y, TEXTURE_WIDTH_VERTICAL, TEXTURE_HEIGHT_VERTICAL);
         return foundItem;
     }
 
@@ -122,7 +125,11 @@ public class InventoryHUD extends AbstractHUD {
             }
         }
 
-        setBoundingBox(x, y, TEXTURE_WIDTH_HORIZONTAL, TEXTURE_HEIGHT_HORIZONTAL);
+        if (!foundItem)
+            getBoundingBox().setEmpty(true);
+        else
+            setBoundingBox(x, y, TEXTURE_WIDTH_HORIZONTAL, TEXTURE_HEIGHT_HORIZONTAL);
+
         return foundItem;
     }
 
@@ -161,13 +168,4 @@ public class InventoryHUD extends AbstractHUD {
             y1 += 23;
         }
     }
-//    @Override
-//    public int getBaseHUDWidth() {
-//        return INVENTORY_SETTINGS.drawVertical ? TEXTURE_WIDTH_VERTICAL : TEXTURE_WIDTH_HORIZONTAL;
-//    }
-//
-//    @Override
-//    public int getBaseHUDHeight() {
-//        return INVENTORY_SETTINGS.drawVertical ? TEXTURE_HEIGHT_VERTICAL : TEXTURE_HEIGHT_HORIZONTAL;
-//    }
 }

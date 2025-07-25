@@ -1,6 +1,5 @@
 package fin.starhud.hud.implementation;
 
-import fin.starhud.config.BaseHUDSettings;
 import fin.starhud.config.hud.CoordSettings;
 import fin.starhud.helper.RenderUtils;
 import fin.starhud.hud.AbstractHUD;
@@ -38,7 +37,7 @@ public abstract class AbstractCoordinateHUD extends AbstractHUD {
         int height = ICON_HEIGHT;
 
         x += getGrowthDirectionHorizontal(width);
-        y -= getGrowthDirectionHorizontal(height);
+        y -= getGrowthDirectionVertical(height);
 
         int color = SETTINGS.color | 0xFF000000;
 

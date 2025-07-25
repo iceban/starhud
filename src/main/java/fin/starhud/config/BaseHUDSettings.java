@@ -134,6 +134,17 @@ public class BaseHUDSettings implements ConfigData {
         return conditions;
     }
 
+    public void copyFrom(BaseHUDSettings other) {
+        this.x = other.x;
+        this.y = other.y;
+        this.originX = other.originX;
+        this.originY = other.originY;
+        this.growthDirectionX = other.growthDirectionX;
+        this.growthDirectionY = other.growthDirectionY;
+        this.scale = other.scale;
+        this.conditions = List.copyOf(other.conditions);
+    }
+
     public int getGrowthDirectionHorizontal(int dynamicWidth) {
         return this.getGrowthDirectionX().getGrowthDirection(dynamicWidth);
     }
