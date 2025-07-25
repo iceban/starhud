@@ -45,11 +45,11 @@ public class EditHUDScreen extends Screen {
     private final List<AbstractHUD> individualHUDs;
     private final List<GroupedHUD> groupedHUDs;
 
-    private final List<BaseHUDSettings> oldIndividualHUDSettings;
-    private final List<BaseHUDSettings> oldGroupedHUDSettings;
+    private final Map<HUDId, BaseHUDSettings> oldIndividualHUDSettings;
+    private final Map<String, GroupedHUDSettings> oldGroupedHUDSettings;
 
     private final List<HUDId> oldIndividualHudIds;
-    private final List<GroupedHUDSettings> oldGroupedHUDIds;
+    private final List<GroupedHUDSettings> oldGroupedHUDs;
 
     private boolean dragging = false;
     private final List<AbstractHUD> selectedHUDs = new ArrayList<>();
@@ -103,20 +103,30 @@ public class EditHUDScreen extends Screen {
         individualHUDs = HUDComponent.getInstance().getIndividualHUDs();
         groupedHUDs = HUDComponent.getInstance().getGroupedHUDs();
 
-        oldIndividualHUDSettings = new ArrayList<>();
+        oldIndividualHUDSettings = new HashMap<>();
         for (AbstractHUD p : individualHUDs) {
             BaseHUDSettings settings = p.getSettings();
-            oldIndividualHUDSettings.add(new BaseHUDSettings(settings.x, settings.y, settings.originX, settings.originY, settings.growthDirectionX, settings.growthDirectionY, settings.scale));
+            oldIndividualHUDSettings.put(p.getId(), new BaseHUDSettings(settings.x, settings.y, settings.originX, settings.originY, settings.growthDirectionX, settings.growthDirectionY, settings.scale));
         }
 
-        oldGroupedHUDSettings = new ArrayList<>();
-        for (AbstractHUD p : groupedHUDs) {
+        oldGroupedHUDSettings = new HashMap<>();
+        for (GroupedHUD p : groupedHUDs) {
             BaseHUDSettings settings = p.getSettings();
-            oldGroupedHUDSettings.add(new BaseHUDSettings(settings.x, settings.y, settings.originX, settings.originY, settings.growthDirectionX, settings.growthDirectionY, settings.scale));
+            oldGroupedHUDSettings.put(
+                    p.getGroupId(),
+                    new GroupedHUDSettings(
+                            new BaseHUDSettings(settings.x, settings.y, settings.originX, settings.originY, settings.growthDirectionX, settings.growthDirectionY, settings.scale),
+                            p.getGroupId(),
+                            p.groupSettings.gap,
+                            p.groupSettings.alignVertical,
+                            p.groupSettings.boxColor,
+                            p.groupSettings.hudIds
+                    )
+            );
         }
 
         oldIndividualHudIds = List.copyOf(Main.settings.hudList.individualHudIds);
-        oldGroupedHUDIds = List.copyOf(Main.settings.hudList.groupedHuds);
+        oldGroupedHUDs = List.copyOf(Main.settings.hudList.groupedHuds);
     }
 
     @Override
@@ -575,10 +585,12 @@ public class EditHUDScreen extends Screen {
         if (button == 0) {
             if (dragging) {
                 dragging = false;
-                AbstractHUD selectedHUD = selectedHUDs.getFirst();
-                xField.setText(String.valueOf(selectedHUD.getSettings().x));
-                yField.setText(String.valueOf(selectedHUD.getSettings().y));
-                hudAccumulatedDelta.clear();
+                if (!selectedHUDs.isEmpty()) {
+                    AbstractHUD selectedHUD = selectedHUDs.getFirst();
+                    xField.setText(String.valueOf(selectedHUD.getSettings().x));
+                    yField.setText(String.valueOf(selectedHUD.getSettings().y));
+                    hudAccumulatedDelta.clear();
+                }
 
                 if (pendingToggleHUD != null) {
                     selectedHUDs.remove(pendingToggleHUD);
@@ -649,30 +661,54 @@ public class EditHUDScreen extends Screen {
                     if (!hud.getBoundingBox().isEmpty())
                         if (intersectsBox(x1, y1, x2, y2, hud))
                             selectedHUDs.add(hud);
-
             }
+
+            updateFieldsFromSelectedHUD();
         }
         return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
     }
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (!dragSelection && !selectedHUDs.isEmpty()) {
-            for (AbstractHUD hud : selectedHUDs)
-                onKeyPressed(hud, keyCode, modifiers);
+        if (!dragSelection && !dragging) {
+            if (!selectedHUDs.isEmpty())
+                for (AbstractHUD hud : selectedHUDs)
+                    onKeyPressed(hud, keyCode, modifiers);
 
-            if (keyCode == GLFW.GLFW_KEY_G) {
-                if (selectedHUDs.size() > 1) {
-                    if (selectedHUDs.stream().noneMatch(hud -> hud instanceof GroupedHUD || hud instanceof EffectHUD)) {
-                        group(selectedHUDs);
-                        selectedHUDs.clear();
+            boolean isCtrl = isMac
+                    ? (modifiers & GLFW.GLFW_MOD_SUPER) != 0
+                    : (modifiers & GLFW.GLFW_MOD_CONTROL) != 0;
+
+            boolean handled = false;
+
+            switch (keyCode) {
+                case GLFW.GLFW_KEY_G -> {
+                    if (selectedHUDs.isEmpty()) break;
+                    if (selectedHUDs.size() > 1) {
+                        if (selectedHUDs.stream().noneMatch(hud -> hud instanceof GroupedHUD || hud instanceof EffectHUD)) {
+                            group(selectedHUDs);
+                            selectedHUDs.clear();
+                        }
+                    } else {
+                        if (selectedHUDs.getFirst() instanceof GroupedHUD groupedHUD) {
+                            unGroup(groupedHUD);
+                            selectedHUDs.clear();
+                        }
                     }
-                } else {
-                    if (selectedHUDs.getFirst() instanceof GroupedHUD groupedHUD) {
-                        unGroup(groupedHUD);
-                        selectedHUDs.clear();
-                    }
+                    handled = true;
                 }
+                case GLFW.GLFW_KEY_R -> {
+                    if (isCtrl) {
+                        revertChanges();
+                        selectedHUDs.clear();
+                    }
+
+                    handled = true;
+                }
+            }
+
+            if (handled) {
+                updateFieldsFromSelectedHUD();
             }
         }
 
@@ -739,13 +775,6 @@ public class EditHUDScreen extends Screen {
                 handled = true;
             }
 
-            case GLFW.GLFW_KEY_R -> {
-                if (isCtrl) {
-                    revertChanges();
-                    handled = true;
-                }
-            }
-
             case GLFW.GLFW_KEY_MINUS ->  {
                 if (!yField.isFocused() && !xField.isFocused()) {
                     settings.scale = (settings.scale + 6) % 7;
@@ -798,57 +827,79 @@ public class EditHUDScreen extends Screen {
 
 
     private boolean isDirty() {
-
         List<HUDId> individualIds = Main.settings.hudList.individualHudIds;
-        List<GroupedHUDSettings> groupedHUDIds = Main.settings.hudList.groupedHuds;
+        List<GroupedHUDSettings> groupedHUDSettings = Main.settings.hudList.groupedHuds;
+
+//        for (HUDId id : individualIds)
+//            System.out.println(id);
+//
+//        System.out.println("----------------");
+//
+//        for (HUDId id : oldIndividualHudIds)
+//            System.out.println(id);
+//
+//        System.out.println("----------------");
+//
+        for (GroupedHUDSettings groupSetting : groupedHUDSettings)
+            System.out.println(groupSetting);
+
+        System.out.println("----------------");
+
+        for (GroupedHUDSettings oldGroupSetting : oldGroupedHUDSettings.values())
+            System.out.println(oldGroupSetting);
+
+        System.out.println("!!!!!!!!!!!!!!!!!!!!!");
 
         if (!individualIds.equals(oldIndividualHudIds))
             return true;
-
-        if (!groupedHUDIds.equals(oldGroupedHUDIds))
+        if (!groupedHUDSettings.equals(oldGroupedHUDs))
             return true;
 
-        for (int i = 0; i < individualHUDs.size(); i++) {
-            BaseHUDSettings current = individualHUDs.get(i).getSettings();
-            BaseHUDSettings original = oldIndividualHUDSettings.get(i);
-
-            if (!isSettingsEqual(current, original)) {
+        for (AbstractHUD hud : individualHUDs) {
+            BaseHUDSettings current = hud.getSettings();
+            BaseHUDSettings original = oldIndividualHUDSettings.get(hud.getId());
+            if (original == null || !current.isEqual(original))
                 return true;
-            }
         }
 
-        for (int i = 0; i < groupedHUDs.size(); i++) {
-            BaseHUDSettings current = groupedHUDs.get(i).getSettings();
-            BaseHUDSettings original = oldGroupedHUDSettings.get(i);
-
-            if (!isSettingsEqual(current, original)) {
+        for (GroupedHUDSettings current : groupedHUDSettings) {
+            GroupedHUDSettings original = oldGroupedHUDSettings.get(current.id);
+            if (original == null || !current.isEqual(original))
                 return true;
-            }
         }
 
         return false;
     }
 
+
     private void revertChanges() {
         Main.settings.hudList.individualHudIds.clear();
         Main.settings.hudList.individualHudIds.addAll(oldIndividualHudIds);
         Main.settings.hudList.groupedHuds.clear();
-        Main.settings.hudList.groupedHuds.addAll(oldGroupedHUDIds);
+        Main.settings.hudList.groupedHuds.addAll(oldGroupedHUDs);
+
         HUDComponent.getInstance().updateActiveHUDs();
 
-        for (int i = 0; i < individualHUDs.size(); ++i) {
-            BaseHUDSettings current = individualHUDs.get(i).getSettings();
-            BaseHUDSettings original = oldIndividualHUDSettings.get(i);
-            copySettings(current, original);
+        for (AbstractHUD hud : individualHUDs) {
+            BaseHUDSettings original = oldIndividualHUDSettings.get(hud.getId());
+            if (original != null)
+                hud.getSettings().copySettings(original);
         }
 
-        for (int i = 0; i < groupedHUDs.size(); ++i) {
-            BaseHUDSettings current = groupedHUDs.get(i).getSettings();
-            BaseHUDSettings original = oldGroupedHUDSettings.get(i);
-            copySettings(current, original);
+        for (GroupedHUD hud : groupedHUDs) {
+            GroupedHUDSettings original = oldGroupedHUDSettings.get(hud.groupSettings.id);
+            System.out.println(hud.groupSettings);
+            System.out.println("---------------");
+            System.out.println(original);
+            if (original != null)
+                hud.groupSettings.copyFrom(original);
+
         }
+
+        HUDComponent.getInstance().updateAll();
         AutoConfig.getConfigHolder(Settings.class).save();
     }
+
 
     @Override
     public void close() {
@@ -898,26 +949,6 @@ public class EditHUDScreen extends Screen {
         }
     }
 
-    public boolean isSettingsEqual(BaseHUDSettings a, BaseHUDSettings b) {
-        return (a.x == b.x)
-                && (a.y == b.y)
-                && (a.originX == b.originX)
-                && (a.originY == b.originY)
-                && (a.growthDirectionX == b.growthDirectionX)
-                && (a.growthDirectionY == b.growthDirectionY)
-                && (a.scale == b.scale);
-    }
-
-    public void copySettings(BaseHUDSettings dst, BaseHUDSettings src) {
-        dst.x = src.x;
-        dst.y = src.y;
-        dst.originX = src.originX;
-        dst.originY = src.originY;
-        dst.growthDirectionX = src.growthDirectionX;
-        dst.growthDirectionY = src.growthDirectionY;
-        dst.scale = src.scale;
-    }
-
     // grouping function, experimental, may crash.
 
     // hud in huds MUST be ungrouped. not doing so will crash.
@@ -933,7 +964,7 @@ public class EditHUDScreen extends Screen {
                 throw new IllegalStateException("HUD " + hud.getId() + " is already in a group.");
             }
             individualHUDs.remove(hud.getId());
-            newSettings.ids.add(hud.getId());
+            newSettings.hudIds.add(hud.getId());
         }
 
         groupedHUDs.add(newSettings);

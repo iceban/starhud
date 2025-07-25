@@ -31,13 +31,13 @@ public class HUDSettings {
         }
 
         for (GroupedHUDSettings group : groupedHuds) {
-            for (HUDId id : group.ids) {
+            for (HUDId id : group.hudIds) {
                 appearanceMap.put(id, appearanceMap.getOrDefault(id, 0) + 1);
             }
         }
 
         for (GroupedHUDSettings group : groupedHuds) {
-            group.ids.removeIf(id -> {
+            group.hudIds.removeIf(id -> {
                 int count = appearanceMap.get(id);
                 if (count > 1) {
                     appearanceMap.put(id, count - 1);

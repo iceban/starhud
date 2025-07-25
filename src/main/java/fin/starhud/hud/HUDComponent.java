@@ -6,10 +6,7 @@ import fin.starhud.config.HUDSettings;
 import fin.starhud.hud.implementation.*;
 import net.minecraft.client.gui.DrawContext;
 
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class HUDComponent {
 
@@ -18,6 +15,7 @@ public class HUDComponent {
 
     // Registered HUDs by ID
     private final Map<HUDId, AbstractHUD> hudMap = new EnumMap<>(HUDId.class);
+    private final Map<String, GroupedHUD> groupedHUDMap = new HashMap<>();
 
     // Active HUDs (selected in config)
     private final List<AbstractHUD> individualHUDs = new ArrayList<>();
@@ -90,20 +88,27 @@ public class HUDComponent {
             }
         }
 
-        groupedHUDs.removeIf(group -> !hudConfig.groupedHuds.contains(group.groupSettings));
+        groupedHUDs.removeIf(group -> {
+            boolean missing = hudConfig.groupedHuds.stream().noneMatch(settings -> settings.id.equals(group.groupSettings.id));
+            if (missing) {
+                groupedHUDMap.remove(group.groupSettings.id);
+            }
+            return missing;
+        });
 
         for (GroupedHUDSettings settings : hudConfig.groupedHuds) {
-            boolean alreadyExists = false;
-
-            for (GroupedHUD group : groupedHUDs) {
-                if (group.groupSettings.equals(settings)) {
-                    alreadyExists = true;
-                    break;
-                }
+            if (settings.id == null || settings.id.isEmpty()) {
+                settings.id = generateNextGroupId();
             }
 
-            if (!alreadyExists) {
-                groupedHUDs.add(new GroupedHUD(settings));
+            GroupedHUD existing = groupedHUDMap.get(settings.id);
+            if (existing != null) {
+                existing.groupSettings.copyFrom(settings);;
+                existing.updateActiveHUDsFromConfig();
+            } else {
+                GroupedHUD newGroup = new GroupedHUD(settings);
+                groupedHUDs.add(newGroup);
+                groupedHUDMap.put(settings.id, newGroup);
             }
         }
     }
@@ -154,6 +159,15 @@ public class HUDComponent {
     public void removeActiveHUDs() {
         individualHUDs.clear();
         groupedHUDs.clear();
+    }
+
+    public String generateNextGroupId() {
+        int index = 1;
+        String id;
+        do {
+            id = "group_" + index++;
+        } while (groupedHUDMap.containsKey(id));
+        return id;
     }
 
     public void setRenderInGameScreen(boolean value) {

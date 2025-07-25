@@ -9,14 +9,14 @@ import java.util.List;
 
 public class GroupedHUD extends AbstractHUD {
 
-    public final GroupedHUDSettings groupSettings;
+    public GroupedHUDSettings groupSettings;
     public final List<AbstractHUD> huds = new ArrayList<>();
 
     public GroupedHUD(GroupedHUDSettings groupSettings) {
         super(groupSettings.base);
         this.groupSettings = groupSettings;
 
-        for (HUDId id : groupSettings.ids) {
+        for (HUDId id : groupSettings.hudIds) {
             AbstractHUD hud = HUDComponent.getInstance().getHUD(id);
             huds.add(hud);
             hud.setInGroup(true);
@@ -28,7 +28,7 @@ public class GroupedHUD extends AbstractHUD {
         StringBuilder name = new StringBuilder();
 
         for (AbstractHUD hud : huds)
-            name.append(hud).append(' ');
+            name.append(hud.getName()).append(' ');
 
         name.deleteCharAt(name.length() - 1);
 
@@ -102,6 +102,10 @@ public class GroupedHUD extends AbstractHUD {
         return null;
     }
 
+    public String getGroupId() {
+        return groupSettings.id;
+    }
+
     @Override
     public void update() {
         super.update();
@@ -111,12 +115,12 @@ public class GroupedHUD extends AbstractHUD {
 
     public void updateActiveHUDsFromConfig() {
         huds.removeIf(hud -> {
-            boolean result = !groupSettings.ids.contains(hud.getId());
+            boolean result = !groupSettings.hudIds.contains(hud.getId());
             if (result) hud.setInGroup(false);
             return result;
         });
 
-        for (HUDId id : groupSettings.ids) {
+        for (HUDId id : groupSettings.hudIds) {
             AbstractHUD hud = HUDComponent.getInstance().getHUD(id);
             if (!huds.contains(hud)) {
                 huds.add(hud);

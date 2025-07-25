@@ -134,6 +134,32 @@ public class BaseHUDSettings implements ConfigData {
         return conditions;
     }
 
+    @Override
+    public String toString() {
+        return "BaseHUDSettings{" +
+                "shouldRender=" + shouldRender +
+                ", x=" + x +
+                ", y=" + y +
+                ", originX=" + originX +
+                ", originY=" + originY +
+                ", growthDirectionX=" + growthDirectionX +
+                ", growthDirectionY=" + growthDirectionY +
+                ", scale=" + scale +
+                ", conditions=" + conditions +
+                '}';
+    }
+
+
+    public boolean isEqual(BaseHUDSettings b) {
+        return (this.x == b.x)
+                && (this.y == b.y)
+                && (this.originX == b.originX)
+                && (this.originY == b.originY)
+                && (this.growthDirectionX == b.growthDirectionX)
+                && (this.growthDirectionY == b.growthDirectionY)
+                && (this.scale == b.scale);
+    }
+
     public void copyFrom(BaseHUDSettings other) {
         this.x = other.x;
         this.y = other.y;
@@ -143,6 +169,16 @@ public class BaseHUDSettings implements ConfigData {
         this.growthDirectionY = other.growthDirectionY;
         this.scale = other.scale;
         this.conditions = List.copyOf(other.conditions);
+    }
+
+    public void copySettings(BaseHUDSettings src) {
+        this.x = src.x;
+        this.y = src.y;
+        this.originX = src.originX;
+        this.originY = src.originY;
+        this.growthDirectionX = src.growthDirectionX;
+        this.growthDirectionY = src.growthDirectionY;
+        this.scale = src.scale;
     }
 
     public int getGrowthDirectionHorizontal(int dynamicWidth) {
