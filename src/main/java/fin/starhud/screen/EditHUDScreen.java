@@ -241,7 +241,7 @@ public class EditHUDScreen extends Screen {
                 }
         )
                 .tooltip(Tooltip.of(Text.of("Help")))
-                .dimensions(CENTER_X - (SQUARE_WIDGET_LENGTH / 2) - SQUARE_WIDGET_LENGTH - (GAP / 2), this.height - SQUARE_WIDGET_LENGTH - GAP, SQUARE_WIDGET_LENGTH, SQUARE_WIDGET_LENGTH)
+                .dimensions(CENTER_X - (SQUARE_WIDGET_LENGTH / 2) - SQUARE_WIDGET_LENGTH - (GAP), this.height - SQUARE_WIDGET_LENGTH - GAP, SQUARE_WIDGET_LENGTH, SQUARE_WIDGET_LENGTH)
                 .build();
 
         ButtonWidget moreOptionButton = ButtonWidget.builder(

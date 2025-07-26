@@ -1,5 +1,9 @@
 package fin.starhud.config;
 
+import fin.starhud.helper.GrowthDirectionX;
+import fin.starhud.helper.GrowthDirectionY;
+import fin.starhud.helper.ScreenAlignmentX;
+import fin.starhud.helper.ScreenAlignmentY;
 import fin.starhud.hud.HUDId;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
 
@@ -18,7 +22,51 @@ public class HUDSettings {
     }
 
     public HUDSettings() {
-        individualHudIds.addAll(List.of(HUDId.values()));
+        groupedHuds.add(
+                new GroupedHUDSettings(
+                        new BaseHUDSettings(true, 5, 5, ScreenAlignmentX.LEFT, ScreenAlignmentY.TOP, GrowthDirectionX.RIGHT, GrowthDirectionY.DOWN),
+                        1,
+                        2,
+                        false,
+                        0xFFFFFF,
+                        List.of(HUDId.X_COORDINATE, HUDId.Y_COORDINATE, HUDId.Z_COORDINATE)
+                )
+        );
+
+        groupedHuds.add(
+                new GroupedHUDSettings(
+                        new BaseHUDSettings(true, 0, 5, ScreenAlignmentX.CENTER, ScreenAlignmentY.TOP, GrowthDirectionX.CENTER, GrowthDirectionY.DOWN),
+                        2,
+                        2,
+                        false,
+                        0xFFFFFF,
+                        List.of(HUDId.BIOME, HUDId.CLOCK_INGAME)
+                )
+        );
+
+        groupedHuds.add(
+                new GroupedHUDSettings(
+                        new BaseHUDSettings(true, 5, 0, ScreenAlignmentX.LEFT, ScreenAlignmentY.MIDDLE, GrowthDirectionX.RIGHT, GrowthDirectionY.MIDDLE),
+                        3,
+                        1,
+                        true,
+                        0xFFFFFF,
+                        List.of(HUDId.HELMET, HUDId.CHESTPLATE, HUDId.LEGGINGS, HUDId.BOOTS)
+                )
+        );
+
+        groupedHuds.add(
+                new GroupedHUDSettings(
+                        new BaseHUDSettings(true, -5, -5, ScreenAlignmentX.RIGHT, ScreenAlignmentY.BOTTOM, GrowthDirectionX.LEFT, GrowthDirectionY.UP),
+                        4,
+                        2,
+                        false,
+                        0xFFFFFF,
+                        List.of(HUDId.PING, HUDId.CLOCK_SYSTEM)
+                )
+        );
+
+        individualHudIds.addAll(List.of(HUDId.FPS, HUDId.DIRECTION, HUDId.DAY, HUDId.INVENTORY, HUDId.EFFECT, HUDId.TARGETED_CROSSHAIR));
     }
 
 

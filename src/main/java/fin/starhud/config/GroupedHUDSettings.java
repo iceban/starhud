@@ -42,6 +42,15 @@ public class GroupedHUDSettings {
         this.hudIds = hudIds;
     }
 
+    public GroupedHUDSettings(BaseHUDSettings base, int id, int gap, boolean alignVertical, int boxColor, List<HUDId> hudIds) {
+        this.base = base;
+        this.id = "group_" + id;
+        this.gap = gap;
+        this.alignVertical = alignVertical;
+        this.boxColor = boxColor;
+        this.hudIds = hudIds;
+    }
+
     public GroupedHUDSettings() {
         this(new BaseHUDSettings(true, 0, 0, ScreenAlignmentX.LEFT, ScreenAlignmentY.TOP, GrowthDirectionX.RIGHT, GrowthDirectionY.DOWN));
     }
