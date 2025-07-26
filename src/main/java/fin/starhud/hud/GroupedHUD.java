@@ -1,13 +1,17 @@
 package fin.starhud.hud;
 
+import fin.starhud.Main;
 import fin.starhud.config.GroupedHUDSettings;
 import net.minecraft.client.gui.DrawContext;
+import org.slf4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class GroupedHUD extends AbstractHUD {
+
+    private static final Logger LOGGER = Main.LOGGER;
 
     public GroupedHUDSettings groupSettings;
     public final List<AbstractHUD> huds = new ArrayList<>();
@@ -19,7 +23,7 @@ public class GroupedHUD extends AbstractHUD {
         for (HUDId id : groupSettings.hudIds) {
             AbstractHUD hud = HUDComponent.getInstance().getHUD(id);
             huds.add(hud);
-            hud.setInGroup(true);
+            hud.setInGroup(this.groupSettings.id);
         }
     }
 
@@ -102,6 +106,7 @@ public class GroupedHUD extends AbstractHUD {
         return null;
     }
 
+    @Override
     public String getGroupId() {
         return groupSettings.id;
     }
@@ -110,27 +115,28 @@ public class GroupedHUD extends AbstractHUD {
     public void update() {
         super.update();
 
+        for (AbstractHUD hud : huds){
+            if (!hud.isInGroup()) {
+                LOGGER.warn("{} IS NOT IN A GROUP! FORCING TO CHANGE THEM.", hud.getName());
+                hud.setInGroup(groupSettings.id);
+            }
+        }
+
         getBoundingBox().setColor(groupSettings.boxColor | 0xFF000000);
     }
 
     public void updateActiveHUDsFromConfig() {
-        huds.removeIf(hud -> {
-            boolean result = !groupSettings.hudIds.contains(hud.getId());
-            if (result) hud.setInGroup(false);
-            return result;
-        });
+
+        for (AbstractHUD hud : huds)
+            hud.setInGroup(null);
+        huds.clear();
 
         for (HUDId id : groupSettings.hudIds) {
             AbstractHUD hud = HUDComponent.getInstance().getHUD(id);
-            if (!huds.contains(hud)) {
-                huds.add(hud);
-                hud.setInGroup(true);
-            }
-        }
-    }
 
-    public void onUngroup() {
-        for (AbstractHUD hud : huds)
-            hud.setInGroup(false);
+            huds.add(hud);
+            hud.setInGroup(groupSettings.id);
+            LOGGER.info("UpdateActiveHUDsFromConfig (added to group: {}) : {}", groupSettings.id, hud.getName());
+        }
     }
 }

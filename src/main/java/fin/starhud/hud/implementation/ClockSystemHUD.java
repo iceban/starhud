@@ -58,7 +58,7 @@ public class ClockSystemHUD extends AbstractHUD {
             cachedSystemMinute = minute;
 
             cachedSystemTimeString = use12Hour ?
-                    buildSystemTime12String(currentTime) :
+                    buildSystemTime12String(currentTime).toUpperCase() :
                     buildSystemTime24String(currentTime);
 
             cachedStrWidth = CLIENT.textRenderer.getWidth(cachedSystemTimeString) - 1;

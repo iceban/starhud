@@ -5,6 +5,7 @@ import fin.starhud.config.GroupedHUDSettings;
 import fin.starhud.config.HUDSettings;
 import fin.starhud.hud.implementation.*;
 import net.minecraft.client.gui.DrawContext;
+import org.slf4j.Logger;
 
 import java.util.*;
 
@@ -12,6 +13,8 @@ public class HUDComponent {
 
     // singleton
     private static HUDComponent instance;
+
+    private static final Logger LOGGER = Main.LOGGER;
 
     // Registered HUDs by ID
     private final Map<HUDId, AbstractHUD> hudMap = new EnumMap<>(HUDId.class);
@@ -78,34 +81,53 @@ public class HUDComponent {
     public void loadActiveHUDsFromConfig() {
         HUDSettings hudConfig = Main.settings.hudList;
 
-        individualHUDs.removeIf(hud -> !hudConfig.individualHudIds.contains(hud.getId()));
+        // remove hud that is in a group from individual huds
+        // this is done by checking if said hud id is no longer present in the individual hud ids.
+        individualHUDs.removeIf(hud -> {
+            boolean result = !hudConfig.individualHudIds.contains(hud.getId());
+            if (result) {
+                LOGGER.info("Removed {} from Individual HUD", hud.getName());
+            }
+            return result;
+        });
 
+        // if there are any individual hud that exist in the config but not here, add them
         for (HUDId id : hudConfig.individualHudIds) {
             AbstractHUD hud = hudMap.get(id);
-            if (!individualHUDs.contains(hud)) {
-                hud.setInGroup(false);
+            if (individualHUDs.stream().noneMatch(existingHud -> existingHud.getId().equals(id))) {
+                LOGGER.info("Added {} to Individual HUD", hud.getName());
+                hud.setInGroup(null);
                 individualHUDs.add(hud);
             }
         }
 
+        // remove group that is no longer present in the config.
         groupedHUDs.removeIf(group -> {
             boolean missing = hudConfig.groupedHuds.stream().noneMatch(settings -> settings.id.equals(group.groupSettings.id));
             if (missing) {
                 groupedHUDMap.remove(group.groupSettings.id);
+                LOGGER.info("Removed Group ({}) from Groupped HUDs", group.getName());
             }
             return missing;
         });
 
+        // if there are any group that exist in the config but not here, add them
         for (GroupedHUDSettings settings : hudConfig.groupedHuds) {
+
+            // this is usually not needed since when creating the object we also construct the id.
             if (settings.id == null || settings.id.isEmpty()) {
                 settings.id = generateNextGroupId();
             }
 
             GroupedHUD existing = groupedHUDMap.get(settings.id);
+
+            // if the said group is already exist, we need to update them.
             if (existing != null) {
-                existing.groupSettings.copyFrom(settings);;
+                LOGGER.info("Group ({}) already exist, updating the settings...", existing.getName());
+                existing.groupSettings.copyFrom(settings);
                 existing.updateActiveHUDsFromConfig();
-            } else {
+            } else { // otherwise create a new one
+                LOGGER.info("{} have not yet exist, creating new Groupped HUD...", settings.id);
                 GroupedHUD newGroup = new GroupedHUD(settings);
                 groupedHUDs.add(newGroup);
                 groupedHUDMap.put(settings.id, newGroup);

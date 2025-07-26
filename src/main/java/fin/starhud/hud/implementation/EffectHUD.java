@@ -84,13 +84,13 @@ public class EffectHUD extends AbstractHUD {
         boolean drawVertical = effectSettings.drawVertical;
 
         // sameTypeGap = the gap between each beneficial / harm effect.
-        int sameTypeGap = effectSettings.sameTypeGap;
+        int sameTypeGap = getSameTypeGap();
 
         /* differentTypeGap = the gap between beneficial and harm effect.
         * if HUD on the right screen and is drawn Vertically, We change the differentTypeGap from going right, to left.so that the harm effect hud does not go out of screen
         * if HUD on the bottom screen and is drawn horizontally, We change the differentTypeGap from going down, to up. so that the harm effect hud does not go out of screen
         * */
-        int differentTypeGap = ((drawVertical && effectSettings.base.originX == ScreenAlignmentX.RIGHT) || (!drawVertical && effectSettings.base.originY == ScreenAlignmentY.BOTTOM)) ? -effectSettings.differentTypeGap :effectSettings.differentTypeGap;
+        int differentTypeGap = ((drawVertical && effectSettings.base.originX == ScreenAlignmentX.RIGHT) || (!drawVertical && effectSettings.base.originY == ScreenAlignmentY.BOTTOM)) ? -(getDifferentTypeGap()) : (getDifferentTypeGap());
 
         int effectSize = collection.size();
         int beneficialSize = getBeneficialSize();
@@ -253,12 +253,12 @@ public class EffectHUD extends AbstractHUD {
                  // if we draw the HUD vertically, essentially the width should be the texture width
          return effectSettings.drawVertical ? STATUS_EFFECT_TEXTURE_WIDTH
                  // else, the width should be the whole column of Effect HUDs.
-                 : ((isBeneficial ? beneficialSize : harmSize) * effectSettings.sameTypeGap);
+                 : ((isBeneficial ? beneficialSize : harmSize) * getSameTypeGap());
     }
 
     public int getDynamicHeight(boolean isBeneficial, int beneficialSize, int harmSize) {
                 // if the HUD is drawn Vertically, the Height should be the whole row of Effect HUDs
-        return effectSettings.drawVertical ? ((isBeneficial ? beneficialSize : harmSize) * effectSettings.sameTypeGap)
+        return effectSettings.drawVertical ? ((isBeneficial ? beneficialSize : harmSize) * getSameTypeGap())
                 // else, the height is just the same as the texture height.
                 : STATUS_EFFECT_TEXTURE_HEIGHT;
     }
@@ -270,6 +270,14 @@ public class EffectHUD extends AbstractHUD {
                 ++size;
         }
         return size;
+    }
+
+    public int getSameTypeGap() {
+        return (effectSettings.drawVertical ? STATUS_EFFECT_TEXTURE_HEIGHT : STATUS_EFFECT_TEXTURE_WIDTH) + effectSettings.sameTypeGap;
+    }
+
+    public int getDifferentTypeGap() {
+        return (effectSettings.drawVertical ? STATUS_EFFECT_TEXTURE_WIDTH : STATUS_EFFECT_TEXTURE_HEIGHT) + effectSettings.differentTypeGap;
     }
 
     public static Identifier getStatusEffectTexture(RegistryEntry<StatusEffect> effect) {

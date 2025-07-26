@@ -20,7 +20,7 @@ public abstract class AbstractHUD implements HUDInterface {
 
     protected final Box boundingBox = new Box(-1, -1, -1, -1);
 
-    public boolean isInGroup = false;
+    public String groupId = null;
 
     public AbstractHUD(BaseHUDSettings baseHUDSettings) {
         this.baseHUDSettings = baseHUDSettings;
@@ -116,11 +116,15 @@ public abstract class AbstractHUD implements HUDInterface {
     }
 
     public boolean isInGroup() {
-        return isInGroup;
+        return groupId != null;
     }
 
-    public void setInGroup(boolean inGroup) {
-        isInGroup = inGroup;
+    public void setInGroup(String groupId) {
+        this.groupId = groupId;
+    }
+
+    public String getGroupId() {
+        return this.groupId;
     }
 
     public BaseHUDSettings getSettings() {

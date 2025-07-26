@@ -52,8 +52,8 @@ public class DirectionHUD extends AbstractHUD {
         if (DIRECTION_SETTINGS.includeOrdinal) {
             int iconIndex = getOrdinalDirectionIcon(yaw);
 
-            int width = ORDINAL_TEXTURE_WIDTH + 1 + 5 + yawWidth + 5;
-            int height = ORDINAL_TEXTURE_HEIGHT;
+            int width = ORDINAL_ICON_WIDTH + 1 + 5 + yawWidth + 5;
+            int height = ORDINAL_ICON_HEIGHT;
 
             x -= getSettings().getGrowthDirectionHorizontal(width);
             y -= getSettings().getGrowthDirectionVertical(height);
