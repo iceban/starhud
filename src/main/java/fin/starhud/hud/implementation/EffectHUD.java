@@ -71,6 +71,11 @@ public class EffectHUD extends AbstractHUD {
     }
 
     @Override
+    public boolean collectHUDInformation() {
+        return true; // special case: status effect is silly so no data collection for now...
+    }
+
+    @Override
     public boolean renderHUD(DrawContext context, int x, int y) {
 
         // straight up copied from minecraft's own status effect rendering system.
@@ -196,7 +201,7 @@ public class EffectHUD extends AbstractHUD {
                 int maxDuration = statusEffectAttribute.maxDuration();
 
                 step = Helper.getStep(duration, maxDuration, 7);
-                color = (effectSettings.useEffectColor ? registryEntry.value().getColor() : RenderUtils.getItemBarColor(step, 7)) | 0xFF000000;
+                color = (effectSettings.useEffectColor ? registryEntry.value().getColor() : AbstractDurabilityHUD.getItemBarColor(step, 7)) | 0xFF000000;
             }
 
             // draw timer bar

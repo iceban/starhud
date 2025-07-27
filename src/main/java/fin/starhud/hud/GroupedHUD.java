@@ -6,7 +6,9 @@ import net.minecraft.client.gui.DrawContext;
 import org.slf4j.Logger;
 
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class GroupedHUD extends AbstractHUD {
@@ -39,18 +41,25 @@ public class GroupedHUD extends AbstractHUD {
         return name.toString();
     }
 
+    private int width;
+    private int height;
+
+    private final Map<HUDId, Boolean> shouldRenders = new EnumMap<>(HUDId.class);
+
     @Override
-    public boolean renderHUD(DrawContext context, int x, int y) {
-        int width = 0;
-        int height = 0;
+    public boolean collectHUDInformation() {
+        width = 0;
+        height = 0;
 
         int renderedCount = 0;
 
         for (AbstractHUD hud : huds) {
-            if (!hud.shouldRender()) continue;
-            renderedCount++;
+            if (!hud.shouldRender() || !hud.collectHUDInformation()) {
+                shouldRenders.put(hud.getId(), false);
+                continue;
+            }
 
-            if (hud.getBoundingBox().isEmpty()) continue;
+            renderedCount++;
 
             if (groupSettings.alignVertical) {
                 height += hud.getHeight();
@@ -60,6 +69,7 @@ public class GroupedHUD extends AbstractHUD {
                 height = Math.max(height, hud.getHeight());
             }
 
+            shouldRenders.put(hud.getId(), true);
         }
 
         if (renderedCount > 0) {
@@ -71,16 +81,25 @@ public class GroupedHUD extends AbstractHUD {
         } else
             return false;
 
+        getBoundingBox().setWidth(width);
+        getBoundingBox().setHeight(height);
+
+        return true;
+    }
+
+    @Override
+    public boolean renderHUD(DrawContext context, int x, int y) {
         x -= getSettings().getGrowthDirectionHorizontal(width);
         y -= getSettings().getGrowthDirectionVertical(height);
+
+        setBoundingBox(x, y, width, height);
 
         int drawX = x;
         int drawY = y;
 
-        setBoundingBox(x, y, width, height);
-
         for (AbstractHUD hud : huds) {
-            if (!hud.shouldRender()) continue;
+            if (!shouldRenders.get(hud.getId()))
+                continue;
 
             if (groupSettings.alignVertical) {
                 drawX = x + getGrowthDirectionHorizontal(width - hud.getWidth());

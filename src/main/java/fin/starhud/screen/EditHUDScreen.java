@@ -457,7 +457,7 @@ public class EditHUDScreen extends Screen {
 
     private void renderHUD(DrawContext context, AbstractHUD hud, int mouseX, int mouseY) {
         if (!hud.shouldRender()) return; // if not rendered
-        if (!hud.render(context)) return; // if ALSO not rendered (either failed or no information to render)
+        if (!hud.render(context)) return;
 
         if (hud.isScaled()) {
             context.getMatrices().pushMatrix();
@@ -701,22 +701,22 @@ public class EditHUDScreen extends Screen {
                         if (selectedHUDs.stream().noneMatch(hud -> hud instanceof GroupedHUD || hud instanceof EffectHUD)) {
                             group(selectedHUDs);
                             selectedHUDs.clear();
+                            handled = true;
                         }
                     } else {
                         if (selectedHUDs.getFirst() instanceof GroupedHUD groupedHUD) {
                             unGroup(groupedHUD);
                             selectedHUDs.clear();
+                            handled = true;
                         }
                     }
-                    handled = true;
                 }
                 case GLFW.GLFW_KEY_R -> {
                     if (isCtrl) {
                         revertChanges();
                         selectedHUDs.clear();
+                        handled = true;
                     }
-
-                    handled = true;
                 }
             }
 

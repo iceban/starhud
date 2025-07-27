@@ -2,18 +2,14 @@ package fin.starhud.config.hud;
 
 import fin.starhud.config.BaseHUDSettings;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
-import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
 
 public class ArmorSettings {
 
     @ConfigEntry.Gui.TransitiveObject
     public BaseHUDSettings base;
 
-    @Comment("Draw The Durability using Bars instead of numbers.")
-    public boolean drawBar = true;
-
-    @Comment("Draw The Icon Using the Item instead of the HUD icon. (Warning: LARGE HUD)")
-    public boolean drawItem = false;
+    @ConfigEntry.Gui.TransitiveObject
+    public DurabilitySettings durabilitySettings = new DurabilitySettings();
 
     @ConfigEntry.ColorPicker
     public int color = 0xD0DAED;

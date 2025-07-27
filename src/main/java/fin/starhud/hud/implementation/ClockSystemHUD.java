@@ -45,8 +45,12 @@ public class ClockSystemHUD extends AbstractHUD {
         return HUDId.CLOCK_SYSTEM;
     }
 
+    private int width;
+    private int height;
+    private int color;
+
     @Override
-    public boolean renderHUD(DrawContext context, int x, int y) {
+    public boolean collectHUDInformation() {
         // update each minute
         long currentTime = System.currentTimeMillis();
         long minute = currentTime / 60000;
@@ -64,10 +68,19 @@ public class ClockSystemHUD extends AbstractHUD {
             cachedStrWidth = CLIENT.textRenderer.getWidth(cachedSystemTimeString) - 1;
         }
 
-        int color = CLOCK_SYSTEM_SETTINGS.color | 0xFF000000;
+        color = CLOCK_SYSTEM_SETTINGS.color | 0xFF000000;
 
-        int width = ICON_WIDTH + 1 + 5 + cachedStrWidth + 5;
-        int height = ICON_HEIGHT;
+        width = ICON_WIDTH + 1 + 5 + cachedStrWidth + 5;
+        height = ICON_HEIGHT;
+
+        setWidth(width);
+        setHeight(height);
+
+        return true;
+    }
+
+    @Override
+    public boolean renderHUD(DrawContext context, int x, int y) {
 
         x -= getGrowthDirectionHorizontal(width);
         y -= getGrowthDirectionVertical(height);

@@ -29,7 +29,7 @@ public class HUDSettings {
                         2,
                         false,
                         0xFFFFFF,
-                        List.of(HUDId.X_COORDINATE, HUDId.Y_COORDINATE, HUDId.Z_COORDINATE)
+                        new ArrayList<>(List.of(HUDId.X_COORDINATE, HUDId.Y_COORDINATE, HUDId.Z_COORDINATE))
                 )
         );
 
@@ -40,7 +40,7 @@ public class HUDSettings {
                         2,
                         false,
                         0xFFFFFF,
-                        List.of(HUDId.BIOME, HUDId.CLOCK_INGAME)
+                        new ArrayList<>(List.of(HUDId.BIOME, HUDId.CLOCK_INGAME))
                 )
         );
 
@@ -51,7 +51,7 @@ public class HUDSettings {
                         1,
                         true,
                         0xFFFFFF,
-                        List.of(HUDId.HELMET, HUDId.CHESTPLATE, HUDId.LEGGINGS, HUDId.BOOTS)
+                        new ArrayList<>(List.of(HUDId.HELMET, HUDId.CHESTPLATE, HUDId.LEGGINGS, HUDId.BOOTS))
                 )
         );
 
@@ -62,7 +62,7 @@ public class HUDSettings {
                         2,
                         false,
                         0xFFFFFF,
-                        List.of(HUDId.PING, HUDId.CLOCK_SYSTEM)
+                        new ArrayList<>(List.of(HUDId.PING, HUDId.CLOCK_SYSTEM))
                 )
         );
 

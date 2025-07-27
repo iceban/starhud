@@ -43,14 +43,17 @@ public class PingHUD extends AbstractHUD {
         return HUDId.PING;
     }
 
-    @Override
-    public boolean shouldRender() {
-        return super.shouldRender()
-                && !CLIENT.isInSingleplayer();
-    }
+    private String pingStr;
+    private int width;
+    private int height;
+    private int color;
+    private int step;
 
     @Override
-    public boolean renderHUD(DrawContext context, int x, int y) {
+    public boolean collectHUDInformation() {
+        if (CLIENT.isInSingleplayer())
+            return false;
+
         MultiValueDebugSampleLogImpl pingLog = CLIENT.getDebugHud().getPingLog();
 
         // different world and server checking for PingMeasurer renewal.
@@ -63,25 +66,32 @@ public class PingHUD extends AbstractHUD {
         updatePingLog();
 
         int pingLogLen = pingLog.getLength();
-        if (pingLogLen <= 0) {
-            getBoundingBox().setEmpty(true);
+        if (pingLogLen <= 0)
             return false;
-        }
 
         // get the latest updated ping through the last element.
         long currentPing = pingLog.get(pingLogLen - 1);
-        String pingStr = currentPing + " ms";
+        pingStr = currentPing + " ms";
         int strWidth = CLIENT.textRenderer.getWidth(pingStr) - 1;
 
-        int width = ICON_WIDTH + 1 + 5 + strWidth + 5;
-        int height = ICON_HEIGHT;
+        width = ICON_WIDTH + 1 + 5 + strWidth + 5;
+        height = ICON_HEIGHT;
+
+        // 0, 150, 300, 450
+        step = Math.min((int) currentPing / 150, 3);
+        color = getPingColor(step) | 0xFF000000;
+
+        setWidth(width);
+        setHeight(height);
+
+        return true;
+    }
+
+    @Override
+    public boolean renderHUD(DrawContext context, int x, int y) {
 
         x -= getGrowthDirectionHorizontal(width);
         y -= getGrowthDirectionVertical(height);
-
-        // 0, 150, 300, 450
-        int step = Math.min((int) currentPing / 150, 3);
-        int color = getPingColor(step) | 0xFF000000;
 
         setBoundingBox(x, y, width, height, color);
 

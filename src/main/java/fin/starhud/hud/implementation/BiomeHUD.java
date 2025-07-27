@@ -42,18 +42,13 @@ public class  BiomeHUD extends AbstractHUD {
         super(BIOME_SETTINGS.base);
     }
 
-    @Override
-    public String getName() {
-        return "Biome HUD";
-    }
+    private int width;
+    private int height;
+    private int color;
+    private int dimensionIndex;
 
     @Override
-    public HUDId getId() {
-        return HUDId.BIOME;
-    }
-
-    @Override
-    public boolean renderHUD(DrawContext context, int x, int y) {
+    public boolean collectHUDInformation() {
         TextRenderer textRenderer = CLIENT.textRenderer;
 
         BlockPos blockPos = CLIENT.player.getBlockPos();
@@ -80,11 +75,30 @@ public class  BiomeHUD extends AbstractHUD {
             cachedTextWidth = textRenderer.getWidth(cachedBiomeNameText) - 1;
         }
 
-        int dimensionIndex = getDimensionIndex(CLIENT.world.getRegistryKey());
-        int color = getTextColorFromDimension(dimensionIndex) | 0xFF000000;
+        dimensionIndex = getDimensionIndex(CLIENT.world.getRegistryKey());
+        color = getTextColorFromDimension(dimensionIndex) | 0xFF000000;
 
-        int width = ICON_WIDTH + 1 + 5 + cachedTextWidth + 5;
-        int height = ICON_HEIGHT;
+        width = ICON_WIDTH + 1 + 5 + cachedTextWidth + 5;
+        height = ICON_HEIGHT;
+
+        setWidth(width);
+        setHeight(height);
+
+        return true;
+    }
+
+    @Override
+    public String getName() {
+        return "Biome HUD";
+    }
+
+    @Override
+    public HUDId getId() {
+        return HUDId.BIOME;
+    }
+
+    @Override
+    public boolean renderHUD(DrawContext context, int x, int y) {
 
         x -= getGrowthDirectionHorizontal(width);
         y -= getGrowthDirectionVertical(height);

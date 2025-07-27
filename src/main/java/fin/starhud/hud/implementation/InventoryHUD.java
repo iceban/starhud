@@ -37,6 +37,24 @@ public class InventoryHUD extends AbstractHUD {
         preComputeVertical();
     }
 
+    private int width;
+    private int height;
+    private boolean drawVertical;
+
+    @Override
+    public boolean collectHUDInformation() {
+        if (hasItemInInventory()) {
+            drawVertical = INVENTORY_SETTINGS.drawVertical;
+            width = drawVertical ? TEXTURE_WIDTH_VERTICAL : TEXTURE_WIDTH_HORIZONTAL;
+            height = drawVertical ? TEXTURE_HEIGHT_VERTICAL : TEXTURE_HEIGHT_HORIZONTAL;
+            getBoundingBox().setWidth(width);
+            getBoundingBox().setHeight(height);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     @Override
     public String getName() {
         return "Inventory HUD";
@@ -53,7 +71,10 @@ public class InventoryHUD extends AbstractHUD {
 
     @Override
     public boolean renderHUD(DrawContext context, int x, int y) {
-        if (INVENTORY_SETTINGS.drawVertical) {
+        x -= getGrowthDirectionHorizontal(width);
+        y -= getGrowthDirectionVertical(height);
+        setBoundingBox(x, y, width, height);
+        if (drawVertical) {
             return drawInventoryVertical(context, x, y);
         } else {
             return drawInventoryHorizontal(context, x, y);
@@ -62,24 +83,13 @@ public class InventoryHUD extends AbstractHUD {
 
     private boolean drawInventoryVertical(DrawContext context, int x, int y) {
         PlayerInventory inventory = CLIENT.player.getInventory();
-        boolean foundItem = false;
 
-        int width = TEXTURE_WIDTH_VERTICAL;
-        int height = TEXTURE_HEIGHT_VERTICAL;
-
-        x -= getGrowthDirectionHorizontal(width);
-        y -= getGrowthDirectionVertical(height);
-
+        RenderUtils.drawTextureHUD(context, INVENTORY_TEXTURE_VERTICAL, x, y, 0.0F, 0.0F, TEXTURE_WIDTH_VERTICAL, TEXTURE_HEIGHT_VERTICAL, TEXTURE_WIDTH_VERTICAL, TEXTURE_HEIGHT_VERTICAL);
         for (int itemIndex = 0; itemIndex < 27; ++itemIndex) {
 
             ItemStack stack = inventory.getMainStacks().get(itemIndex + 9);
 
             if (!stack.isEmpty()) {
-
-                if (!foundItem) {
-                    foundItem = true;
-                    RenderUtils.drawTextureHUD(context, INVENTORY_TEXTURE_VERTICAL, x, y, 0.0F, 0.0F, TEXTURE_WIDTH_VERTICAL, TEXTURE_HEIGHT_VERTICAL, TEXTURE_WIDTH_VERTICAL, TEXTURE_HEIGHT_VERTICAL);
-                }
 
                 int x1 = x + SLOT_X_VERTICAL[itemIndex];
                 int y1 = y + SLOT_Y_VERTICAL[itemIndex];
@@ -89,34 +99,18 @@ public class InventoryHUD extends AbstractHUD {
             }
         }
 
-        if (!foundItem)
-            getBoundingBox().setEmpty(true);
-        else
-            setBoundingBox(x, y, TEXTURE_WIDTH_VERTICAL, TEXTURE_HEIGHT_VERTICAL);
-        return foundItem;
+        return true;
     }
 
     private boolean drawInventoryHorizontal(DrawContext context, int x, int y) {
         PlayerInventory inventory = CLIENT.player.getInventory();
-        boolean foundItem = false;
 
-        int width = TEXTURE_WIDTH_HORIZONTAL;
-        int height = TEXTURE_HEIGHT_HORIZONTAL;
-
-        x -= getGrowthDirectionHorizontal(width);
-        y -= getGrowthDirectionVertical(height);
-
+        RenderUtils.drawTextureHUD(context, INVENTORY_TEXTURE, x, y, 0.0F, 0.0F, TEXTURE_WIDTH_HORIZONTAL, TEXTURE_HEIGHT_HORIZONTAL, TEXTURE_WIDTH_HORIZONTAL, TEXTURE_HEIGHT_HORIZONTAL);
         for (int itemIndex = 0; itemIndex < 27; ++itemIndex) {
 
             ItemStack stack = inventory.getMainStacks().get(itemIndex + 9);
 
             if (!stack.isEmpty()) {
-
-                if (!foundItem) {
-                    foundItem = true;
-                    RenderUtils.drawTextureHUD(context, INVENTORY_TEXTURE, x, y, 0.0F, 0.0F, TEXTURE_WIDTH_HORIZONTAL, TEXTURE_HEIGHT_HORIZONTAL, TEXTURE_WIDTH_HORIZONTAL, TEXTURE_HEIGHT_HORIZONTAL);
-                }
-
                 int x1 = x + SLOT_X_HORIZONTAL[itemIndex];
                 int y1 = y + SLOT_Y_HORIZONTAL[itemIndex];
 
@@ -125,12 +119,19 @@ public class InventoryHUD extends AbstractHUD {
             }
         }
 
-        if (!foundItem)
-            getBoundingBox().setEmpty(true);
-        else
-            setBoundingBox(x, y, TEXTURE_WIDTH_HORIZONTAL, TEXTURE_HEIGHT_HORIZONTAL);
+        return true;
+    }
 
-        return foundItem;
+    public boolean hasItemInInventory() {
+        PlayerInventory inventory = CLIENT.player.getInventory();
+        for (int itemIndex = 0; itemIndex < 27; ++itemIndex) {
+            ItemStack stack = inventory.getMainStacks().get(itemIndex + 9);
+            if (!stack.isEmpty()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private static void preComputeHorizontal() {

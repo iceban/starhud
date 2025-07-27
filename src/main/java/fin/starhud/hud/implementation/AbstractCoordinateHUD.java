@@ -28,18 +28,31 @@ public abstract class AbstractCoordinateHUD extends AbstractHUD {
 
     public abstract int getCoord();
 
+    private String coordStr;
+    private int width;
+    private int height;
+    private int color;
+
+    @Override
+    public boolean collectHUDInformation() {
+        coordStr = Integer.toString(getCoord());
+        int strWidth = CLIENT.textRenderer.getWidth(coordStr) - 1;
+        width = ICON_WIDTH + 1 + 5 + strWidth + 5;
+        height = ICON_HEIGHT;
+
+        color = SETTINGS.color | 0xFF000000;
+
+        setWidth(width);
+        setHeight(height);
+
+        return true;
+    }
+
     @Override
     public boolean renderHUD(DrawContext context, int x, int y) {
-        String coordStr = Integer.toString(getCoord());
-
-        int strWidth = CLIENT.textRenderer.getWidth(coordStr) - 1;
-        int width = ICON_WIDTH + 1 + 5 + strWidth + 5;
-        int height = ICON_HEIGHT;
 
         x += getGrowthDirectionHorizontal(width);
         y -= getGrowthDirectionVertical(height);
-
-        int color = SETTINGS.color | 0xFF000000;
 
         setBoundingBox(x, y, width, height, color);
 

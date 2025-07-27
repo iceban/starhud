@@ -62,13 +62,6 @@ public class TargetedCrosshairHUD extends AbstractHUD {
         return HUDId.TARGETED_CROSSHAIR;
     }
 
-    @Override
-    public boolean shouldRender() {
-        return super.shouldRender()
-                && CLIENT.crosshairTarget != null
-                && CLIENT.crosshairTarget.getType() != HitResult.Type.MISS;
-    }
-
     public static boolean shouldHUDRender() {
 
         if (!TARGETED_CROSSHAIR_SETTINGS.base.shouldRender())
@@ -77,27 +70,33 @@ public class TargetedCrosshairHUD extends AbstractHUD {
         return CLIENT.crosshairTarget != null && CLIENT.crosshairTarget.getType() != HitResult.Type.MISS;
     }
 
+    private int width;
+    private int height;
+    private HitResult.Type hitResultType;
+
     @Override
-    public boolean renderHUD(DrawContext context, int x, int y) {
-        return switch (CLIENT.crosshairTarget.getType()) {
-            case BLOCK -> renderBlockInfoHUD(context, x, y);
-            case ENTITY -> renderEntityInfoHUD(context, x, y);
+    public boolean collectHUDInformation() {
+        hitResultType = CLIENT.crosshairTarget.getType();
+        return switch (hitResultType) {
+            case BLOCK -> collectDataBlock();
+            case ENTITY -> collectDataEntity();
             default -> false;
         };
     }
 
+    private ItemStack blockStack;
     private Block cachedBlock = null;
     private OrderedText cachedBlockName = null;
     private String cachedBlockModName = null;
     private int cachedBlockMaxWidth = -1;
 
-    public boolean renderBlockInfoHUD(DrawContext context, int x, int y) {
+    public boolean collectDataBlock() {
         BlockPos pos = ((BlockHitResult) CLIENT.crosshairTarget).getBlockPos();
 
         BlockState blockState = CLIENT.world.getBlockState(pos);
         Block block = blockState.getBlock();
         Item blockItem = block.asItem();
-        ItemStack blockStack = blockItem.getDefaultStack();
+        blockStack = blockItem.getDefaultStack();
 
         if (!block.equals(cachedBlock)) {
             cachedBlock = block;
@@ -112,8 +111,56 @@ public class TargetedCrosshairHUD extends AbstractHUD {
             cachedBlockMaxWidth = Math.max(modNameWidth, blockNameWidth) - 1;
         }
 
-        int width = ICON_BACKGROUND_WIDTH + 1 + 5 + cachedBlockMaxWidth + 5;
-        int height = ICON_BACKGROUND_HEIGHT;
+        width = ICON_BACKGROUND_WIDTH + 1 + 5 + cachedBlockMaxWidth + 5;
+        height = ICON_BACKGROUND_HEIGHT;
+
+        setWidth(width);
+        setHeight(height);
+        return true;
+    }
+
+    private int color;
+    private Entity cachedTargetedEntity = null;
+    private OrderedText cachedEntityName = null;
+    private String cachedEntityModName = null;
+    private int cachedEntityMaxWidth = -1;
+    private int cachedIndex = -1;
+
+    public boolean collectDataEntity() {
+        Entity targetedEntity = ((EntityHitResult) CLIENT.crosshairTarget).getEntity();
+
+        if (!targetedEntity.equals(cachedTargetedEntity)) {
+            cachedTargetedEntity = targetedEntity;
+            cachedEntityName = targetedEntity.getName().asOrderedText();
+            cachedEntityModName = Helper.getModName(Registries.ENTITY_TYPE.getId(targetedEntity.getType()));
+
+            int entityNameWidth = CLIENT.textRenderer.getWidth(cachedEntityName);
+            int modNameWidth = CLIENT.textRenderer.getWidth(cachedEntityModName);
+            cachedEntityMaxWidth = Math.max(entityNameWidth, modNameWidth) - 1;
+
+            cachedIndex = getEntityIconIndex(targetedEntity);
+        }
+
+        width = ICON_BACKGROUND_WIDTH + 1 + 5 + cachedEntityMaxWidth + 5;
+        height = ICON_BACKGROUND_HEIGHT;
+        color = getEntityIconColor(cachedIndex) | 0xFF000000;
+
+        setWidth(width);
+        setHeight(height);
+
+        return true;
+    }
+
+    @Override
+    public boolean renderHUD(DrawContext context, int x, int y) {
+        return switch (hitResultType) {
+            case BLOCK -> renderBlockInfoHUD(context, x, y);
+            case ENTITY -> renderEntityInfoHUD(context, x, y);
+            default -> false;
+        };
+    }
+
+    public boolean renderBlockInfoHUD(DrawContext context, int x, int y) {
 
         x -= getGrowthDirectionHorizontal(width);
         y -= getGrowthDirectionVertical(height);
@@ -155,34 +202,9 @@ public class TargetedCrosshairHUD extends AbstractHUD {
         return true;
     }
 
-    private Entity cachedTargetedEntity = null;
-    private OrderedText cachedEntityName = null;
-    private String cachedEntityModName = null;
-    private int cachedEntityMaxWidth = -1;
-    private int cachedIndex = -1;
-
     public boolean renderEntityInfoHUD(DrawContext context, int x, int y) {
-        Entity targetedEntity = ((EntityHitResult) CLIENT.crosshairTarget).getEntity();
-
-        if (!targetedEntity.equals(cachedTargetedEntity)) {
-            cachedTargetedEntity = targetedEntity;
-            cachedEntityName = targetedEntity.getName().asOrderedText();
-            cachedEntityModName = Helper.getModName(Registries.ENTITY_TYPE.getId(targetedEntity.getType()));
-
-            int entityNameWidth = CLIENT.textRenderer.getWidth(cachedEntityName);
-            int modNameWidth = CLIENT.textRenderer.getWidth(cachedEntityModName);
-            cachedEntityMaxWidth = Math.max(entityNameWidth, modNameWidth) - 1;
-
-            cachedIndex = getEntityIconIndex(targetedEntity);
-        }
-
-        int width = ICON_BACKGROUND_WIDTH + 1 + 5 + cachedEntityMaxWidth + 5;
-        int height = ICON_BACKGROUND_HEIGHT;
-
         x -= getGrowthDirectionHorizontal(width);
         y -= getGrowthDirectionVertical(height);
-
-        int color = getEntityIconColor(cachedIndex) | 0xFF000000;
 
         setBoundingBox(x, y, width, height, color);
 

@@ -41,9 +41,12 @@ public class DayHUD extends AbstractHUD {
         return HUDId.DAY;
     }
 
-    @Override
-    public boolean renderHUD(DrawContext context, int x, int y) {
+    private int width;
+    private int height;
+    private int color;
 
+    @Override
+    public boolean collectHUDInformation() {
         long day = CLIENT.world.getTimeOfDay() / 24000L;
 
         // I cached these because textRendered.getWidth() is expensive.
@@ -54,13 +57,21 @@ public class DayHUD extends AbstractHUD {
             cachedTextWidth = CLIENT.textRenderer.getWidth(cachedDayString) - 1;
         }
 
-        int width = ICON_WIDTH + 1 + 5 + cachedTextWidth + 5;
-        int height = ICON_HEIGHT;
+        color = DAY_SETTINGS.color | 0xFF000000;
+        width = ICON_WIDTH + 1 + 5 + cachedTextWidth + 5;
+        height = ICON_HEIGHT;
+
+        setWidth(width);
+        setHeight(height);
+        return true;
+    }
+
+    @Override
+    public boolean renderHUD(DrawContext context, int x, int y) {
 
         x -= getGrowthDirectionHorizontal(width);
         y -= getGrowthDirectionVertical(height);
 
-        int color = DAY_SETTINGS.color | 0xFF000000;
         setBoundingBox(x, y, width, height, color);
 
         RenderUtils.drawSmallHUD(

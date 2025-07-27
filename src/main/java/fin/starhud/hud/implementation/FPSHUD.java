@@ -36,18 +36,31 @@ public class FPSHUD extends AbstractHUD {
         return HUDId.FPS;
     }
 
+    private String fpsStr;
+    private int width;
+    private int height;
+    private int color;
+
     @Override
-    public boolean renderHUD(DrawContext context, int x, int y) {
-        String fpsStr = CLIENT.getCurrentFps() + " FPS";
+    public boolean collectHUDInformation() {
+        fpsStr = CLIENT.getCurrentFps() + " FPS";
         int strWidth = CLIENT.textRenderer.getWidth(fpsStr) - 1;
 
-        int width = TEXTURE_WIDTH + 1 + 5 + strWidth + 5;
-        int height = TEXTURE_HEIGHT;
+        width = TEXTURE_WIDTH + 1 + 5 + strWidth + 5;
+        height = TEXTURE_HEIGHT;
+
+        color = FPS_SETTINGS.color | 0xFF000000;
+
+        setWidth(width);
+        setHeight(height);
+        return true;
+    }
+
+    @Override
+    public boolean renderHUD(DrawContext context, int x, int y) {
 
         x -= getGrowthDirectionHorizontal(width);
         y -= getGrowthDirectionVertical(height);
-
-        int color = FPS_SETTINGS.color | 0xFF000000;
 
         setBoundingBox(x, y, width, height, color);
 

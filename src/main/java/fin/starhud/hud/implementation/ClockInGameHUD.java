@@ -42,8 +42,13 @@ public class ClockInGameHUD extends AbstractHUD {
         return HUDId.CLOCK_INGAME;
     }
 
+    private int width;
+    private int height;
+    private int color;
+    private int iconIndex;
+
     @Override
-    public boolean renderHUD(DrawContext context, int x, int y) {
+    public boolean collectHUDInformation() {
         ClientWorld world = CLIENT.world;
 
         long time = world.getTimeOfDay() % 24000;
@@ -62,11 +67,20 @@ public class ClockInGameHUD extends AbstractHUD {
             cachedStrWidth = CLIENT.textRenderer.getWidth(cachedMinecraftTimeString) - 1;
         }
 
-        int iconIndex = getWeatherOrTime(world);
-        int color = getIconColor(iconIndex) | 0xFF000000;
+        iconIndex = getWeatherOrTime(world);
+        color = getIconColor(iconIndex) | 0xFF000000;
 
-        int width = ICON_WIDTH + 1 + 5 + cachedStrWidth + 5;
-        int height = ICON_HEIGHT;
+        width = ICON_WIDTH + 1 + 5 + cachedStrWidth + 5;
+        height = ICON_HEIGHT;
+
+        setWidth(width);
+        setHeight(height);
+
+        return true;
+    }
+
+    @Override
+    public boolean renderHUD(DrawContext context, int x, int y) {
 
         x -= getGrowthDirectionHorizontal(width);
         y -= getGrowthDirectionVertical(height);

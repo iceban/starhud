@@ -24,4 +24,9 @@ public class LeftHandHUD extends AbstractHandHUD {
     public HUDId getId() {
         return HUDId.LEFT_HAND;
     }
+
+    @Override
+    public int getIconColor() {
+        return LEFT_HAND_SETTINGS.color | 0xFF000000;
+    }
 }

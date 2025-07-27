@@ -1,11 +1,6 @@
 package fin.starhud.hud.implementation;
 
 import fin.starhud.config.hud.ArmorSettings;
-import fin.starhud.helper.Box;
-import fin.starhud.helper.GrowthDirectionX;
-import fin.starhud.helper.GrowthDirectionY;
-import fin.starhud.helper.RenderUtils;
-import fin.starhud.hud.AbstractHUD;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.component.type.AttributeModifierSlot;
@@ -13,7 +8,7 @@ import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 
-public abstract class AbstractArmorHUD extends AbstractHUD {
+public abstract class AbstractArmorHUD extends AbstractDurabilityHUD {
 
     private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
 
@@ -27,45 +22,33 @@ public abstract class AbstractArmorHUD extends AbstractHUD {
     private static final int ICON_HEIGHT = 13;
 
     public AbstractArmorHUD(ArmorSettings armorSettings, Identifier armorTexture, int armorIndex) {
-        super(armorSettings.base);
+        super(armorSettings.base, armorSettings.durabilitySettings);
         this.SETTINGS = armorSettings;
         this.TEXTURE = armorTexture;
         this.armorIndex = armorIndex;
     }
 
+    @Override
     public ItemStack getStack() {
         EquipmentSlot equipmentSlot = AttributeModifierSlot.ARMOR.getSlots().get(armorIndex);
         return CLIENT.player.getEquippedStack(equipmentSlot);
     }
 
     @Override
-    public boolean shouldRender() {
-        return super.shouldRender()
-                && (!getStack().isEmpty() && getStack().isDamageable());
+    public int getIconColor() {
+        return SETTINGS.color | 0xFF000000;
     }
 
     @Override
     public boolean renderHUD(DrawContext context, int x, int y) {
-        ItemStack armor = getStack();
-
-        GrowthDirectionX growthDirectionX = isInGroup() ? GrowthDirectionX.RIGHT : SETTINGS.base.growthDirectionX;
-        GrowthDirectionY growthDirectionY = isInGroup() ? GrowthDirectionY.DOWN : SETTINGS.base.growthDirectionY;
-
-        Box tempBox = RenderUtils.renderDurabilityHUD(
+        renderDurabilityHUD(
                 context,
-                armor,
                 TEXTURE,
                 x, y,
                 0.0F, 0.0F,
                 TEXTURE_WIDTH, TEXTURE_HEIGHT,
-                ICON_WIDTH, ICON_HEIGHT,
-                SETTINGS.color | 0xFF000000,
-                SETTINGS.drawBar,
-                SETTINGS.drawItem,
-                growthDirectionX, growthDirectionY
+                ICON_WIDTH, ICON_HEIGHT
         );
-
-        copyBoundingBox(tempBox);
 
         return true;
     }

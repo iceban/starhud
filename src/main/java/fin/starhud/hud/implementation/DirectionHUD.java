@@ -43,23 +43,50 @@ public class DirectionHUD extends AbstractHUD {
         return HUDId.DIRECTION;
     }
 
+    private String yawStr;
+    private int iconIndex;
+    private int width;
+    private int height;
+    private int color;
+    private boolean includeOrdinal;
+
+
     @Override
-    public boolean renderHUD(DrawContext context, int x, int y) {
+    public boolean collectHUDInformation() {
         float yaw = Math.round(MathHelper.wrapDegrees(CLIENT.cameraEntity.getYaw()) * 10.0F) / 10.0F;
-        String yawStr = Float.toString(yaw);
+        yawStr = Float.toString(yaw);
         int yawWidth = CLIENT.textRenderer.getWidth(yawStr) - 1;
 
-        if (DIRECTION_SETTINGS.includeOrdinal) {
-            int iconIndex = getOrdinalDirectionIcon(yaw);
+        includeOrdinal = DIRECTION_SETTINGS.includeOrdinal;
 
-            int width = ORDINAL_ICON_WIDTH + 1 + 5 + yawWidth + 5;
-            int height = ORDINAL_ICON_HEIGHT;
+        if (includeOrdinal) {
+            iconIndex = getOrdinalDirectionIcon(yaw);
 
-            x -= getSettings().getGrowthDirectionHorizontal(width);
-            y -= getSettings().getGrowthDirectionVertical(height);
+            width = ORDINAL_ICON_WIDTH + 1 + 5 + yawWidth + 5;
+            height = ORDINAL_ICON_HEIGHT;
 
-            int color = getDirectionColor(iconIndex) | 0xFF000000;
-            setBoundingBox(x, y, width, height, color);
+            color = getDirectionColor(iconIndex) | 0xFF000000;
+
+        } else {
+            iconIndex = getCardinalDirectionIcon(yaw);
+            width = CARDINAL_ICON_WIDTH + 1 + 5 + yawWidth + 5;
+            height = CARDINAL_ICON_HEIGHT;
+
+            color = getDirectionColor(iconIndex * 2) | 0xFF000000;
+        }
+
+        setWidth(width);
+        setHeight(height);
+        return true;
+    }
+
+    @Override
+    public boolean renderHUD(DrawContext context, int x, int y) {
+        x -= getGrowthDirectionHorizontal(width);
+        y -= getGrowthDirectionVertical(height);
+        setBoundingBox(x, y, width, height, color);
+        if (includeOrdinal) {
+
 
             RenderUtils.drawSmallHUD(
                     context,
@@ -74,16 +101,6 @@ public class DirectionHUD extends AbstractHUD {
             );
 
         } else {
-            int iconIndex = getCardinalDirectionIcon(yaw);
-            int width = CARDINAL_ICON_WIDTH + 1 + 5 + yawWidth + 5;
-            int height = CARDINAL_ICON_HEIGHT;
-
-            x -= getGrowthDirectionHorizontal(width);
-            y -= getGrowthDirectionVertical(height);
-
-            int color = getDirectionColor(iconIndex * 2) | 0xFF000000;
-            setBoundingBox(x, y, width, height, color);
-
             RenderUtils.drawSmallHUD(
                     context,
                     yawStr,
