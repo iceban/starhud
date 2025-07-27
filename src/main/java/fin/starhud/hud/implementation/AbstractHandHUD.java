@@ -57,6 +57,8 @@ public abstract class AbstractHandHUD extends AbstractDurabilityHUD {
     @Override
     public boolean collectHUDInformation() {
         item = getStack();
+        if (item.isEmpty())
+            return false;
 
         showDurability = handSettings.showDurability;
         showCount = handSettings.showCount;

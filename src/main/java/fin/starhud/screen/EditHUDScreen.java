@@ -258,6 +258,8 @@ public class EditHUDScreen extends Screen {
         ButtonWidget configScreenButton = ButtonWidget.builder(
                 Text.of("🛠"),
                 button -> {
+                    isHelpActivated = false;
+                    isMoreOptionActivated = false;
                     this.client.setScreen(AutoConfig.getConfigScreen(Settings.class, this).get());
                 }
         ).dimensions(CENTER_X - (SQUARE_WIDGET_LENGTH / 2), this.height - SQUARE_WIDGET_LENGTH - GAP, SQUARE_WIDGET_LENGTH, SQUARE_WIDGET_LENGTH).build();
