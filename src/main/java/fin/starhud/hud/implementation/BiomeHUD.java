@@ -11,6 +11,7 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Language;
@@ -32,7 +33,7 @@ public class  BiomeHUD extends AbstractHUD {
     private static final int ICON_WIDTH = 13;
     private static final int ICON_HEIGHT = 13;
 
-    private static Text cachedBiomeNameText;
+    private static OrderedText cachedBiomeNameText;
     private static RegistryEntry<Biome> cachedBiome;
     private static int cachedTextWidth;
 
@@ -63,12 +64,12 @@ public class  BiomeHUD extends AbstractHUD {
 
                 // if it has translation we get the translation, else we just convert it to Pascal Case manually.
                 if (Language.getInstance().hasTranslation(translatableKey))
-                    cachedBiomeNameText = Text.translatable(translatableKey);
+                    cachedBiomeNameText = Text.translatable(translatableKey).asOrderedText();
                 else
-                    cachedBiomeNameText = Text.of(Helper.idNameFormatter(currentBiome.getIdAsString()));
+                    cachedBiomeNameText = Text.of(Helper.idNameFormatter(currentBiome.getIdAsString())).asOrderedText();
 
             } else {
-                cachedBiomeNameText = Text.of("Unregistered");
+                cachedBiomeNameText = Text.of("Unregistered").asOrderedText();
             }
 
             cachedBiome = currentBiome;
@@ -107,14 +108,15 @@ public class  BiomeHUD extends AbstractHUD {
 
         RenderUtils.drawSmallHUD(
                 context,
-                cachedBiomeNameText.asOrderedText(),
+                cachedBiomeNameText,
                 x, y,
                 width, height,
                 DIMENSION_TEXTURE,
                 0.0F, ICON_HEIGHT * dimensionIndex,
                 TEXTURE_WIDTH, TEXTURE_HEIGHT,
                 ICON_WIDTH, ICON_HEIGHT,
-                color
+                color,
+                0xFFFFFFFF
         );
 
         return true;

@@ -63,28 +63,31 @@ public class PingHUD extends AbstractHUD {
             LAST_WORLD = currentWorld;
         }
 
-        updatePingLog();
+        // update pingLog every n seconds. Because this is quite expensive.
+        long currentTimeMillis = System.currentTimeMillis();
+        if (currentTimeMillis - LAST_PING_UPDATE >= 1000 * PING_SETTINGS.updateInterval) {
+            LAST_PING_UPDATE = currentTimeMillis;
+            cachedPingMeasurer.ping();
 
-        int pingLogLen = pingLog.getLength();
-        if (pingLogLen <= 0)
-            return false;
+            // cache string calculations here since ping was just updated
+            int pingLogLen = pingLog.getLength();
+            if (pingLogLen > 0) {
+                long currentPing = pingLog.get(pingLogLen - 1);
+                pingStr = currentPing + " ms";
+                int strWidth = CLIENT.textRenderer.getWidth(pingStr) - 1;
 
-        // get the latest updated ping through the last element.
-        long currentPing = pingLog.get(pingLogLen - 1);
-        pingStr = currentPing + " ms";
-        int strWidth = CLIENT.textRenderer.getWidth(pingStr) - 1;
+                width = ICON_WIDTH + 1 + 5 + strWidth + 5;
+                height = ICON_HEIGHT;
 
-        width = ICON_WIDTH + 1 + 5 + strWidth + 5;
-        height = ICON_HEIGHT;
+                step = Math.min((int) currentPing / 150, 3);
+                color = getPingColor(step) | 0xFF000000;
 
-        // 0, 150, 300, 450
-        step = Math.min((int) currentPing / 150, 3);
-        color = getPingColor(step) | 0xFF000000;
+                setWidth(width);
+                setHeight(height);
+            }
+        }
 
-        setWidth(width);
-        setHeight(height);
-
-        return true;
+        return pingStr != null;
     }
 
     @Override
@@ -118,15 +121,6 @@ public class PingHUD extends AbstractHUD {
             case 3 -> PING_SETTINGS.pingColor.fourth;
             default -> 0xFFFFFFFF;
         };
-    }
-
-    // update pingLog every n seconds. Because this is quite expensive.
-    private static void updatePingLog() {
-        long currentTimeMillis = System.currentTimeMillis();
-        if (currentTimeMillis - LAST_PING_UPDATE >= 1000 * PING_SETTINGS.updateInterval) {
-            LAST_PING_UPDATE = currentTimeMillis;
-            cachedPingMeasurer.ping();
-        }
     }
 
 }

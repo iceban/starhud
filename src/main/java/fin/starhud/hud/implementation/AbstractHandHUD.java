@@ -32,6 +32,7 @@ public abstract class AbstractHandHUD extends AbstractDurabilityHUD {
 
     public AbstractHandHUD(HandSettings handSettings, Arm arm, Identifier ICON_TEXTURE) {
         super(handSettings.base, handSettings.durabilitySettings);
+
         this.handSettings = handSettings;
         this.arm = arm;
         this.ICON_TEXTURE = ICON_TEXTURE;

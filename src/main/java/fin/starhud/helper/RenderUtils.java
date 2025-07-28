@@ -11,6 +11,19 @@ public class RenderUtils {
 
     private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
 
+    public static void drawSmallHUD(DrawContext context, String infoStr, int x, int y, int width, int height, Identifier iconTexture, float u, float v, int textureWidth, int textureHeight, int iconWidth, int iconHeight, int color, int iconColor) {
+        RenderUtils.drawTextureHUD(context, iconTexture, x, y, u, v, iconWidth, iconHeight, textureWidth, textureHeight, iconColor);
+        RenderUtils.fillRoundedRightSide(context, x + iconWidth + 1, y, x + width, y + height, 0x80000000);
+        RenderUtils.drawTextHUD(context, infoStr, x + iconWidth + 1 + 5, y + 3, color, false);
+    }
+
+    public static void drawSmallHUD(DrawContext context, OrderedText infoText, int x, int y, int width, int height, Identifier iconTexture, float u, float v, int textureWidth, int textureHeight, int iconWidth, int iconHeight, int color, int iconColor) {
+        RenderUtils.drawTextureHUD(context, iconTexture, x, y, u, v, iconWidth, iconHeight, textureWidth, textureHeight, iconColor);
+        RenderUtils.fillRoundedRightSide(context, x + iconWidth + 1, y, x + width, y + height, 0x80000000);
+        RenderUtils.drawTextHUD(context, infoText, x + iconWidth + 1 + 5, y + 3, color, false);
+    }
+
+
     public static void drawSmallHUD(DrawContext context, String infoStr, int x, int y, int width, int height, Identifier iconTexture, float u, float v, int textureWidth, int textureHeight, int iconWidth, int iconHeight, int color) {
         RenderUtils.drawTextureHUD(context, iconTexture, x, y, u, v, iconWidth, iconHeight, textureWidth, textureHeight, color);
         RenderUtils.fillRoundedRightSide(context, x + iconWidth + 1, y, x + width, y + height, 0x80000000);

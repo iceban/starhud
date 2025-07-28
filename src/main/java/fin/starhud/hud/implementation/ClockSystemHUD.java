@@ -110,16 +110,6 @@ public class ClockSystemHUD extends AbstractHUD {
         return CLOCK_12_FORMAT.format(new Date(time));
     }
 
-//    @Override
-//    public int getBaseHUDWidth() {
-//        return CLOCK_SYSTEM_SETTINGS.use12Hour ? TEXTURE_SYSTEM_12_WIDTH : TEXTURE_SYSTEM_24_WIDTH;
-//    }
-//
-//    @Override
-//    public int getBaseHUDHeight() {
-//        return TEXTURE_HEIGHT;
-//    }
-
     @Override
     public void update() {
         super.update();

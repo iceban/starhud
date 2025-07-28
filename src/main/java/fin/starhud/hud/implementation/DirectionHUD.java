@@ -85,9 +85,8 @@ public class DirectionHUD extends AbstractHUD {
         x -= getGrowthDirectionHorizontal(width);
         y -= getGrowthDirectionVertical(height);
         setBoundingBox(x, y, width, height, color);
+
         if (includeOrdinal) {
-
-
             RenderUtils.drawSmallHUD(
                     context,
                     yawStr,

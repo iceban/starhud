@@ -53,7 +53,7 @@ public class DayHUD extends AbstractHUD {
         // And since day count hardly updates at all, doing this is reasonable.
         if (day != lastDay) {
             lastDay = day;
-            cachedDayString = Long.toString(day);
+            cachedDayString = "Day " + day;
             cachedTextWidth = CLIENT.textRenderer.getWidth(cachedDayString) - 1;
         }
 

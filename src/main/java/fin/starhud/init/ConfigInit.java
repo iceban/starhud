@@ -16,10 +16,12 @@ public class ConfigInit {
         Main.settings = holder.getConfig();
 
         // onConfigSaved we update every HUDs
-        holder.registerSaveListener((ignored, ignored1) -> {
-            Main.settings.hudList.onConfigSaved();
-            HUDComponent.getInstance().updateActiveHUDs();
-            return ActionResult.SUCCESS;
-        });
+        holder.registerSaveListener(ConfigInit::onConfigSaved);
+    }
+
+    public static ActionResult onConfigSaved(ConfigHolder<Settings> configHolder, Settings settings) {
+        Main.settings.hudList.onConfigSaved();
+        HUDComponent.getInstance().updateActiveHUDs();
+        return ActionResult.SUCCESS;
     }
 }

@@ -72,7 +72,7 @@ public class EffectHUD extends AbstractHUD {
 
     @Override
     public boolean collectHUDInformation() {
-        return true; // special case: status effect is silly so no data collection for now...
+        return true; // special case: status effect is silly so data collection is in the rendering logic for now...
     }
 
     @Override

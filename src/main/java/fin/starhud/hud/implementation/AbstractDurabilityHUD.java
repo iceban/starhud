@@ -67,19 +67,20 @@ public abstract class AbstractDurabilityHUD extends AbstractHUD {
 
     @Override
     public boolean collectHUDInformation() {
-        this.stack = getStack();
+        stack = getStack();
 
         if (stack.isEmpty() || !stack.isDamageable())
             return false;
 
-        this.drawBar = durabilitySettings.drawBar;
-        this.drawItem = durabilitySettings.drawItem;
-        this.iconColor = getIconColor();
         stackDamage = stack.getDamage();
         stackMaxDamage = stack.getMaxDamage();
 
-        this.width = processWidth();
-        this.height = drawItem ? BIG_DURABILITY_BACKGROUND_TEXTURE_HEIGHT : DURABILITY_BACKGROUND_TEXTURE_HEIGHT;
+        drawBar = durabilitySettings.drawBar;
+        drawItem = durabilitySettings.drawItem;
+        iconColor = getIconColor();
+
+        width = processWidth();
+        height = drawItem ? BIG_DURABILITY_BACKGROUND_TEXTURE_HEIGHT : DURABILITY_BACKGROUND_TEXTURE_HEIGHT;
 
         setWidth(width);
         setHeight(height);
