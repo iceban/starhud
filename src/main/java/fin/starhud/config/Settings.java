@@ -17,7 +17,7 @@ public class Settings implements ConfigData {
     @ConfigEntry.Gui.TransitiveObject
     public GeneralSettings generalSettings = new GeneralSettings();
 
-    @ConfigEntry.Category("hud")
+    @ConfigEntry.Category("hudList")
     @ConfigEntry.Gui.TransitiveObject
     public HUDSettings hudList = new HUDSettings();
 

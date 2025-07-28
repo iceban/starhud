@@ -31,6 +31,9 @@ public class GroupedHUD extends AbstractHUD {
 
     @Override
     public String getName() {
+        if (huds.isEmpty())
+            return "Groupped HUD";
+
         StringBuilder name = new StringBuilder();
 
         for (AbstractHUD hud : huds)
@@ -155,7 +158,7 @@ public class GroupedHUD extends AbstractHUD {
 
             huds.add(hud);
             hud.setInGroup(groupSettings.id);
-            LOGGER.info("UpdateActiveHUDsFromConfig (added to group: {}) : {}", groupSettings.id, hud.getName());
+//            LOGGER.info("UpdateActiveHUDsFromConfig (added to group: {}) : {}", groupSettings.id, hud.getName());
         }
     }
 }

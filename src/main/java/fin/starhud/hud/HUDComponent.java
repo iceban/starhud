@@ -90,7 +90,7 @@ public class HUDComponent {
         individualHUDs.removeIf(hud -> {
             boolean result = !hudConfig.individualHudIds.contains(hud.getId());
             if (result) {
-                LOGGER.info("Removed {} from Individual HUD", hud.getName());
+//                LOGGER.info("Removed {} from Individual HUD", hud.getName());
             }
             return result;
         });
@@ -99,7 +99,7 @@ public class HUDComponent {
         for (HUDId id : hudConfig.individualHudIds) {
             AbstractHUD hud = hudMap.get(id);
             if (individualHUDs.stream().noneMatch(existingHud -> existingHud.getId().equals(id))) {
-                LOGGER.info("Added {} to Individual HUD", hud.getName());
+//                LOGGER.info("Added {} to Individual HUD", hud.getName());
                 hud.setInGroup(null);
                 individualHUDs.add(hud);
             }
@@ -110,7 +110,7 @@ public class HUDComponent {
             boolean missing = hudConfig.groupedHuds.stream().noneMatch(settings -> settings.id.equals(group.groupSettings.id));
             if (missing) {
                 groupedHUDMap.remove(group.groupSettings.id);
-                LOGGER.info("Removed Group ({}) from Groupped HUDs", group.getName());
+//                LOGGER.info("Removed Group ({}) from Groupped HUDs", group.getName());
             }
             return missing;
         });
@@ -127,11 +127,11 @@ public class HUDComponent {
 
             // if the said group is already exist, we need to update them.
             if (existing != null) {
-                LOGGER.info("Group ({}) already exist, updating the settings...", existing.getName());
+//                LOGGER.info("Group ({}) already exist, updating the settings...", existing.getName());
                 existing.groupSettings.copyFrom(settings);
                 existing.updateActiveHUDsFromConfig();
             } else { // otherwise create a new one
-                LOGGER.info("{} have not yet exist, creating new Groupped HUD...", settings.id);
+//                LOGGER.info("{} have not yet exist, creating new Groupped HUD...", settings.id);
                 GroupedHUD newGroup = new GroupedHUD(settings);
                 groupedHUDs.add(newGroup);
                 groupedHUDMap.put(settings.id, newGroup);

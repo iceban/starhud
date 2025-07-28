@@ -6,6 +6,7 @@ import fin.starhud.helper.ScreenAlignmentX;
 import fin.starhud.helper.ScreenAlignmentY;
 import fin.starhud.hud.HUDId;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
+import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
 
 import java.util.*;
 
@@ -14,6 +15,7 @@ public class HUDSettings {
     @ConfigEntry.Gui.Excluded
     public List<HUDId> individualHudIds = new ArrayList<>();
 
+    @Comment("It's not recommended to modify grouped HUD directly on the configuration screen.")
     public List<GroupedHUDSettings> groupedHuds = new ArrayList<>();
 
     public HUDSettings(List<HUDId> individualHudIds, List<GroupedHUDSettings> groupedHuds) {
@@ -71,7 +73,7 @@ public class HUDSettings {
 
 
     public void onConfigSaved() {
-        // check each HUD id appearance, if there's more than 1 appearance, we must clear.
+        // count appearances of each HUD ID
         Map<HUDId, Integer> appearanceMap = new EnumMap<>(HUDId.class);
 
         for (HUDId id : individualHudIds) {
@@ -84,31 +86,38 @@ public class HUDSettings {
             }
         }
 
-        for (GroupedHUDSettings group : groupedHuds) {
-            group.hudIds.removeIf(id -> {
-                int count = appearanceMap.get(id);
-                if (count > 1) {
-                    appearanceMap.put(id, count - 1);
-                    return true;
-                }
-                return false;
-            });
-        }
+        for (Map.Entry<HUDId, Integer> entry : appearanceMap.entrySet()) {
+            HUDId id = entry.getKey();
+            int count = entry.getValue();
 
-        Set<HUDId> seen = new HashSet<>();
-        individualHudIds.removeIf(id -> {
-            if (seen.contains(id)) return true;
-            seen.add(id);
-            return false;
-        });
+            if (count == 1) continue;
 
-        for (HUDId id : HUDId.values()) {
-            if (!appearanceMap.containsKey(id) || appearanceMap.get(id) == 0) {
-                individualHudIds.add(id);
+            boolean inIndividual = individualHudIds.contains(id);
+            boolean inGrouped = groupedHuds.stream()
+                    .anyMatch(group -> group.hudIds.contains(id));
+
+            // if there are 2 and in individual and in grouped, prioritize group.
+            if (count == 2 && inIndividual && inGrouped) {
+                individualHudIds.remove(id);
+            } else {
+                // if there are many duplicates, remove all.
+                for (GroupedHUDSettings group : groupedHuds)
+                    group.hudIds.removeIf(hudId -> hudId.equals(id));
+
+                individualHudIds.removeIf(hudId -> hudId.equals(id));
             }
         }
 
+        // this ensures that every hudIds that isn't found in groupedhud to be put in individual hud.
+        Set<HUDId> allRepresentedIds = new HashSet<>(individualHudIds);
+        for (GroupedHUDSettings group : groupedHuds) {
+            allRepresentedIds.addAll(group.hudIds);
+        }
+
+        for (HUDId id : HUDId.values()) {
+            if (!allRepresentedIds.contains(id)) {
+                individualHudIds.add(id);
+            }
+        }
     }
-
-
 }
