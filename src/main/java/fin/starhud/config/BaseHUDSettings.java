@@ -8,6 +8,7 @@ import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.util.Window;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -197,11 +198,17 @@ public class BaseHUDSettings implements ConfigData {
 
     // this shifts your HUD based on your x point, and alignment on X axis, and place them accordingly in your screen.
     public int getCalculatedPosX() {
-        return this.getX() + (int) (this.getOriginX().getAlignmentPos(MinecraftClient.getInstance().getWindow().getScaledWidth()) * getScaledFactor());
+        Window window = MinecraftClient.getInstance().getWindow();
+        int scaledWidth = (window == null ? 0 : window.getScaledWidth());
+
+        return this.getX() + (int) (this.getOriginX().getAlignmentPos(scaledWidth) * getScaledFactor());
     }
 
     // this also shifts your HUD based on your y point, and alignment on Y axis, and place them accordingly in your screen.
     public int getCalculatedPosY() {
-        return this.getY() + (int) (this.getOriginY().getAlignmentPos(MinecraftClient.getInstance().getWindow().getScaledHeight()) * getScaledFactor());
+        Window window = MinecraftClient.getInstance().getWindow();
+        int scaledHeight = (window == null ? 0 : window.getScaledHeight());
+
+        return this.getY() + (int) (this.getOriginY().getAlignmentPos(scaledHeight) * getScaledFactor());
     }
 }

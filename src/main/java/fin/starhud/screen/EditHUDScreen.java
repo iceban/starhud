@@ -24,10 +24,7 @@ import org.joml.Vector2d;
 import org.lwjgl.glfw.GLFW;
 import org.slf4j.Logger;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class EditHUDScreen extends Screen {
 
@@ -252,7 +249,7 @@ public class EditHUDScreen extends Screen {
                 }
         )
                 .tooltip(Tooltip.of(Text.of("More Options")))
-                .dimensions(CENTER_X + + (SQUARE_WIDGET_LENGTH / 2) + (GAP), this.height - SQUARE_WIDGET_LENGTH - GAP, SQUARE_WIDGET_LENGTH, SQUARE_WIDGET_LENGTH)
+                .dimensions(CENTER_X + (SQUARE_WIDGET_LENGTH / 2) + (GAP), this.height - SQUARE_WIDGET_LENGTH - GAP, SQUARE_WIDGET_LENGTH, SQUARE_WIDGET_LENGTH)
                 .build();
 
         ButtonWidget configScreenButton = ButtonWidget.builder(
@@ -415,6 +412,7 @@ public class EditHUDScreen extends Screen {
         }
     }
 
+    // Enhanced render method - add this to your existing render method
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         super.render(context, mouseX, mouseY, delta);
@@ -434,17 +432,28 @@ public class EditHUDScreen extends Screen {
             context.drawText(CLIENT.textRenderer, ":Y", yField.getX() + yField.getWidth() + 3, yField.getY() + 6, 0xFFFFFFFF, true);
         }
 
-        // draw dragBox if present
-        if (dragSelection) {
-            int x1 = Math.min(dragStartX, dragCurrentX);
-            int y1 = Math.min(dragStartY, dragCurrentY);
-            int x2 = Math.max(dragStartX, dragCurrentX);
-            int y2 = Math.max(dragStartY, dragCurrentY);
-            context.drawBorder(x1, y1, x2 - x1, y2 - y1, 0xFFFFFFFF);
+        if (dragSelection && hasMovedSincePress) {
+            renderDragBox(context);
         }
 
         // draw all visible hud bounding boxes.
         renderBoundingBoxes(context, mouseX, mouseY);
+    }
+
+    private void renderDragBox(DrawContext context) {
+        int x1 = Math.min(dragStartX, dragCurrentX);
+        int y1 = Math.min(dragStartY, dragCurrentY);
+        int x2 = Math.max(dragStartX, dragCurrentX);
+        int y2 = Math.max(dragStartY, dragCurrentY);
+
+        int width = x2 - x1;
+        int height = y2 - y1;
+        int color = SETTINGS.dragBoxColor;
+
+        if (width > 0 && height > 0) {
+            context.fill(x1, y1, x2, y2, color | 0x40000000);
+            context.drawBorder(x1, y1, width, height, color | 0xFF000000);
+        }
     }
 
     private void renderBoundingBoxes(DrawContext context, int mouseX, int mouseY) {
@@ -539,147 +548,327 @@ public class EditHUDScreen extends Screen {
     int dragStartX, dragStartY;
     int dragCurrentX, dragCurrentY;
 
+    private final Set<AbstractHUD> initialDragBoxSelection = new HashSet<>();
+    private boolean hasMovedSincePress = false;
+    private static final int DRAG_THRESHOLD = 3; // pixels
+    private AbstractHUD clickedHUD = null;
+
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-
         if (super.mouseClicked(mouseX, mouseY, button))
             return true;
 
         if (button == 0) {
-            for (AbstractHUD hud : individualHUDs)
-                onMouseClicked(hud, mouseX, mouseY, button);
+            hasMovedSincePress = false;
+            dragStartX = (int) mouseX;
+            dragStartY = (int) mouseY;
+            dragCurrentX = (int) mouseX;
+            dragCurrentY = (int) mouseY;
 
-            for (AbstractHUD hud : groupedHUDs)
-                onMouseClicked(hud, mouseX, mouseY, button);
+            // find which HUD was clicked (if any)
+            clickedHUD = getHUDAtPosition(mouseX, mouseY);
 
-            // if we are not dragging we can start an expanding box
-            if (!dragging) {
-                selectedHUDs.clear();
-                updateFieldsFromSelectedHUD();
-                dragSelection = true;
-                dragStartX = (int) mouseX;
-                dragStartY = (int) mouseY;
-                dragCurrentX = (int) mouseX;
-                dragCurrentY = (int) mouseY;
+            if (clickedHUD != null) {
+                handleHUDClick(clickedHUD, mouseX, mouseY);
+            } else {
+                handleEmptySpaceClick();
             }
+
+            // store initial selection for drag box operations
+            initialDragBoxSelection.clear();
+            initialDragBoxSelection.addAll(selectedHUDs);
         }
         return true;
     }
 
-    public AbstractHUD pendingToggleHUD = null;
-
-    public void onMouseClicked(AbstractHUD hud, double mouseX, double mouseY, int button) {
-        if (!hud.shouldRender()) return;
-        Box boundingBox = hud.getBoundingBox();
-        int scale = hud.getSettings().scale;
-        int x = boundingBox.getX();
-        int y = boundingBox.getY();
-        int width = boundingBox.getWidth();
-        int height = boundingBox.getHeight();
-
-        if (isHovered(x, y, width, height, (int) mouseX, (int) mouseY, scale)) {
-
-            if (hasShiftDown()) {
-                if (selectedHUDs.contains(hud))
-                    pendingToggleHUD = hud;
-                else
-                    selectedHUDs.add(hud);
-            } else {
-                selectedHUDs.clear();
-                selectedHUDs.add(hud);
+    private AbstractHUD getHUDAtPosition(double mouseX, double mouseY) {
+        for (AbstractHUD hud : groupedHUDs) {
+            if (isHUDClickable(hud, mouseX, mouseY)) {
+                return hud;
             }
+        }
 
-            dragging = true;
+        for (AbstractHUD hud : individualHUDs) {
+            if (isHUDClickable(hud, mouseX, mouseY)) {
+                return hud;
+            }
+        }
+
+        return null;
+    }
+
+    private boolean isHUDClickable(AbstractHUD hud, double mouseX, double mouseY) {
+        if (!hud.shouldRender()) return false;
+
+        Box boundingBox = hud.getBoundingBox();
+        if (boundingBox.isEmpty()) return false;
+
+        int scale = hud.getSettings().scale;
+        return isHovered(
+                boundingBox.getX(),
+                boundingBox.getY(),
+                boundingBox.getWidth(),
+                boundingBox.getHeight(),
+                (int) mouseX,
+                (int) mouseY,
+                scale
+        );
+    }
+
+    private void handleHUDClick(AbstractHUD clickedHUD, double mouseX, double mouseY) {
+        if (Screen.hasShiftDown()) {
+            // shift click: Add to selection (don't remove if already selected)
+            if (!selectedHUDs.contains(clickedHUD)) {
+                selectedHUDs.add(clickedHUD);
+            }
+            // if already selected, we'll handle potential removal in mouseReleased
+            pendingToggleHUD = selectedHUDs.contains(clickedHUD) ? clickedHUD : null;
+        } else if (Screen.hasControlDown()) {
+            // ctrl click: toggle selection
+            if (selectedHUDs.contains(clickedHUD)) {
+                pendingToggleHUD = clickedHUD; // remove on release if no drag
+            } else {
+                selectedHUDs.add(clickedHUD);
+                pendingToggleHUD = null;
+            }
+        } else {
+            // click
+            if (selectedHUDs.contains(clickedHUD)) {
+                // clicking on already selected item - don't change selection yet
+                // (might be starting a multi-HUD drag)
+                pendingToggleHUD = null;
+            } else {
+                // clicking on unselected item - select only this one
+                selectedHUDs.clear();
+                selectedHUDs.add(clickedHUD);
+                pendingToggleHUD = null;
+            }
+        }
+
+        // Prepare for potential dragging
+        dragging = true;
+        updateFieldsFromSelectedHUD();
+    }
+
+    private void handleEmptySpaceClick() {
+        if (!Screen.hasShiftDown() && !Screen.hasControlDown()) {
+            // click on empty space - clear selection
+            selectedHUDs.clear();
             updateFieldsFromSelectedHUD();
         }
+
+        // prepare for drag box selection
+        dragSelection = true;
+        pendingToggleHUD = null;
     }
+
+    public AbstractHUD pendingToggleHUD = null;
 
     @Override
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
         if (button == 0) {
-            if (dragging) {
-                dragging = false;
-                if (!selectedHUDs.isEmpty()) {
-                    AbstractHUD selectedHUD = selectedHUDs.getFirst();
-                    xField.setText(String.valueOf(selectedHUD.getSettings().x));
-                    yField.setText(String.valueOf(selectedHUD.getSettings().y));
-                    hudAccumulatedDelta.clear();
-                }
-
-                if (pendingToggleHUD != null) {
-                    selectedHUDs.remove(pendingToggleHUD);
-                    pendingToggleHUD = null;
-                    updateFieldsFromSelectedHUD();
-                }
-            } else {
-                if (dragSelection)
-                    dragSelection = false;
+            if (!hasMovedSincePress) {
+                // if mouse hasn't moved since clicked to release, we handle non mouse moved operation
+                handleClickRelease();
             }
+
+            // Finalize any drag operations
+            if (dragging) {
+                finalizeDragOperation();
+            }
+
+            if (dragSelection) {
+                dragSelection = false;
+            }
+
+            resetMouseState();
             return true;
         }
         return super.mouseReleased(mouseX, mouseY, button);
+    }
+
+    private void handleClickRelease() {
+        // Handle pending toggle operations (for ctrl click and shift click)
+        if (pendingToggleHUD != null) {
+            if (Screen.hasShiftDown()) {
+                // shift click on already selected: remove from selection
+                selectedHUDs.remove(pendingToggleHUD);
+            } else if (Screen.hasControlDown()) {
+                // ctrl click toggle: remove from selection
+                selectedHUDs.remove(pendingToggleHUD);
+            }
+            updateFieldsFromSelectedHUD();
+        }
+
+        // Handle single-click deselection for multi-selection
+        if (clickedHUD != null && !Screen.hasShiftDown() && !Screen.hasControlDown()) {
+            if (selectedHUDs.contains(clickedHUD) && selectedHUDs.size() > 1) {
+                // Single click on item in multi-selection should select only that item
+                selectedHUDs.clear();
+                selectedHUDs.add(clickedHUD);
+                updateFieldsFromSelectedHUD();
+            }
+        }
+    }
+
+    private void finalizeDragOperation() {
+        dragging = false;
+
+        // Update final positions in text fields
+        if (!selectedHUDs.isEmpty()) {
+            AbstractHUD selectedHUD = selectedHUDs.getFirst();
+            xField.setText(String.valueOf(selectedHUD.getSettings().x));
+            yField.setText(String.valueOf(selectedHUD.getSettings().y));
+        }
+
+        hudAccumulatedDelta.clear();
+    }
+
+    private void resetMouseState() {
+        hasMovedSincePress = false;
+        clickedHUD = null;
+        pendingToggleHUD = null;
+        initialDragBoxSelection.clear();
     }
 
     private final Map<AbstractHUD, Vector2d> hudAccumulatedDelta = new HashMap<>();
 
     @Override
     public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
-        if (dragging && !selectedHUDs.isEmpty() && button == 0) {
-            pendingToggleHUD = null;
+        if (button != 0) {
+            return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
+        }
 
-            for (AbstractHUD hud : selectedHUDs) {
-                double scaleFactor = hud.getSettings().getScaledFactor();
+        // check if we've moved enough to start drag operation
+        if (!hasMovedSincePress) {
+            int totalMovement = Math.abs((int)mouseX - dragStartX) + Math.abs((int)mouseY - dragStartY);
+            if (totalMovement >= DRAG_THRESHOLD) {
+                hasMovedSincePress = true;
+                startDragOperation();
+            }
+        }
 
-                Vector2d acc = hudAccumulatedDelta.computeIfAbsent(hud, h -> new Vector2d(0, 0));
-                acc.x += deltaX;
-                acc.y += deltaY;
+        if (hasMovedSincePress) {
+            if (dragging && !selectedHUDs.isEmpty()) { // if we've moved and there are selected huds, we drag them, obviously
+                dragSelectedHUDs(deltaX, deltaY);
+                return true;
+            } else if (dragSelection) { // otherwise it's just drag box
+                updateDragBoxSelection(mouseX, mouseY);
+                return true;
+            }
+        }
 
-                double scaledX = acc.x * scaleFactor;
-                double scaledY = acc.y * scaleFactor;
+        return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
+    }
 
-                int dx = (int) scaledX;
-                int dy = (int) scaledY;
+    private void startDragOperation() {
+        // clear any pending toggle since we're now dragging
+        pendingToggleHUD = null;
 
-                if (dx != 0 || dy != 0) {
-                    hud.getSettings().x += dx;
-                    hud.getSettings().y += dy;
-                    hud.update();
+        // if moved + has hud selected -> potential hud(s) dragging.
+        if (clickedHUD != null && selectedHUDs.contains(clickedHUD)) {
+            dragSelection = false;
+        } else { // if moved but no hud selected -> potential drag box
 
-                    acc.x -= dx / scaleFactor;
-                    acc.y -= dy / scaleFactor;
+            dragging = false;
+
+            // if we clicked on a HUD, but it wasn't selected, and no modifiers,
+            // clear selection first
+            if (clickedHUD != null && !Screen.hasShiftDown() && !Screen.hasControlDown()) {
+                selectedHUDs.clear();
+                initialDragBoxSelection.clear();
+            }
+        }
+    }
+
+    private void dragSelectedHUDs(double deltaX, double deltaY) {
+        for (AbstractHUD hud : selectedHUDs) {
+            double scaleFactor = hud.getSettings().getScaledFactor();
+
+            Vector2d acc = hudAccumulatedDelta.computeIfAbsent(hud, h -> new Vector2d(0, 0));
+            acc.x += deltaX;
+            acc.y += deltaY;
+
+            double scaledX = acc.x * scaleFactor;
+            double scaledY = acc.y * scaleFactor;
+
+            int dx = (int) scaledX;
+            int dy = (int) scaledY;
+
+            if (dx != 0 || dy != 0) {
+                hud.getSettings().x += dx;
+                hud.getSettings().y += dy;
+                hud.update();
+
+                acc.x -= dx / scaleFactor;
+                acc.y -= dy / scaleFactor;
+            }
+        }
+
+        if (!selectedHUDs.isEmpty()) {
+            AbstractHUD firstSelected = selectedHUDs.getFirst();
+            xField.setText(String.valueOf(firstSelected.getSettings().x));
+            yField.setText(String.valueOf(firstSelected.getSettings().y));
+        }
+    }
+
+    private void updateDragBoxSelection(double mouseX, double mouseY) {
+        dragCurrentX = (int) mouseX;
+        dragCurrentY = (int) mouseY;
+
+        int x1 = Math.min(dragStartX, dragCurrentX);
+        int y1 = Math.min(dragStartY, dragCurrentY);
+        int x2 = Math.max(dragStartX, dragCurrentX);
+        int y2 = Math.max(dragStartY, dragCurrentY);
+
+        // linked hash set to maintain the selected ordering
+        Set<AbstractHUD> boxSelectedHUDs = new HashSet<>();
+
+        for (AbstractHUD hud : individualHUDs) {
+            if (hud.shouldRender() && !hud.getBoundingBox().isEmpty()) {
+                if (intersectsBox(x1, y1, x2, y2, hud)) {
+                    boxSelectedHUDs.add(hud);
                 }
             }
-
-            return true;
-        } else if (dragSelection && button == 0) {
-            dragCurrentX = (int) mouseX;
-            dragCurrentY = (int) mouseY;
-
-            int x1 = Math.min(dragStartX, dragCurrentX);
-            int y1 = Math.min(dragStartY, dragCurrentY);
-            int x2 = Math.max(dragStartX, dragCurrentX);
-            int y2 = Math.max(dragStartY, dragCurrentY);
-
-            selectedHUDs.clear();
-
-            for (AbstractHUD hud : individualHUDs) {
-                if (hud.shouldRender())
-                    if (!hud.getBoundingBox().isEmpty())
-                        if (intersectsBox(x1, y1, x2, y2, hud))
-                            selectedHUDs.add(hud);
-
-            }
-
-            for (AbstractHUD hud : groupedHUDs) {
-                if (hud.shouldRender())
-                    if (!hud.getBoundingBox().isEmpty())
-                        if (intersectsBox(x1, y1, x2, y2, hud))
-                            selectedHUDs.add(hud);
-            }
-
-            updateFieldsFromSelectedHUD();
         }
-        return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
+
+        for (AbstractHUD hud : groupedHUDs) {
+            if (hud.shouldRender() && !hud.getBoundingBox().isEmpty()) {
+                if (intersectsBox(x1, y1, x2, y2, hud)) {
+                    boxSelectedHUDs.add(hud);
+                }
+            }
+        }
+
+        // Apply drag box selection based on modifier keys
+        if (Screen.hasShiftDown()) {
+            // shift drag box: Add new items to existing selection
+            for (AbstractHUD hud : boxSelectedHUDs) {
+                if (!selectedHUDs.contains(hud)) { // only add if not already selected
+                    selectedHUDs.add(hud);
+                }
+            }
+        } else if (Screen.hasControlDown()) {
+            // ctrl drag box: invert items in box
+            for (AbstractHUD hud : boxSelectedHUDs) {
+                if (initialDragBoxSelection.contains(hud)) {
+                    selectedHUDs.remove(hud); // remove if was initially selected
+                } else if (!selectedHUDs.contains(hud)) {
+                    selectedHUDs.add(hud); // add if not currently selected
+                }
+            }
+        } else {
+            // click: update selection, remove the ones that didnt get caught, add the one that did get caught
+            selectedHUDs.removeIf(hud -> !boxSelectedHUDs.contains(hud));
+
+            for (AbstractHUD hud : boxSelectedHUDs) {
+                 if (!selectedHUDs.contains(hud)) {
+                    selectedHUDs.add(hud); // add if not currently selected
+                }
+            }
+        }
+
+        updateFieldsFromSelectedHUD();
     }
 
     @Override
@@ -973,6 +1162,10 @@ public class EditHUDScreen extends Screen {
 
             LOGGER.info("{} added to {}", hud.getName(), newSettings.id);
         }
+
+        // we should copy the settings from the first selected hud. so that the position doesn't reset to 0,0.
+        AbstractHUD firstHUD = huds.getFirst();
+        newSettings.base.copySettings(firstHUD.getSettings());
 
         groupedHUDs.add(newSettings);
         HUDComponent.getInstance().updateActiveHUDs();

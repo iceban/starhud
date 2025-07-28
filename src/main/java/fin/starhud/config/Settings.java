@@ -126,4 +126,119 @@ public class Settings implements ConfigData {
     @ConfigEntry.Category("targeted")
     @ConfigEntry.Gui.TransitiveObject
     public TargetedCrosshairSettings targetedCrosshairSettings = new TargetedCrosshairSettings();
+
+    @Override
+    public void validatePostLoad() {
+        if (generalSettings.inGameSettings == null)
+            generalSettings.inGameSettings = new GeneralSettings.InGameHUDSettings();
+
+        if (generalSettings.screenSettings == null)
+            generalSettings.screenSettings = new GeneralSettings.EditHUDScreenSettings();
+
+        ArmorSettings helmet = armorSettings.helmet;
+        if (helmet.base == null) {
+            armorSettings.helmet = new ArmorSettings(
+                    new BaseHUDSettings(true, 5, 0, ScreenAlignmentX.LEFT, ScreenAlignmentY.MIDDLE, GrowthDirectionX.RIGHT, GrowthDirectionY.MIDDLE)
+            );
+        } else if (helmet.durabilitySettings == null) {
+            armorSettings.helmet.durabilitySettings = new DurabilitySettings();
+        }
+
+        ArmorSettings chestplate = armorSettings.chestplate;
+        if (chestplate.base == null) {
+            armorSettings.chestplate = new ArmorSettings(
+                    new BaseHUDSettings(true, 5, 14, ScreenAlignmentX.LEFT, ScreenAlignmentY.MIDDLE, GrowthDirectionX.RIGHT, GrowthDirectionY.MIDDLE)
+            );
+        } else if (chestplate.durabilitySettings == null) {
+            armorSettings.chestplate.durabilitySettings = new DurabilitySettings();
+        }
+
+        ArmorSettings leggings = armorSettings.leggings;
+        if (leggings.base == null) {
+            armorSettings.leggings = new ArmorSettings(
+                    new BaseHUDSettings(true, 5, 14 * 2, ScreenAlignmentX.LEFT, ScreenAlignmentY.MIDDLE, GrowthDirectionX.RIGHT, GrowthDirectionY.MIDDLE)
+            );
+        } else if (leggings.durabilitySettings == null) {
+            armorSettings.leggings.durabilitySettings = new DurabilitySettings();
+        }
+
+        ArmorSettings boots = armorSettings.boots;
+        if (boots.base == null) {
+            armorSettings.boots = new ArmorSettings(
+                    new BaseHUDSettings(true, 5, 14 * 3, ScreenAlignmentX.LEFT, ScreenAlignmentY.MIDDLE, GrowthDirectionX.RIGHT, GrowthDirectionY.MIDDLE)
+            );
+        } else if (boots.durabilitySettings == null) {
+            armorSettings.boots.durabilitySettings = new DurabilitySettings();
+        }
+
+        if (fpsSettings.base == null)
+            fpsSettings = new FPSSettings();
+
+        CoordSettings coordX = coordSettings.X;
+        if (coordX.base == null) {
+            coordSettings.X = new CoordSettings(
+                    new BaseHUDSettings(true, 5, 5, ScreenAlignmentX.LEFT, ScreenAlignmentY.TOP, GrowthDirectionX.RIGHT, GrowthDirectionY.DOWN),
+                    0xFc7871
+            );
+        }
+
+        CoordSettings coordY = coordSettings.Y;
+        if (coordY.base == null) {
+            coordSettings.Y = new CoordSettings(
+                    new BaseHUDSettings(true, 5, 5 + 14, ScreenAlignmentX.LEFT, ScreenAlignmentY.TOP, GrowthDirectionX.RIGHT, GrowthDirectionY.DOWN),
+                    0xA6F1AF
+            );
+        }
+
+        CoordSettings coordZ = coordSettings.Z;
+        if (coordZ.base == null) {
+            coordSettings.Z = new CoordSettings(
+                    new BaseHUDSettings(true, 5, 5 + 14 * 2, ScreenAlignmentX.LEFT, ScreenAlignmentY.TOP, GrowthDirectionX.RIGHT, GrowthDirectionY.DOWN),
+                    0x6CE1FC
+            );
+        }
+
+        if (directionSettings.base == null)
+            directionSettings = new DirectionSettings();
+
+        if (pingSettings.base == null)
+            pingSettings = new PingSettings();
+
+        ClockSystemSettings systemSetting = clockSettings.systemSetting;
+        if (systemSetting.base == null)
+            clockSettings.systemSetting = new ClockSystemSettings();
+
+        ClockInGameSettings inGameSetting = clockSettings.inGameSetting;
+        if (inGameSetting.base == null)
+            clockSettings.inGameSetting = new ClockInGameSettings();
+
+        if (daySettings.base == null)
+            daySettings = new DaySettings();
+
+        if (biomeSettings.base == null)
+            biomeSettings = new BiomeSettings();
+
+        if (inventorySettings.base == null)
+            inventorySettings = new InventorySettings();
+
+        HandSettings leftHand = handSettings.leftHandSettings;
+        if (leftHand.base == null) {
+            handSettings.leftHandSettings = new HandSettings(true, -96, -25, ScreenAlignmentX.CENTER, ScreenAlignmentY.BOTTOM, GrowthDirectionX.LEFT, GrowthDirectionY.UP, 0xffb3b3);
+        } else if (leftHand.durabilitySettings == null) {
+            handSettings.leftHandSettings.durabilitySettings = new DurabilitySettings();
+        }
+
+        HandSettings rightHand = handSettings.rightHandSettings;
+        if (rightHand.base == null) {
+            handSettings.rightHandSettings = new HandSettings(true, 96, -25, ScreenAlignmentX.CENTER, ScreenAlignmentY.BOTTOM, GrowthDirectionX.RIGHT, GrowthDirectionY.UP, 0x87ceeb);
+        } else if (rightHand.durabilitySettings == null) {
+            handSettings.rightHandSettings.durabilitySettings = new DurabilitySettings();
+        }
+
+        if (effectSettings.base == null)
+            effectSettings = new EffectSettings();
+
+        if (targetedCrosshairSettings.base == null)
+            targetedCrosshairSettings = new TargetedCrosshairSettings();
+    }
 }

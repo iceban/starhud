@@ -3,7 +3,9 @@ package fin.starhud.hud;
 import fin.starhud.Main;
 import fin.starhud.config.GroupedHUDSettings;
 import fin.starhud.config.HUDSettings;
+import fin.starhud.config.Settings;
 import fin.starhud.hud.implementation.*;
+import me.shedaniel.autoconfig.AutoConfig;
 import net.minecraft.client.gui.DrawContext;
 import org.slf4j.Logger;
 
@@ -64,6 +66,8 @@ public class HUDComponent {
         registerHUD(new PingHUD());
         registerHUD(new TargetedCrosshairHUD());
         registerHUD(new EffectHUD());
+
+        AutoConfig.getConfigHolder(Settings.class).save();
     }
 
     public Map<HUDId, AbstractHUD> getHudMap() {
@@ -138,6 +142,7 @@ public class HUDComponent {
 
     private void registerHUD(AbstractHUD hud) {
         hudMap.put(hud.getId(), hud);
+        LOGGER.info("{} Added to Hud Map.", hud.getId());
     }
 
     public AbstractHUD getHUD(HUDId id) {
@@ -165,11 +170,13 @@ public class HUDComponent {
     }
 
     public void updateAll() {
-        for (HUDInterface hud : hudMap.values())
+        for (HUDInterface hud : hudMap.values()) {
             hud.update();
+        }
 
-        for (HUDInterface hud : groupedHUDs)
+        for (HUDInterface hud : groupedHUDs) {
             hud.update();
+        }
     }
 
     // follow up with the updated config.

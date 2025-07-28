@@ -11,7 +11,6 @@ import net.minecraft.util.ActionResult;
 public class ConfigInit {
     public static void init() {
 
-        // register the Settings.java config into clothconfig
         AutoConfig.register(Settings.class, GsonConfigSerializer::new);
         ConfigHolder<Settings> holder = AutoConfig.getConfigHolder(Settings.class);
         Main.settings = holder.getConfig();
