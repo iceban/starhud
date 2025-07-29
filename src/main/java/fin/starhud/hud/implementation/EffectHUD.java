@@ -258,12 +258,12 @@ public class EffectHUD extends AbstractHUD {
                  // if we draw the HUD vertically, essentially the width should be the texture width
          return effectSettings.drawVertical ? STATUS_EFFECT_TEXTURE_WIDTH
                  // else, the width should be the whole column of Effect HUDs.
-                 : ((isBeneficial ? beneficialSize : harmSize) * getSameTypeGap());
+                 : ((isBeneficial ? beneficialSize : harmSize) * getSameTypeGap()) - effectSettings.sameTypeGap;
     }
 
     public int getDynamicHeight(boolean isBeneficial, int beneficialSize, int harmSize) {
                 // if the HUD is drawn Vertically, the Height should be the whole row of Effect HUDs
-        return effectSettings.drawVertical ? ((isBeneficial ? beneficialSize : harmSize) * getSameTypeGap())
+        return effectSettings.drawVertical ? ((isBeneficial ? beneficialSize : harmSize) * getSameTypeGap()) - effectSettings.sameTypeGap
                 // else, the height is just the same as the texture height.
                 : STATUS_EFFECT_TEXTURE_HEIGHT;
     }

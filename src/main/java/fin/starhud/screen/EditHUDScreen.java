@@ -933,9 +933,6 @@ public class EditHUDScreen extends Screen {
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (super.keyPressed(keyCode, scanCode, modifiers))
-            return true;
-
         if (!dragSelection && !dragging) {
 
             boolean handled = false;
@@ -981,7 +978,7 @@ public class EditHUDScreen extends Screen {
             }
         }
 
-        return false;
+        return super.keyPressed(keyCode, scanCode, modifiers);
     }
 
     public boolean onKeyPressed(AbstractHUD hud, int keyCode, int modifiers) {
