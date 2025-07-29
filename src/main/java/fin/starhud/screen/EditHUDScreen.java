@@ -1138,6 +1138,8 @@ public class EditHUDScreen extends Screen {
         for (GroupedHUD hud : groupedHUDs) {
             GroupedHUDSettings original = oldGroupedHUDSettings.get(hud.groupSettings.id);
             if (original != null) {
+//                System.out.println("GroupedHUD REVERT: " + hud.groupSettings);
+//                System.out.println("Original REVERT: " + original);
                 hud.groupSettings.copyFrom(original);
 //                LOGGER.info("Reverting Group ({}) Settings", hud.getName());
             } else {
@@ -1145,7 +1147,6 @@ public class EditHUDScreen extends Screen {
             }
         }
 
-        HUDComponent.getInstance().updateAll();
         AutoConfig.getConfigHolder(Settings.class).save();
     }
 

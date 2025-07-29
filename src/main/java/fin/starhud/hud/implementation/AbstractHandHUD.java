@@ -124,7 +124,7 @@ public abstract class AbstractHandHUD extends AbstractDurabilityHUD {
         RenderUtils.drawTextureHUD(context, ITEM_BACKGROUND_TEXTURE, x, y, 0.0F, 0.0F, ITEM_TEXTURE_WIDTH, ITEM_TEXTURE_HEIGHT, ITEM_TEXTURE_WIDTH, ITEM_TEXTURE_HEIGHT);
         RenderUtils.fillRoundedRightSide(context, x + ITEM_TEXTURE_WIDTH + 1, y, x + width, y + ITEM_TEXTURE_HEIGHT, 0x80000000);
         context.drawItem(item, x + 3, y + 3);
-        RenderUtils.drawTextHUD(context, amountStr, x + ITEM_TEXTURE_WIDTH + 1 + 5, y + 3, iconColor, false);
+        RenderUtils.drawTextHUD(context, amountStr, x + ITEM_TEXTURE_WIDTH + 1 + 5, y + 7, iconColor, false);
     }
 
     private void renderStackCountIconHUD(DrawContext context, int x, int y) {

@@ -125,10 +125,16 @@ public class HUDComponent {
 
             GroupedHUD existing = groupedHUDMap.get(settings.id);
 
+            if (existing != null && existing.groupSettings != settings) {
+//                LOGGER.info("Group ({}) has different settings reference, removing old instance", settings.id);
+                groupedHUDs.remove(existing);
+                groupedHUDMap.remove(settings.id);
+                existing = null;
+            }
+
             // if the said group is already exist, we need to update them.
             if (existing != null) {
 //                LOGGER.info("Group ({}) already exist, updating the settings...", existing.getName());
-                existing.groupSettings.copyFrom(settings);
                 existing.updateActiveHUDsFromConfig();
             } else { // otherwise create a new one
 //                LOGGER.info("{} have not yet exist, creating new Groupped HUD...", settings.id);
