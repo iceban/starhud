@@ -20,7 +20,7 @@ public class GeneralSettings {
         public int selectedGroupBoxColor = 0xFc7871;
 
         @ConfigEntry.ColorPicker
-        public int dragBoxColor = 0xFFFFFF;
+        public int dragBoxColor = 0xa8d8ea;
     }
 
     public static class InGameHUDSettings {

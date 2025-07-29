@@ -108,7 +108,7 @@ public abstract class AbstractHUD implements HUDInterface {
         return groupId != null;
     }
 
-    public void setInGroup(String groupId) {
+    public void setGroupId(String groupId) {
         this.groupId = groupId;
     }
 

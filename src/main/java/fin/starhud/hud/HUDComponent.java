@@ -20,11 +20,10 @@ public class HUDComponent {
 
     // Registered HUDs by ID
     private final Map<HUDId, AbstractHUD> hudMap = new EnumMap<>(HUDId.class);
-    private final Map<String, GroupedHUD> groupedHUDMap = new HashMap<>();
 
     // Active HUDs (selected in config)
-    private final List<AbstractHUD> individualHUDs = new ArrayList<>();
-    private final List<GroupedHUD> groupedHUDs = new ArrayList<>();
+    private final Map<HUDId, AbstractHUD> individualHUDs = new EnumMap<>(HUDId.class);
+    private final Map<String, GroupedHUD> groupedHUDs = new HashMap<>();
 
     private boolean renderInGameScreen = true;
 
@@ -66,82 +65,35 @@ public class HUDComponent {
         registerHUD(new PingHUD());
         registerHUD(new TargetedCrosshairHUD());
         registerHUD(new EffectHUD());
-
-        AutoConfig.getConfigHolder(Settings.class).save();
     }
 
     public Map<HUDId, AbstractHUD> getHudMap() {
         return hudMap;
     }
 
-    public List<AbstractHUD> getIndividualHUDs() {
+    public Map<HUDId, AbstractHUD> getIndividualHUDs() {
         return individualHUDs;
     }
 
-    public List<GroupedHUD> getGroupedHUDs() {
+    public Map<String, GroupedHUD> getGroupedHUDs() {
         return groupedHUDs;
     }
 
     public void loadActiveHUDsFromConfig() {
         HUDSettings hudConfig = Main.settings.hudList;
 
-        // remove hud that is in a group from individual huds
-        // this is done by checking if said hud id is no longer present in the individual hud ids.
-        individualHUDs.removeIf(hud -> {
-            boolean result = !hudConfig.individualHudIds.contains(hud.getId());
-            if (result) {
-//                LOGGER.info("Removed {} from Individual HUD", hud.getName());
-            }
-            return result;
-        });
+        individualHUDs.clear();
 
-        // if there are any individual hud that exist in the config but not here, add them
         for (HUDId id : hudConfig.individualHudIds) {
             AbstractHUD hud = hudMap.get(id);
-            if (individualHUDs.stream().noneMatch(existingHud -> existingHud.getId().equals(id))) {
-//                LOGGER.info("Added {} to Individual HUD", hud.getName());
-                hud.setInGroup(null);
-                individualHUDs.add(hud);
-            }
+            hud.setGroupId(null);
+            individualHUDs.put(id, hud);
         }
 
-        // remove group that is no longer present in the config.
-        groupedHUDs.removeIf(group -> {
-            boolean missing = hudConfig.groupedHuds.stream().noneMatch(settings -> settings.id.equals(group.groupSettings.id));
-            if (missing) {
-                groupedHUDMap.remove(group.groupSettings.id);
-//                LOGGER.info("Removed Group ({}) from Groupped HUDs", group.getName());
-            }
-            return missing;
-        });
+        groupedHUDs.clear();
 
-        // if there are any group that exist in the config but not here, add them
         for (GroupedHUDSettings settings : hudConfig.groupedHuds) {
-
-            // this is usually not needed since when creating the object we also construct the id.
-            if (settings.id == null || settings.id.isEmpty()) {
-                settings.id = generateNextGroupId();
-            }
-
-            GroupedHUD existing = groupedHUDMap.get(settings.id);
-
-            if (existing != null && existing.groupSettings != settings) {
-//                LOGGER.info("Group ({}) has different settings reference, removing old instance", settings.id);
-                groupedHUDs.remove(existing);
-                groupedHUDMap.remove(settings.id);
-                existing = null;
-            }
-
-            // if the said group is already exist, we need to update them.
-            if (existing != null) {
-//                LOGGER.info("Group ({}) already exist, updating the settings...", existing.getName());
-                existing.updateActiveHUDsFromConfig();
-            } else { // otherwise create a new one
-//                LOGGER.info("{} have not yet exist, creating new Groupped HUD...", settings.id);
-                GroupedHUD newGroup = new GroupedHUD(settings);
-                groupedHUDs.add(newGroup);
-                groupedHUDMap.put(settings.id, newGroup);
-            }
+            groupedHUDs.put(settings.id, new GroupedHUD(settings));
         }
     }
 
@@ -161,7 +113,7 @@ public class HUDComponent {
     }
 
     private void renderIndividualHUDs(DrawContext context) {
-        for (HUDInterface hud : individualHUDs) {
+        for (HUDInterface hud : individualHUDs.values()) {
             if (hud.shouldRender()) {
                 hud.render(context);
             }
@@ -169,7 +121,7 @@ public class HUDComponent {
     }
 
     private void renderGroupedHUDs(DrawContext context) {
-        for (GroupedHUD group : groupedHUDs) {
+        for (GroupedHUD group : groupedHUDs.values()) {
             if (group.shouldRender())
                 group.render(context);
         }
@@ -180,7 +132,7 @@ public class HUDComponent {
             hud.update();
         }
 
-        for (HUDInterface hud : groupedHUDs) {
+        for (HUDInterface hud : groupedHUDs.values()) {
             hud.update();
         }
     }
@@ -201,7 +153,7 @@ public class HUDComponent {
         String id;
         do {
             id = "group_" + index++;
-        } while (groupedHUDMap.containsKey(id));
+        } while (groupedHUDs.containsKey(id));
         return id;
     }
 

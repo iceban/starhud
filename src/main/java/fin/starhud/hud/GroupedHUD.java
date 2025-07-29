@@ -25,7 +25,7 @@ public class GroupedHUD extends AbstractHUD {
         for (HUDId id : groupSettings.hudIds) {
             AbstractHUD hud = HUDComponent.getInstance().getHUD(id);
             huds.add(hud);
-            hud.setInGroup(this.groupSettings.id);
+            hud.setGroupId(this.groupSettings.id);
         }
     }
 
@@ -140,7 +140,7 @@ public class GroupedHUD extends AbstractHUD {
         for (AbstractHUD hud : huds){
             if (!hud.isInGroup()) {
                 LOGGER.warn("{} IS NOT IN A GROUP! FORCING TO CHANGE THEM.", hud.getName());
-                hud.setInGroup(groupSettings.id);
+                hud.setGroupId(groupSettings.id);
             }
         }
 
@@ -150,14 +150,14 @@ public class GroupedHUD extends AbstractHUD {
     public void updateActiveHUDsFromConfig() {
 
         for (AbstractHUD hud : huds)
-            hud.setInGroup(null);
+            hud.setGroupId(null);
         huds.clear();
 
         for (HUDId id : groupSettings.hudIds) {
             AbstractHUD hud = HUDComponent.getInstance().getHUD(id);
 
             huds.add(hud);
-            hud.setInGroup(groupSettings.id);
+            hud.setGroupId(groupSettings.id);
 //            LOGGER.info("UpdateActiveHUDsFromConfig (added to group: {}) : {}", groupSettings.id, hud.getName());
         }
     }

@@ -41,8 +41,8 @@ public class EditHUDScreen extends Screen {
 
     public Screen parent;
 
-    private final List<AbstractHUD> individualHUDs;
-    private final List<GroupedHUD> groupedHUDs;
+    private final Map<HUDId, AbstractHUD> individualHUDs;
+    private final Map<String, GroupedHUD> groupedHUDs;
 
     private final Map<HUDId, BaseHUDSettings> oldHUDSettings;
     private final Map<String, GroupedHUDSettings> oldGroupedHUDSettings;
@@ -116,7 +116,7 @@ public class EditHUDScreen extends Screen {
         }
 
         oldGroupedHUDSettings = new HashMap<>();
-        for (GroupedHUD p : groupedHUDs) {
+        for (GroupedHUD p : groupedHUDs.values()) {
             BaseHUDSettings settings = p.getSettings();
             oldGroupedHUDSettings.put(
                     p.getGroupId(),
@@ -305,11 +305,12 @@ public class EditHUDScreen extends Screen {
                 }
         ).dimensions(xGroupUngroupButton, yBottomGroup, terminatorWidth, SQUARE_WIDGET_LENGTH).build();
 
-        int xGapField = xGroupUngroupButton - GAP - terminatorWidth;
+        int gapFieldWidth = terminatorWidth / 2;
+        int xGapField = xGroupUngroupButton - GAP - gapFieldWidth;
         gapField = new TextFieldWidget(
                 CLIENT.textRenderer,
                 xGapField, yBottomGroup,
-                terminatorWidth, SQUARE_WIDGET_LENGTH,
+                gapFieldWidth, SQUARE_WIDGET_LENGTH,
                 Text.of("Gap")
         );
 
@@ -488,6 +489,10 @@ public class EditHUDScreen extends Screen {
             context.drawText(CLIENT.textRenderer, ":Y", yField.getX() + yField.getWidth() + 3, yField.getY() + 6, 0xFFFFFFFF, true);
         }
 
+        if (gapField.isVisible()) {
+            context.drawText(CLIENT.textRenderer, "GAP:", gapField.getX() - 15 - 2 - 3, gapField.getY() + 6, 0xFFFFFFFF, true);
+        }
+
         if (dragSelection && hasMovedSincePress) {
             renderDragBox(context);
         }
@@ -513,11 +518,11 @@ public class EditHUDScreen extends Screen {
     }
 
     private void renderBoundingBoxes(DrawContext context, int mouseX, int mouseY) {
-        for (AbstractHUD hud: individualHUDs) {
+        for (AbstractHUD hud: individualHUDs.values()) {
             renderHUD(context, hud, mouseX, mouseY);
         }
 
-        for (AbstractHUD hud : groupedHUDs) {
+        for (AbstractHUD hud : groupedHUDs.values()) {
             renderHUD(context, hud, mouseX, mouseY);
         }
     }
@@ -638,13 +643,13 @@ public class EditHUDScreen extends Screen {
     }
 
     private AbstractHUD getHUDAtPosition(double mouseX, double mouseY) {
-        for (AbstractHUD hud : groupedHUDs) {
+        for (AbstractHUD hud : groupedHUDs.values()) {
             if (isHUDClickable(hud, mouseX, mouseY)) {
                 return hud;
             }
         }
 
-        for (AbstractHUD hud : individualHUDs) {
+        for (AbstractHUD hud : individualHUDs.values()) {
             if (isHUDClickable(hud, mouseX, mouseY)) {
                 return hud;
             }
@@ -879,7 +884,7 @@ public class EditHUDScreen extends Screen {
 
         Set<AbstractHUD> boxSelectedHUDs = new HashSet<>();
 
-        for (AbstractHUD hud : individualHUDs) {
+        for (AbstractHUD hud : individualHUDs.values()) {
             if (hud.shouldRender() && !hud.getBoundingBox().isEmpty()) {
                 if (intersectsBox(x1, y1, x2, y2, hud)) {
                     boxSelectedHUDs.add(hud);
@@ -887,7 +892,7 @@ public class EditHUDScreen extends Screen {
             }
         }
 
-        for (AbstractHUD hud : groupedHUDs) {
+        for (AbstractHUD hud : groupedHUDs.values()) {
             if (hud.shouldRender() && !hud.getBoundingBox().isEmpty()) {
                 if (intersectsBox(x1, y1, x2, y2, hud)) {
                     boxSelectedHUDs.add(hud);
@@ -928,13 +933,17 @@ public class EditHUDScreen extends Screen {
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        if (super.keyPressed(keyCode, scanCode, modifiers))
+            return true;
+
         if (!dragSelection && !dragging) {
 
             boolean handled = false;
 
             if (!selectedHUDs.isEmpty())
                 for (AbstractHUD hud : selectedHUDs)
-                    handled = onKeyPressed(hud, keyCode, modifiers);
+                    if (onKeyPressed(hud, keyCode, modifiers))
+                        handled = true;
 
             boolean isCtrl = isMac
                     ? (modifiers & GLFW.GLFW_MOD_SUPER) != 0
@@ -972,7 +981,7 @@ public class EditHUDScreen extends Screen {
             }
         }
 
-        return super.keyPressed(keyCode, scanCode, modifiers);
+        return false;
     }
 
     public boolean onKeyPressed(AbstractHUD hud, int keyCode, int modifiers) {
@@ -1036,14 +1045,14 @@ public class EditHUDScreen extends Screen {
             }
 
             case GLFW.GLFW_KEY_MINUS ->  {
-                if (!yField.isFocused() && !xField.isFocused()) {
+                if (!isShift && !yField.isFocused() && !xField.isFocused() && gapField.isFocused()) {
                     settings.scale = (settings.scale + 6) % 7;
                     handled = true;
                 }
             }
 
             case GLFW.GLFW_KEY_EQUAL ->  {
-                if (isShift && !yField.isFocused() && !xField.isFocused()) {
+                if (isShift && !yField.isFocused() && !xField.isFocused() && gapField.isFocused()) {
                     settings.scale = (settings.scale + 1) % 7;
                     handled = true;
                 }
@@ -1097,7 +1106,7 @@ public class EditHUDScreen extends Screen {
         if (!groupedHUDs.equals(oldGroupedHUDs))
             return true;
 
-        for (AbstractHUD hud : individualHUDs) {
+        for (AbstractHUD hud : individualHUDs.values()) {
             BaseHUDSettings current = hud.getSettings();
             BaseHUDSettings original = oldHUDSettings.get(hud.getId());
             if (original == null || !current.isEqual(original)) {
@@ -1135,11 +1144,9 @@ public class EditHUDScreen extends Screen {
             }
         }
 
-        for (GroupedHUD hud : groupedHUDs) {
+        for (GroupedHUD hud : groupedHUDs.values()) {
             GroupedHUDSettings original = oldGroupedHUDSettings.get(hud.groupSettings.id);
             if (original != null) {
-//                System.out.println("GroupedHUD REVERT: " + hud.groupSettings);
-//                System.out.println("Original REVERT: " + original);
                 hud.groupSettings.copyFrom(original);
 //                LOGGER.info("Reverting Group ({}) Settings", hud.getName());
             } else {
@@ -1213,8 +1220,10 @@ public class EditHUDScreen extends Screen {
             if (hud.isInGroup()) {
                 throw new IllegalStateException("HUD " + hud.getId() + " is already in a group.");
             }
+
             individualHUDs.remove(hud.getId());
             newSettings.hudIds.add(hud.getId());
+            hud.setGroupId(newSettings.id);
 
 //            LOGGER.info("{} added to {}", hud.getName(), newSettings.id);
         }
@@ -1236,6 +1245,7 @@ public class EditHUDScreen extends Screen {
 
         for (AbstractHUD hud : huds) {
             individualHUDs.add(hud.getId());
+            hud.setGroupId(null);
 //            LOGGER.info("{} removed from {}", hud.getName(), groupedHUD.groupSettings.id);
         }
 
