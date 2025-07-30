@@ -42,6 +42,9 @@ public class EffectHUD extends AbstractHUD {
     private static int cachedSize = -1;
     private static boolean needBoxUpdate = true;
 
+    public static int beneficialSize;
+    public static int harmSize;
+
     public EffectHUD() {
         super(effectSettings.base);
     }
@@ -98,8 +101,8 @@ public class EffectHUD extends AbstractHUD {
         int differentTypeGap = ((drawVertical && effectSettings.base.originX == ScreenAlignmentX.RIGHT) || (!drawVertical && effectSettings.base.originY == ScreenAlignmentY.BOTTOM)) ? -(getDifferentTypeGap()) : (getDifferentTypeGap());
 
         int effectSize = collection.size();
-        int beneficialSize = getBeneficialSize();
-        int harmSize = effectSize - beneficialSize;
+        beneficialSize = getBeneficialSize();
+        harmSize = effectSize - beneficialSize;
 
         // xBeneficial, yBeneficial = Starting point for beneficial effect HUD.
         int xBeneficial = x - getGrowthDirectionHorizontal(getDynamicWidth(true, beneficialSize, harmSize));

@@ -83,8 +83,9 @@ public abstract class AbstractHUD implements HUDInterface {
 
         for (ConditionalSettings condition : baseHUDSettings.getConditions()) {
             if (condition.isConditionMet()) {
-                tempX += condition.xOffset;
-                tempY += condition.yOffset;
+                float scaleFactor = getSettings().getScaledFactor();
+                tempX += condition.getXOffset(scaleFactor);
+                tempY += condition.getYOffset(scaleFactor);
             }
         }
 

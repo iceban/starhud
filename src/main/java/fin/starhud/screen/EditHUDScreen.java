@@ -93,7 +93,7 @@ public class EditHUDScreen extends Screen {
             "Revert All Changes",
             "Select HUD",
             "Move HUD",
-            "Group Selected HUDs"
+            "Group / Ungroup"
     };
 
     private static final int HELP_HEIGHT = 5 + (HELP_KEYS.length * 9) + 5;

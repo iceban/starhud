@@ -10,8 +10,8 @@ public class ConditionalSettings {
     @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
     public Condition condition = Condition.DEBUG_HUD_OPENED;
 
-    @Comment("Enable this HUD To be Rendered")
-    public boolean shouldRender = true;
+    @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
+    public ConditionMode mode = ConditionMode.SHOW;
 
     @Comment("Shifts this HUD in the X Axis")
     public int xOffset = 0;
@@ -24,7 +24,23 @@ public class ConditionalSettings {
     }
 
     public boolean shouldHide() {
-        return !shouldRender && isConditionMet();
+        return mode == ConditionMode.HIDE && isConditionMet();
+    }
+
+    public int getXOffset(float scaleFactor) {
+        return switch (mode) {
+            case ADD_WIDTH -> xOffset + (int) (condition.getWidth() * scaleFactor);
+            case SUBTRACT_WIDTH -> xOffset - (int) (condition.getWidth() * scaleFactor);
+            default -> xOffset;
+        };
+    }
+
+    public int getYOffset(float scaleFactor) {
+        return switch(mode) {
+            case ADD_HEIGHT -> yOffset + (int) (condition.getHeight() * scaleFactor);
+            case SUBTRACT_HEIGHT -> yOffset - (int) (condition.getHeight() * scaleFactor);
+            default -> yOffset;
+        };
     }
 
     public boolean isConditionMet() {
@@ -32,5 +48,14 @@ public class ConditionalSettings {
             condition = Condition.DEBUG_HUD_OPENED;
         }
         return this.condition.isConditionMet();
+    }
+
+    public enum ConditionMode {
+        SHOW,
+        HIDE,
+        ADD_WIDTH,
+        SUBTRACT_WIDTH,
+        ADD_HEIGHT,
+        SUBTRACT_HEIGHT;
     }
 }

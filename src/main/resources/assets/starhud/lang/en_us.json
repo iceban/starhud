@@ -34,7 +34,7 @@
 
   "text.autoconfig.starhud.option.ConditionalSettings" : "Condition",
   "text.autoconfig.starhud.option.ConditionalSettings.condition" : "Condition Type",
-  "text.autoconfig.starhud.option.ConditionalSettings.shouldRender" : "Show HUD",
+  "text.autoconfig.starhud.option.ConditionalSettings.mode" : "Mode",
   "text.autoconfig.starhud.option.ConditionalSettings.xOffset" : "X Offset",
   "text.autoconfig.starhud.option.ConditionalSettings.yOffset" : "Y Offset",
 

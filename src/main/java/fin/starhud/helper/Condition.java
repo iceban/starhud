@@ -1,33 +1,108 @@
 package fin.starhud.helper;
 
+import fin.starhud.helper.condition.*;
+
+import java.util.function.BooleanSupplier;
+import java.util.function.IntSupplier;
+
 public enum Condition {
-    DEBUG_HUD_OPENED,
-    CHAT_HUD_OPENED,
-    BOSSBAR_SHOWN,
-    SCOREBOARD_SHOWN,
-    BENEFICIAL_EFFECT_SHOWN,
-    HARM_EFFECT_SHOWN,
-    OFFHAND_SHOWN,
-    HEALTH_BAR_SHOWN,
-    EXPERIENCE_BAR_SHOWN,
-    AIR_BUBBLE_BAR_SHOWN,
-    ARMOR_BAR_SHOWN,
-    TARGETED_HUD_SHOWN;
+    DEBUG_HUD_OPENED(
+            DebugHUD::isShown,
+            () -> 0, // you can't really tell how to get the width / height of them so no can do.
+            () -> 0
+    ),
+
+    CHAT_HUD_OPENED(
+            ChatHUD::isShown,
+            ChatHUD::getWidth,
+            ChatHUD::getHeight
+    ),
+
+    BOSSBAR_SHOWN(
+            BossBarHUD::isShown,
+            BossBarHUD::getWidth,
+            BossBarHUD::getHeight
+    ),
+
+    SCOREBOARD_SHOWN(
+            ScoreboardHUD::isShown,
+            ScoreboardHUD::getWidth,
+            ScoreboardHUD::getHeight
+    ),
+
+    POSITIVE_EFFECT_SHOWN(
+            StatusEffectHUD::isPositiveShown,
+            StatusEffectHUD::getPositiveWidth,
+            StatusEffectHUD::getPositiveHeight
+    ),
+
+    NEGATIVE_EFFECT_SHOWN(
+            StatusEffectHUD::isNegativeShown,
+            StatusEffectHUD::getNegativeWidth,
+            StatusEffectHUD::getNegativeHeight
+    ),
+
+    OFFHAND_SHOWN(
+            OffHandHUD::isShown,
+            OffHandHUD::getWidth,
+            OffHandHUD::getHeight
+    ),
+
+    HEALTH_BAR_SHOWN(
+            HealthBarHUD::isShown,
+            HealthBarHUD::getWidth,
+            HealthBarHUD::getHeight
+    ),
+
+    FOOD_BAR_SHOWN(
+            FoodBarHUD::isShown,
+            FoodBarHUD::getWidth,
+            FoodBarHUD::getHeight
+    ),
+
+    EXPERIENCE_BAR_SHOWN(
+            ExperienceBarHUD::isShown,
+            ExperienceBarHUD::getWidth,
+            ExperienceBarHUD::getHeight
+    ),
+
+    AIR_BUBBLE_BAR_SHOWN(
+            AirBubbleBarHUD::isShown,
+            AirBubbleBarHUD::getWidth,
+            AirBubbleBarHUD::getHeight
+    ),
+
+    ARMOR_BAR_SHOWN(
+            ArmorBarHUD::isShown,
+            ArmorBarHUD::getWidth,
+            ArmorBarHUD::getHeight
+    ),
+
+    TARGETED_HUD_SHOWN(
+            TargetedCrosshair::isShown,
+            TargetedCrosshair::getWidth,
+            TargetedCrosshair::getHeight
+    );
+
+    private final BooleanSupplier shownCheck;
+    private final IntSupplier widthSupplier;
+    private final IntSupplier heightSupplier;
+
+    Condition(BooleanSupplier shownCheck, IntSupplier widthSupplier, IntSupplier heightSupplier) {
+        this.shownCheck = shownCheck;
+        this.widthSupplier = widthSupplier;
+        this.heightSupplier = heightSupplier;
+    }
 
     public boolean isConditionMet() {
-        return switch (this) {
-            case DEBUG_HUD_OPENED -> Conditions.isDebugHUDOpen();
-            case CHAT_HUD_OPENED -> Conditions.isChatFocused();
-            case BOSSBAR_SHOWN -> Conditions.isBossBarShown();
-            case SCOREBOARD_SHOWN -> Conditions.isScoreBoardShown();
-            case BENEFICIAL_EFFECT_SHOWN -> Conditions.isBeneficialEffectOverlayShown();
-            case HARM_EFFECT_SHOWN -> Conditions.isHarmEffectOverlayShown();
-            case OFFHAND_SHOWN -> Conditions.isOffHandOverlayShown();
-            case HEALTH_BAR_SHOWN -> Conditions.isHealthBarShown();
-            case EXPERIENCE_BAR_SHOWN -> Conditions.isExperienceBarShown();
-            case AIR_BUBBLE_BAR_SHOWN -> Conditions.isAirBubbleBarShown();
-            case ARMOR_BAR_SHOWN -> Conditions.isArmorBarShown();
-            case TARGETED_HUD_SHOWN -> Conditions.isTargetedCrosshairHUDShown();
-        };
+        return shownCheck.getAsBoolean();
+    }
+
+    public int getWidth(){
+        return widthSupplier.getAsInt();
+    }
+
+    public int getHeight() {
+        return heightSupplier.getAsInt();
     }
 }

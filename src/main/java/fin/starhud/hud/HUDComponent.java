@@ -3,13 +3,13 @@ package fin.starhud.hud;
 import fin.starhud.Main;
 import fin.starhud.config.GroupedHUDSettings;
 import fin.starhud.config.HUDSettings;
-import fin.starhud.config.Settings;
 import fin.starhud.hud.implementation.*;
-import me.shedaniel.autoconfig.AutoConfig;
 import net.minecraft.client.gui.DrawContext;
 import org.slf4j.Logger;
 
-import java.util.*;
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.Map;
 
 public class HUDComponent {
 
