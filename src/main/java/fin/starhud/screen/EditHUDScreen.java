@@ -368,8 +368,6 @@ public class EditHUDScreen extends Screen {
     }
 
     private void updateFieldsFromSelectedHUD() {
-        if (xField == null || yField == null) return;
-
         if (selectedHUDs.isEmpty()) {
             xField.setEditable(false);
             yField.setEditable(false);
@@ -437,21 +435,23 @@ public class EditHUDScreen extends Screen {
                 groupUngroupButton.visible = true;
                 groupUngroupButton.active = true;
 
-                gapField.visible = true;
-                groupAlignmentButton.visible = true;
+                if (isMoreOptionActivated) {
+                    GroupedHUD hud = (GroupedHUD) firstHUD;
 
-                gapField.setEditable(true);
-                groupAlignmentButton.active = true;
+                    gapField.visible = true;
+                    groupAlignmentButton.visible = true;
 
-                GroupedHUD hud = (GroupedHUD) firstHUD;
+                    gapField.setEditable(true);
+                    groupAlignmentButton.active = true;
 
-                gapField.setText(
-                        Integer.toString(hud.groupSettings.gap)
-                );
+                    gapField.setText(
+                            Integer.toString(hud.groupSettings.gap)
+                    );
 
-                groupAlignmentButton.setMessage(Text.of(
-                        hud.groupSettings.alignVertical ? "Vertical" : "Horizontal"
-                ));
+                    groupAlignmentButton.setMessage(Text.of(
+                            hud.groupSettings.alignVertical ? "Vertical" : "Horizontal"
+                    ));
+                }
             } else {
                 groupUngroupButton.visible = false;
                 groupUngroupButton.active = false;
@@ -490,7 +490,7 @@ public class EditHUDScreen extends Screen {
         }
 
         if (gapField.isVisible()) {
-            context.drawText(CLIENT.textRenderer, "GAP:", gapField.getX() - 15 - 2 - 3, gapField.getY() + 6, 0xFFFFFFFF, true);
+            context.drawText(CLIENT.textRenderer, "GAP:", gapField.getX() - 20 - 3, gapField.getY() + 6, 0xFFFFFFFF, true);
         }
 
         if (dragSelection && hasMovedSincePress) {
@@ -1192,6 +1192,24 @@ public class EditHUDScreen extends Screen {
             xField.visible = true;
             yField.visible = true;
             scaleButton.visible = true;
+
+            if (canSelectedHUDUngroup) {
+                GroupedHUD hud = (GroupedHUD) selectedHUDs.getFirst();
+
+                gapField.visible = true;
+                groupAlignmentButton.visible = true;
+
+                gapField.setEditable(true);
+                groupAlignmentButton.active = true;
+
+                gapField.setText(
+                        Integer.toString(hud.groupSettings.gap)
+                );
+
+                groupAlignmentButton.setMessage(Text.of(
+                        hud.groupSettings.alignVertical ? "Vertical" : "Horizontal"
+                ));
+            }
         } else {
             alignmentXButton.visible = false;
             directionXButton.visible = false;
@@ -1200,6 +1218,9 @@ public class EditHUDScreen extends Screen {
             xField.visible = false;
             yField.visible = false;
             scaleButton.visible = false;
+
+            gapField.visible = false;
+            groupAlignmentButton.visible = false;
         }
     }
 
