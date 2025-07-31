@@ -26,28 +26,6 @@ public class HUDSettings {
     public HUDSettings() {
         groupedHuds.add(
                 new GroupedHUDSettings(
-                        new BaseHUDSettings(true, 5, 5, ScreenAlignmentX.LEFT, ScreenAlignmentY.TOP, GrowthDirectionX.RIGHT, GrowthDirectionY.DOWN),
-                        1,
-                        2,
-                        false,
-                        0xFFFFFF,
-                        new ArrayList<>(List.of(HUDId.X_COORDINATE, HUDId.Y_COORDINATE, HUDId.Z_COORDINATE))
-                )
-        );
-
-        groupedHuds.add(
-                new GroupedHUDSettings(
-                        new BaseHUDSettings(true, 0, 5, ScreenAlignmentX.CENTER, ScreenAlignmentY.TOP, GrowthDirectionX.CENTER, GrowthDirectionY.DOWN),
-                        2,
-                        2,
-                        false,
-                        0xFFFFFF,
-                        new ArrayList<>(List.of(HUDId.BIOME, HUDId.CLOCK_INGAME))
-                )
-        );
-
-        groupedHuds.add(
-                new GroupedHUDSettings(
                         new BaseHUDSettings(true, 5, 0, ScreenAlignmentX.LEFT, ScreenAlignmentY.MIDDLE, GrowthDirectionX.RIGHT, GrowthDirectionY.MIDDLE),
                         3,
                         1,
@@ -57,18 +35,20 @@ public class HUDSettings {
                 )
         );
 
-        groupedHuds.add(
-                new GroupedHUDSettings(
-                        new BaseHUDSettings(true, -5, -5, ScreenAlignmentX.RIGHT, ScreenAlignmentY.BOTTOM, GrowthDirectionX.LEFT, GrowthDirectionY.UP),
-                        4,
-                        2,
-                        false,
-                        0xFFFFFF,
-                        new ArrayList<>(List.of(HUDId.PING, HUDId.CLOCK_SYSTEM))
+        individualHudIds.addAll(
+                List.of(
+                        HUDId.FPS,
+                        HUDId.DIRECTION,
+                        HUDId.DAY,
+                        HUDId.INVENTORY,
+                        HUDId.EFFECT,
+                        HUDId.TARGETED_CROSSHAIR,
+                        HUDId.PING,
+                        HUDId.BIOME,
+                        HUDId.CLOCK_SYSTEM, HUDId.CLOCK_INGAME,
+                        HUDId.X_COORDINATE, HUDId.Y_COORDINATE, HUDId.Z_COORDINATE
                 )
         );
-
-        individualHudIds.addAll(List.of(HUDId.FPS, HUDId.DIRECTION, HUDId.DAY, HUDId.INVENTORY, HUDId.EFFECT, HUDId.TARGETED_CROSSHAIR));
     }
 
 

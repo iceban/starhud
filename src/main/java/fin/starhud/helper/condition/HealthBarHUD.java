@@ -1,7 +1,6 @@
 package fin.starhud.helper.condition;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.MathHelper;
 
@@ -25,7 +24,6 @@ public class HealthBarHUD {
 
     public static int getHeight() {
         PlayerEntity player = CLIENT.player;
-        if (player == null) return 0;
 
         float maxHealth = player.getMaxHealth();
         int absorption = MathHelper.ceil(player.getAbsorptionAmount());

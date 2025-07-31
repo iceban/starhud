@@ -62,7 +62,7 @@ public class TargetedCrosshairHUD extends AbstractHUD {
         return HUDId.TARGETED_CROSSHAIR;
     }
 
-    public static boolean shouldHUDRender() {
+    public static boolean isShown() {
 
         if (!TARGETED_CROSSHAIR_SETTINGS.base.shouldRender())
             return false;

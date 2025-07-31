@@ -28,11 +28,11 @@ public class BaseHUDSettings implements ConfigData {
     @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
     public ScreenAlignmentY originY;
 
-    @Comment("Which way should the HUD goes when a the texture increases? (Recommended to go the opposite way from Alignment)")
+    @Comment("Which way should the HUD goes when the length increases horizontally? (Recommended to go the opposite way from Alignment)")
     @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
     public GrowthDirectionX growthDirectionX;
 
-    @Comment("Which way should the HUD goes when a the texture increases? (Recommended to go the opposite way from Alignment)")
+    @Comment("Which way should the HUD goes when the length increases vertically? (Recommended to go the opposite way from Alignment)")
     @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
     public GrowthDirectionY growthDirectionY;
 
@@ -40,6 +40,7 @@ public class BaseHUDSettings implements ConfigData {
     @Comment("Set to 0 for default GUI Scale")
     public int scale = 0;
 
+    @Comment("Modify HUD Based on Conditions.")
     public List<ConditionalSettings> conditions = new ArrayList<>();
 
     public BaseHUDSettings(boolean shouldRender, int x, int y, ScreenAlignmentX originX, ScreenAlignmentY originY, GrowthDirectionX growthDirectionX, GrowthDirectionY growthDirectionY) {
