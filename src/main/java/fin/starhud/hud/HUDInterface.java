@@ -10,5 +10,5 @@ public interface HUDInterface {
 
     void update();
 
-    HUDId getId();
+    String getId();
 }

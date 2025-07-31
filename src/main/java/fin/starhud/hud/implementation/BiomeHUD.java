@@ -94,8 +94,8 @@ public class  BiomeHUD extends AbstractHUD {
     }
 
     @Override
-    public HUDId getId() {
-        return HUDId.BIOME;
+    public String getId() {
+        return HUDId.BIOME.getString();
     }
 
     @Override

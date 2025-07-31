@@ -39,8 +39,8 @@ public class DirectionHUD extends AbstractHUD {
     }
 
     @Override
-    public HUDId getId() {
-        return HUDId.DIRECTION;
+    public String getId() {
+        return HUDId.DIRECTION.getString();
     }
 
     private String yawStr;

@@ -7,8 +7,8 @@ import fin.starhud.hud.implementation.*;
 import net.minecraft.client.gui.DrawContext;
 import org.slf4j.Logger;
 
-import java.util.EnumMap;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class HUDComponent {
@@ -19,10 +19,10 @@ public class HUDComponent {
     private static final Logger LOGGER = Main.LOGGER;
 
     // Registered HUDs by ID
-    private final Map<HUDId, AbstractHUD> hudMap = new EnumMap<>(HUDId.class);
+    private final Map<String, AbstractHUD> hudMap = new HashMap<>();
 
     // Active HUDs (selected in config)
-    private final Map<HUDId, AbstractHUD> individualHUDs = new EnumMap<>(HUDId.class);
+    private final Map<String, AbstractHUD> individualHUDs = new HashMap<>();
     private final Map<String, GroupedHUD> groupedHUDs = new HashMap<>();
 
     private boolean renderInGameScreen = true;
@@ -67,11 +67,11 @@ public class HUDComponent {
         registerHUD(new EffectHUD());
     }
 
-    public Map<HUDId, AbstractHUD> getHudMap() {
+    public Map<String, AbstractHUD> getHudMap() {
         return hudMap;
     }
 
-    public Map<HUDId, AbstractHUD> getIndividualHUDs() {
+    public Map<String, AbstractHUD> getIndividualHUDs() {
         return individualHUDs;
     }
 
@@ -84,7 +84,7 @@ public class HUDComponent {
 
         individualHUDs.clear();
 
-        for (HUDId id : hudConfig.individualHudIds) {
+        for (String id : hudConfig.individualHudIds) {
             AbstractHUD hud = hudMap.get(id);
             hud.setGroupId(null);
             individualHUDs.put(id, hud);
@@ -103,8 +103,34 @@ public class HUDComponent {
         LOGGER.info("{} Added to Hud Map.", hud.getId());
     }
 
+    public AbstractHUD getHUD(String id) {
+        AbstractHUD hud = hudMap.get(id);
+        if (hud != null)
+            return hud;
+
+        hud = groupedHUDs.get(id);
+        if (hud != null)
+            return hud;
+
+        LOGGER.warn("No such group with id: {} existed in the map, creating new one if available in config", id);
+
+        List<GroupedHUDSettings> groupSettings = Main.settings.hudList.groupedHuds;
+        for (GroupedHUDSettings setting : groupSettings) {
+            System.out.println(setting.id);
+            if (id.equals(setting.id)) {
+                hud = new GroupedHUD(setting);
+                groupedHUDs.put(id, (GroupedHUD) hud);
+                return hud;
+            }
+        }
+
+        LOGGER.error("Group with ID: {} does not exist. returning null.", id);
+
+        return null;
+    }
+
     public AbstractHUD getHUD(HUDId id) {
-        return hudMap.get(id);
+        return hudMap.get(id.getString());
     }
 
     public void renderAll(DrawContext context) {
@@ -122,7 +148,7 @@ public class HUDComponent {
 
     private void renderGroupedHUDs(DrawContext context) {
         for (GroupedHUD group : groupedHUDs.values()) {
-            if (group.shouldRender())
+            if (!group.isInGroup() && group.shouldRender())
                 group.render(context);
         }
     }

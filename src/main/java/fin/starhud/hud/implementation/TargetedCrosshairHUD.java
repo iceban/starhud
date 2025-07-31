@@ -58,8 +58,8 @@ public class TargetedCrosshairHUD extends AbstractHUD {
     }
 
     @Override
-    public HUDId getId() {
-        return HUDId.TARGETED_CROSSHAIR;
+    public String getId() {
+        return HUDId.TARGETED_CROSSHAIR.getString();
     }
 
     public static boolean isShown() {

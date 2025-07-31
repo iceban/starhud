@@ -61,8 +61,8 @@ public class InventoryHUD extends AbstractHUD {
     }
 
     @Override
-    public HUDId getId() {
-        return HUDId.INVENTORY;
+    public String getId() {
+        return HUDId.INVENTORY.getString();
     }
 
     public InventoryHUD() {

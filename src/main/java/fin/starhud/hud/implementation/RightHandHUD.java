@@ -21,8 +21,8 @@ public class RightHandHUD extends AbstractHandHUD {
     }
 
     @Override
-    public HUDId getId() {
-        return HUDId.RIGHT_HAND;
+    public String getId() {
+        return HUDId.RIGHT_HAND.getString();
     }
 
     @Override

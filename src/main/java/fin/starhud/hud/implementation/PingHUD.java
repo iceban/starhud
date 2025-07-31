@@ -39,8 +39,8 @@ public class PingHUD extends AbstractHUD {
     }
 
     @Override
-    public HUDId getId() {
-        return HUDId.PING;
+    public String getId() {
+        return HUDId.PING.getString();
     }
 
     private String pingStr;

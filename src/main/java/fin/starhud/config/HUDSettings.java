@@ -13,12 +13,12 @@ import java.util.*;
 public class HUDSettings {
 
     @ConfigEntry.Gui.Excluded
-    public List<HUDId> individualHudIds = new ArrayList<>();
+    public List<String> individualHudIds = new ArrayList<>();
 
     @Comment("It's not recommended to modify grouped HUD directly on the configuration screen.")
     public List<GroupedHUDSettings> groupedHuds = new ArrayList<>();
 
-    public HUDSettings(List<HUDId> individualHudIds, List<GroupedHUDSettings> groupedHuds) {
+    public HUDSettings(List<String> individualHudIds, List<GroupedHUDSettings> groupedHuds) {
         this.individualHudIds = individualHudIds;
         this.groupedHuds = groupedHuds;
     }
@@ -31,22 +31,22 @@ public class HUDSettings {
                         1,
                         true,
                         0xFFFFFF,
-                        new ArrayList<>(List.of(HUDId.HELMET, HUDId.CHESTPLATE, HUDId.LEGGINGS, HUDId.BOOTS))
+                        new ArrayList<>(List.of(HUDId.HELMET.getString(), HUDId.CHESTPLATE.getString(), HUDId.LEGGINGS.getString(), HUDId.BOOTS.getString()))
                 )
         );
 
         individualHudIds.addAll(
                 List.of(
-                        HUDId.FPS,
-                        HUDId.DIRECTION,
-                        HUDId.DAY,
-                        HUDId.INVENTORY,
-                        HUDId.EFFECT,
-                        HUDId.TARGETED_CROSSHAIR,
-                        HUDId.PING,
-                        HUDId.BIOME,
-                        HUDId.CLOCK_SYSTEM, HUDId.CLOCK_INGAME,
-                        HUDId.X_COORDINATE, HUDId.Y_COORDINATE, HUDId.Z_COORDINATE
+                        HUDId.FPS.getString(),
+                        HUDId.DIRECTION.getString(),
+                        HUDId.DAY.getString(),
+                        HUDId.INVENTORY.getString(),
+                        HUDId.EFFECT.getString(),
+                        HUDId.TARGETED_CROSSHAIR.getString(),
+                        HUDId.PING.getString(),
+                        HUDId.BIOME.getString(),
+                        HUDId.CLOCK_SYSTEM.getString(), HUDId.CLOCK_INGAME.getString(),
+                        HUDId.X_COORDINATE.getString(), HUDId.Y_COORDINATE.getString(), HUDId.Z_COORDINATE.getString()
                 )
         );
     }
@@ -54,20 +54,20 @@ public class HUDSettings {
 
     public void onConfigSaved() {
         // count appearances of each HUD ID
-        Map<HUDId, Integer> appearanceMap = new EnumMap<>(HUDId.class);
+        Map<String, Integer> appearanceMap = new HashMap<>();
 
-        for (HUDId id : individualHudIds) {
+        for (String id : individualHudIds) {
             appearanceMap.put(id, appearanceMap.getOrDefault(id, 0) + 1);
         }
 
         for (GroupedHUDSettings group : groupedHuds) {
-            for (HUDId id : group.hudIds) {
+            for (String id : group.hudIds) {
                 appearanceMap.put(id, appearanceMap.getOrDefault(id, 0) + 1);
             }
         }
 
-        for (Map.Entry<HUDId, Integer> entry : appearanceMap.entrySet()) {
-            HUDId id = entry.getKey();
+        for (Map.Entry<String, Integer> entry : appearanceMap.entrySet()) {
+            String id = entry.getKey();
             int count = entry.getValue();
 
             if (count == 1) continue;
@@ -89,14 +89,14 @@ public class HUDSettings {
         }
 
         // this ensures that every hudIds that isn't found in groupedhud to be put in individual hud.
-        Set<HUDId> allRepresentedIds = new HashSet<>(individualHudIds);
+        Set<String> allRepresentedIds = new HashSet<>(individualHudIds);
         for (GroupedHUDSettings group : groupedHuds) {
             allRepresentedIds.addAll(group.hudIds);
         }
 
         for (HUDId id : HUDId.values()) {
-            if (!allRepresentedIds.contains(id)) {
-                individualHudIds.add(id);
+            if (!allRepresentedIds.contains(id.getString())) {
+                individualHudIds.add(id.getString());
             }
         }
     }

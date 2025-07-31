@@ -20,8 +20,8 @@ public class LeggingsHUD extends AbstractArmorHUD {
     }
 
     @Override
-    public HUDId getId() {
-        return HUDId.LEGGINGS;
+    public String getId() {
+        return HUDId.LEGGINGS.getString();
     }
 
 }

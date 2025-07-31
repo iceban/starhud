@@ -24,7 +24,7 @@ public class ZCoordinateHUD extends AbstractCoordinateHUD {
     }
 
     @Override
-    public HUDId getId() {
-        return HUDId.Z_COORDINATE;
+    public String getId() {
+        return HUDId.Z_COORDINATE.getString();
     }
 }

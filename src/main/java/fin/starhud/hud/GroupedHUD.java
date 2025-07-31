@@ -5,10 +5,7 @@ import fin.starhud.config.GroupedHUDSettings;
 import net.minecraft.client.gui.DrawContext;
 import org.slf4j.Logger;
 
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 public class GroupedHUD extends AbstractHUD {
@@ -22,11 +19,18 @@ public class GroupedHUD extends AbstractHUD {
         super(groupSettings.base);
         this.groupSettings = groupSettings;
 
-        for (HUDId id : groupSettings.hudIds) {
+        List<String> invalidIds = new ArrayList<>();
+
+        for (String id : groupSettings.hudIds) {
             AbstractHUD hud = HUDComponent.getInstance().getHUD(id);
-            huds.add(hud);
-            hud.setGroupId(this.groupSettings.id);
+            if (hud == null) {
+                invalidIds.add(id);
+            } else {
+                huds.add(hud);
+                hud.setGroupId(this.groupSettings.id);
+            }
         }
+        groupSettings.hudIds.removeAll(invalidIds);
     }
 
     @Override
@@ -36,10 +40,12 @@ public class GroupedHUD extends AbstractHUD {
 
         StringBuilder name = new StringBuilder();
 
-        for (AbstractHUD hud : huds)
-            name.append(hud.getName()).append(' ');
+        name.append("(");
 
-        name.deleteCharAt(name.length() - 1);
+        for (AbstractHUD hud : huds)
+            name.append(hud.getName()).append(',');
+
+        name.deleteCharAt(name.length() - 1).append(')');
 
         return name.toString();
     }
@@ -47,7 +53,7 @@ public class GroupedHUD extends AbstractHUD {
     private int width;
     private int height;
 
-    private final Map<HUDId, Boolean> shouldRenders = new EnumMap<>(HUDId.class);
+    private final Map<String, Boolean> shouldRenders = new HashMap<>();
 
     @Override
     public boolean collectHUDInformation() {
@@ -58,7 +64,7 @@ public class GroupedHUD extends AbstractHUD {
 
         for (AbstractHUD hud : huds) {
             if (!hud.shouldRender() || !hud.collectHUDInformation()) {
-                shouldRenders.put(hud.getId(), false);
+                shouldRenders.put(hud.getId().toString(), false);
                 continue;
             }
 
@@ -72,7 +78,7 @@ public class GroupedHUD extends AbstractHUD {
                 height = Math.max(height, hud.getHeight());
             }
 
-            shouldRenders.put(hud.getId(), true);
+            shouldRenders.put(hud.getId().toString(), true);
         }
 
         if (renderedCount > 0) {
@@ -92,8 +98,8 @@ public class GroupedHUD extends AbstractHUD {
 
     @Override
     public boolean renderHUD(DrawContext context, int x, int y) {
-        x -= getSettings().getGrowthDirectionHorizontal(width);
-        y -= getSettings().getGrowthDirectionVertical(height);
+        x -= getGrowthDirectionHorizontal(width);
+        y -= getGrowthDirectionVertical(height);
 
         setBoundingBox(x, y, width, height);
 
@@ -124,12 +130,7 @@ public class GroupedHUD extends AbstractHUD {
     }
 
     @Override
-    public HUDId getId() {
-        return null;
-    }
-
-    @Override
-    public String getGroupId() {
+    public String getId() {
         return groupSettings.id;
     }
 
@@ -153,7 +154,7 @@ public class GroupedHUD extends AbstractHUD {
             hud.setGroupId(null);
         huds.clear();
 
-        for (HUDId id : groupSettings.hudIds) {
+        for (String id : groupSettings.hudIds) {
             AbstractHUD hud = HUDComponent.getInstance().getHUD(id);
 
             huds.add(hud);

@@ -55,8 +55,8 @@ public class EffectHUD extends AbstractHUD {
     }
 
     @Override
-    public HUDId getId() {
-        return HUDId.EFFECT;
+    public String getId() {
+        return HUDId.EFFECT.getString();
     }
 
     @Override

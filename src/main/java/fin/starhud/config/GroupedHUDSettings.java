@@ -23,7 +23,7 @@ public class GroupedHUDSettings {
     public int boxColor = 0xFFFFFF;
 
     @ConfigEntry.Gui.Excluded
-    public List<HUDId> hudIds = new ArrayList<>();
+    public List<String> hudIds = new ArrayList<>();
 
     @ConfigEntry.Gui.Excluded
     public String id;
@@ -33,7 +33,7 @@ public class GroupedHUDSettings {
         this.id = HUDComponent.getInstance().generateNextGroupId();
     }
 
-    public GroupedHUDSettings(BaseHUDSettings base, String id, int gap, boolean alignVertical, int boxColor, List<HUDId> hudIds) {
+    public GroupedHUDSettings(BaseHUDSettings base, String id, int gap, boolean alignVertical, int boxColor, List<String> hudIds) {
         this.base = base;
         this.id = id;
         this.gap = gap;
@@ -42,7 +42,7 @@ public class GroupedHUDSettings {
         this.hudIds = hudIds;
     }
 
-    public GroupedHUDSettings(BaseHUDSettings base, int id, int gap, boolean alignVertical, int boxColor, List<HUDId> hudIds) {
+    public GroupedHUDSettings(BaseHUDSettings base, int id, int gap, boolean alignVertical, int boxColor, List<String> hudIds) {
         this.base = base;
         this.id = "group_" + id;
         this.gap = gap;

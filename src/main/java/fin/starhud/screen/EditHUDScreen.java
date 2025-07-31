@@ -41,13 +41,13 @@ public class EditHUDScreen extends Screen {
 
     public Screen parent;
 
-    private final Map<HUDId, AbstractHUD> individualHUDs;
+    private final Map<String, AbstractHUD> individualHUDs;
     private final Map<String, GroupedHUD> groupedHUDs;
 
-    private final Map<HUDId, BaseHUDSettings> oldHUDSettings;
+    private final Map<String, BaseHUDSettings> oldHUDSettings;
     private final Map<String, GroupedHUDSettings> oldGroupedHUDSettings;
 
-    private final List<HUDId> oldIndividualHudIds;
+    private final List<String> oldIndividualHudIds;
     private final List<GroupedHUDSettings> oldGroupedHUDs;
 
     private boolean dragging = false;
@@ -107,7 +107,7 @@ public class EditHUDScreen extends Screen {
         individualHUDs = HUDComponent.getInstance().getIndividualHUDs();
         groupedHUDs = HUDComponent.getInstance().getGroupedHUDs();
 
-        Map<HUDId, AbstractHUD> HUDMap = HUDComponent.getInstance().getHudMap();
+        Map<String, AbstractHUD> HUDMap = HUDComponent.getInstance().getHudMap();
 
         oldHUDSettings = new HashMap<>();
         for (AbstractHUD p : HUDMap.values()) {
@@ -119,10 +119,10 @@ public class EditHUDScreen extends Screen {
         for (GroupedHUD p : groupedHUDs.values()) {
             BaseHUDSettings settings = p.getSettings();
             oldGroupedHUDSettings.put(
-                    p.getGroupId(),
+                    p.getId(),
                     new GroupedHUDSettings(
                             new BaseHUDSettings(settings.x, settings.y, settings.originX, settings.originY, settings.growthDirectionX, settings.growthDirectionY, settings.scale),
-                            p.getGroupId(),
+                            p.getId(),
                             p.groupSettings.gap,
                             p.groupSettings.alignVertical,
                             p.groupSettings.boxColor,
@@ -424,7 +424,7 @@ public class EditHUDScreen extends Screen {
             groupAlignmentButton.visible = false;
 
             canSelectedHUDUngroup =  (selectedHUDs.size() == 1 && firstHUD instanceof GroupedHUD);
-            canSelectedHUDsGroup = (selectedHUDs.size() > 1 && selectedHUDs.stream().noneMatch(hud -> hud instanceof GroupedHUD || hud instanceof EffectHUD));
+            canSelectedHUDsGroup = (selectedHUDs.size() > 1 && selectedHUDs.stream().noneMatch(hud -> hud instanceof EffectHUD));
 
             if (canSelectedHUDsGroup) {
                 groupUngroupButton.setMessage(Text.of("Group"));
@@ -523,7 +523,8 @@ public class EditHUDScreen extends Screen {
         }
 
         for (AbstractHUD hud : groupedHUDs.values()) {
-            renderHUD(context, hud, mouseX, mouseY);
+            if (!hud.isInGroup())
+                renderHUD(context, hud, mouseX, mouseY);
         }
     }
 
@@ -644,9 +645,9 @@ public class EditHUDScreen extends Screen {
 
     private AbstractHUD getHUDAtPosition(double mouseX, double mouseY) {
         for (AbstractHUD hud : groupedHUDs.values()) {
-            if (isHUDClickable(hud, mouseX, mouseY)) {
-                return hud;
-            }
+            if (!hud.isInGroup())
+                if (isHUDClickable(hud, mouseX, mouseY))
+                    return hud;
         }
 
         for (AbstractHUD hud : individualHUDs.values()) {
@@ -1095,7 +1096,7 @@ public class EditHUDScreen extends Screen {
 
 
     private boolean isDirty() {
-        List<HUDId> individualIds = Main.settings.hudList.individualHudIds;
+        List<String> individualIds = Main.settings.hudList.individualHudIds;
         List<GroupedHUDSettings> groupedHUDs = Main.settings.hudList.groupedHuds;
 
         if (!individualIds.equals(oldIndividualHudIds))
@@ -1132,7 +1133,7 @@ public class EditHUDScreen extends Screen {
 
         for (HUDId id : HUDId.values()) {
             AbstractHUD hud = HUDComponent.getInstance().getHUD(id);
-            BaseHUDSettings original = oldHUDSettings.get(id);
+            BaseHUDSettings original = oldHUDSettings.get(id.getString());
             if (original != null) {
                 hud.getSettings().copySettings(original);
 //                LOGGER.info("Reverting {} Settings", hud.getName());
@@ -1231,7 +1232,7 @@ public class EditHUDScreen extends Screen {
         GroupedHUDSettings newSettings = new GroupedHUDSettings();
 
         List<GroupedHUDSettings> groupedHUDs = Main.settings.hudList.groupedHuds;
-        List<HUDId> individualHUDs = Main.settings.hudList.individualHudIds;
+        List<String> individualHUDs = Main.settings.hudList.individualHudIds;
 
         // remove hud from individualHUDs, and add hud to the group via settings.
         for (AbstractHUD hud : huds) {
@@ -1239,7 +1240,8 @@ public class EditHUDScreen extends Screen {
                 throw new IllegalStateException("HUD " + hud.getId() + " is already in a group.");
             }
 
-            individualHUDs.remove(hud.getId());
+            if (!(hud instanceof GroupedHUD))
+                individualHUDs.remove(hud.getId());
             newSettings.hudIds.add(hud.getId());
             hud.setGroupId(newSettings.id);
 
@@ -1259,10 +1261,11 @@ public class EditHUDScreen extends Screen {
         List<AbstractHUD> huds = groupedHUD.huds;
 
         List<GroupedHUDSettings> groupedHUDs = Main.settings.hudList.groupedHuds;
-        List<HUDId> individualHUDs = Main.settings.hudList.individualHudIds;
+        List<String> individualHUDs = Main.settings.hudList.individualHudIds;
 
         for (AbstractHUD hud : huds) {
-            individualHUDs.add(hud.getId());
+            if (!(hud instanceof GroupedHUD))
+                individualHUDs.add(hud.getId());
             hud.setGroupId(null);
 //            LOGGER.info("{} removed from {}", hud.getName(), groupedHUD.groupSettings.id);
         }
