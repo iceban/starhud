@@ -61,11 +61,11 @@ public class EditHUDScreen extends Screen {
     // widgets
     private TextFieldWidget xField;
     private TextFieldWidget yField;
+    private TextFieldWidget scaleField;
     private ButtonWidget alignmentXButton;
     private ButtonWidget alignmentYButton;
     private ButtonWidget directionXButton;
     private ButtonWidget directionYButton;
-    private ButtonWidget scaleButton;
 
     // special group buttons
     private TextFieldWidget gapField;
@@ -112,7 +112,7 @@ public class EditHUDScreen extends Screen {
         oldHUDSettings = new HashMap<>();
         for (AbstractHUD p : HUDMap.values()) {
             BaseHUDSettings settings = p.getSettings();
-            oldHUDSettings.put(p.getId(), new BaseHUDSettings(settings.x, settings.y, settings.originX, settings.originY, settings.growthDirectionX, settings.growthDirectionY, settings.scale));
+            oldHUDSettings.put(p.getId(), new BaseHUDSettings(settings.x, settings.y, settings.originX, settings.originY, settings.growthDirectionX, settings.growthDirectionY, settings.getScale()));
         }
 
         oldGroupedHUDSettings = new HashMap<>();
@@ -121,7 +121,7 @@ public class EditHUDScreen extends Screen {
             oldGroupedHUDSettings.put(
                     p.getId(),
                     new GroupedHUDSettings(
-                            new BaseHUDSettings(settings.x, settings.y, settings.originX, settings.originY, settings.growthDirectionX, settings.growthDirectionY, settings.scale),
+                            new BaseHUDSettings(settings.x, settings.y, settings.originX, settings.originY, settings.growthDirectionX, settings.growthDirectionY, settings.getScale()),
                             p.getId(),
                             p.groupSettings.gap,
                             p.groupSettings.alignVertical,
@@ -160,6 +160,16 @@ public class EditHUDScreen extends Screen {
                 Text.of("Y")
         );
 
+        int scaleFieldWidth = SQUARE_WIDGET_LENGTH + 6;
+        scaleField = new TextFieldWidget(
+                CLIENT.textRenderer,
+                CENTER_X - (scaleFieldWidth / 2),
+                CENTER_Y - PADDING * 2,
+                scaleFieldWidth,
+                SQUARE_WIDGET_LENGTH,
+                Text.of("Scale")
+        );
+
         alignmentXButton = ButtonWidget.builder(
                 Text.of("X Alignment: N/A"),
                 button -> {
@@ -183,17 +193,6 @@ public class EditHUDScreen extends Screen {
                     alignmentYButton.setMessage(Text.of("Y Alignment: " + selectedHUD.getSettings().originY));
                 }
         ).dimensions(CENTER_X + (SQUARE_WIDGET_LENGTH / 2) + GAP, CENTER_Y - PADDING * 2, WIDGET_WIDTH, WIDGET_HEIGHT).build();
-
-        scaleButton = ButtonWidget.builder(
-                Text.of("N/A"),
-                button -> {
-                    if (selectedHUDs.isEmpty()) return;
-                    AbstractHUD selectedHUD = selectedHUDs.getFirst();
-                    selectedHUD.getSettings().scale = (selectedHUD.getSettings().scale + 1) % 7;
-                    selectedHUD.update();
-                    scaleButton.setMessage(Text.of(Integer.toString(selectedHUD.getSettings().scale)));
-                }
-        ).tooltip(Tooltip.of(Text.of("Scale"))).dimensions(CENTER_X - (SQUARE_WIDGET_LENGTH / 2), CENTER_Y - PADDING * 2, SQUARE_WIDGET_LENGTH, SQUARE_WIDGET_LENGTH).build();
 
         directionXButton = ButtonWidget.builder(
                 Text.of("X Direction: N/A"),
@@ -235,9 +234,20 @@ public class EditHUDScreen extends Screen {
             } catch (NumberFormatException ignored) {}
         });
 
+        scaleField.setTooltip(Tooltip.of(Text.of("HUD Scale (Set to 0 for default)")));
+        scaleField.setChangedListener(text -> {
+            if (selectedHUDs.isEmpty()) return;
+            AbstractHUD selectedHUD = selectedHUDs.getFirst();
+            try {
+                selectedHUD.getSettings().scale = Float.parseFloat(text);
+                selectedHUD.update();
+            } catch (NumberFormatException ignored) {}
+        });
+
         int yBottom = this.height - SQUARE_WIDGET_LENGTH - GAP;
 
-        int xConfigScreenButton = CENTER_X - (SQUARE_WIDGET_LENGTH / 2);
+        int configScreenLength = SQUARE_WIDGET_LENGTH;
+        int xConfigScreenButton = CENTER_X - (configScreenLength / 2);
         ButtonWidget configScreenButton = ButtonWidget.builder(
                         Text.of("🛠"),
                         button -> {
@@ -247,10 +257,10 @@ public class EditHUDScreen extends Screen {
                         }
                 )
                 .tooltip(Tooltip.of(Text.of("Open Configuration Screen")))
-                .dimensions(xConfigScreenButton, yBottom, SQUARE_WIDGET_LENGTH, SQUARE_WIDGET_LENGTH)
+                .dimensions(xConfigScreenButton, CENTER_Y - PADDING, configScreenLength, configScreenLength)
                 .build();
 
-        int xHelpButton = xConfigScreenButton - GAP - SQUARE_WIDGET_LENGTH;
+        int xHelpButton = CENTER_X - (GAP/2) - SQUARE_WIDGET_LENGTH;
         ButtonWidget helpButton = ButtonWidget.builder(
                 Text.of("?"),
                 button -> {
@@ -262,7 +272,7 @@ public class EditHUDScreen extends Screen {
                 .dimensions(xHelpButton, yBottom, SQUARE_WIDGET_LENGTH, SQUARE_WIDGET_LENGTH)
                 .build();
 
-        int xMoreOptionButton = xConfigScreenButton + SQUARE_WIDGET_LENGTH + GAP;
+        int xMoreOptionButton = CENTER_X + (GAP/2);
         ButtonWidget moreOptionButton = ButtonWidget.builder(
                 Text.of("+"),
                 button -> {
@@ -276,15 +286,19 @@ public class EditHUDScreen extends Screen {
 
         int terminatorWidth = 70;
         int xSaveAndQuitButton = xMoreOptionButton + GAP + SQUARE_WIDGET_LENGTH;
-        addDrawableChild(ButtonWidget.builder(Text.of("Save & Quit"), button -> {
-            AutoConfig.getConfigHolder(Settings.class).save();
-            onClose();
-        }).dimensions(xSaveAndQuitButton, yBottom, terminatorWidth, WIDGET_HEIGHT).build());
+        ButtonWidget saveAndQuitButton = ButtonWidget.builder(
+                Text.of("Save & Quit"),
+                button -> {
+                    AutoConfig.getConfigHolder(Settings.class).save();
+                    onClose();
+        }).dimensions(xSaveAndQuitButton, yBottom, terminatorWidth, WIDGET_HEIGHT).build();
 
         int xCancelButton = xHelpButton - GAP - terminatorWidth;
-        addDrawableChild(ButtonWidget.builder(Text.of("Cancel"), button -> {
-            close();
-        }).dimensions(xCancelButton, yBottom, terminatorWidth, WIDGET_HEIGHT).build());
+
+        ButtonWidget cancelButton = ButtonWidget.builder(
+                Text.of("Cancel"),
+                button -> close()
+        ).dimensions(xCancelButton, yBottom, terminatorWidth, WIDGET_HEIGHT).build();
 
         // special case: grouped hud buttons
 
@@ -343,43 +357,49 @@ public class EditHUDScreen extends Screen {
         directionYButton.visible = false;
         xField.visible = false;
         yField.visible = false;
-        scaleButton.visible = false;
+        scaleField.visible = false;
 
         gapField.visible = false;
         groupAlignmentButton.visible = false;
 
+        addDrawableChild(cancelButton);
         addDrawableChild(helpButton);
         addDrawableChild(moreOptionButton);
-        addDrawableChild(configScreenButton);
+        addDrawableChild(saveAndQuitButton);
 
-        addDrawableChild(gapField);
-        addDrawableChild(groupAlignmentButton);
-        addDrawableChild(groupUngroupButton);
-
-        addDrawableChild(alignmentXButton);
-        addDrawableChild(alignmentYButton);
         addDrawableChild(directionXButton);
         addDrawableChild(directionYButton);
-        addDrawableChild(scaleButton);
+
+        addDrawableChild(alignmentXButton);
+        addDrawableChild(scaleField);
+        addDrawableChild(alignmentYButton);
+
         addDrawableChild(xField);
+        addDrawableChild(configScreenButton);
         addDrawableChild(yField);
+
+        addDrawableChild(gapField);
+        addDrawableChild(groupUngroupButton);
+        addDrawableChild(groupAlignmentButton);
 
         updateFieldsFromSelectedHUD();
     }
 
     private void updateFieldsFromSelectedHUD() {
+        super.setFocused(null);
+
         if (selectedHUDs.isEmpty()) {
             xField.setEditable(false);
             yField.setEditable(false);
+            scaleField.setEditable(false);
             xField.setText("N/A");
             yField.setText("N/A");
+            scaleField.setText("N/A");
 
             alignmentXButton.setMessage(Text.of("X Alignment: N/A"));
             directionXButton.setMessage(Text.of("X Direction: N/A"));
             alignmentYButton.setMessage(Text.of("Y Alignment: N/A"));
             directionYButton.setMessage(Text.of("Y Direction: N/A"));
-
-            scaleButton.setMessage(Text.of("N/A"));
 
             gapField.setText("N/A");
             groupAlignmentButton.setMessage(Text.of("N/A"));
@@ -393,7 +413,6 @@ public class EditHUDScreen extends Screen {
             directionXButton.active = false;
             alignmentYButton.active = false;
             directionYButton.active = false;
-            scaleButton.active = false;
 
             groupUngroupButton.active = false;
             groupUngroupButton.visible = false;
@@ -405,18 +424,18 @@ public class EditHUDScreen extends Screen {
             BaseHUDSettings settings = firstHUD.getSettings();
             xField.setText(String.valueOf(settings.x));
             yField.setText(String.valueOf(settings.y));
+            scaleField.setText(String.valueOf(settings.getScale()));
 
             alignmentXButton.setMessage(Text.of("X Alignment: " + settings.originX));
             directionXButton.setMessage(Text.of("X Direction: " + settings.growthDirectionX));
             alignmentYButton.setMessage(Text.of("Y Alignment: " + settings.originY));
             directionYButton.setMessage(Text.of("Y Direction: " + settings.growthDirectionY));
-            scaleButton.setMessage(Text.of(Integer.toString(settings.scale)));
 
             alignmentXButton.active = true;
             directionXButton.active = true;
             alignmentYButton.active = true;
             directionYButton.active = true;
-            scaleButton.active = true;
+            scaleField.setEditable(true);
             xField.setEditable(true);
             yField.setEditable(true);
 
@@ -464,7 +483,7 @@ public class EditHUDScreen extends Screen {
                 directionYButton.visible = true;
                 xField.visible = true;
                 yField.visible = true;
-                scaleButton.visible = true;
+                scaleField.visible = true;
             }
         }
     }
@@ -553,7 +572,7 @@ public class EditHUDScreen extends Screen {
         int width = boundingBox.getWidth();
         int height = boundingBox.getHeight();
         int color = boundingBox.getColor();
-        int scale = hud.getSettings().scale;
+        float scale = hud.getSettings().getScale();
         int selectedColor = SETTINGS.selectedBoxColor | 0x80000000;
         int selectedGroupColor = SETTINGS.selectedGroupBoxColor | 0x80000000;
 
@@ -665,7 +684,7 @@ public class EditHUDScreen extends Screen {
         Box boundingBox = hud.getBoundingBox();
         if (boundingBox.isEmpty()) return false;
 
-        int scale = hud.getSettings().scale;
+        float scale = hud.getSettings().getScale();
         return isHovered(
                 boundingBox.getX(),
                 boundingBox.getY(),
@@ -932,8 +951,15 @@ public class EditHUDScreen extends Screen {
         updateFieldsFromSelectedHUD();
     }
 
+    public boolean isTextFieldsFocused() {
+        return xField.isFocused() || yField.isFocused() || gapField.isFocused() || scaleField.isFocused();
+    }
+
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        if (isTextFieldsFocused())
+            return super.keyPressed(keyCode, scanCode, modifiers);
+
         if (!dragSelection && !dragging) {
 
             boolean handled = false;
@@ -1043,15 +1069,17 @@ public class EditHUDScreen extends Screen {
             }
 
             case GLFW.GLFW_KEY_MINUS ->  {
-                if (!isShift && !yField.isFocused() && !xField.isFocused() && gapField.isFocused()) {
-                    settings.scale = (settings.scale + 6) % 7;
+                if (!isShift) {
+                    if (settings.scale <= 0) break;
+
+                    settings.scale -= 1;
                     handled = true;
                 }
             }
 
             case GLFW.GLFW_KEY_EQUAL ->  {
-                if (isShift && !yField.isFocused() && !xField.isFocused() && gapField.isFocused()) {
-                    settings.scale = (settings.scale + 1) % 7;
+                if (isShift) {
+                    settings.scale += 1;
                     handled = true;
                 }
             }
@@ -1065,7 +1093,7 @@ public class EditHUDScreen extends Screen {
         return handled;
     }
 
-    public boolean isHovered(int x, int y, int width, int height, int mouseX, int mouseY, int HUDScale) {
+    public boolean isHovered(int x, int y, int width, int height, int mouseX, int mouseY, float HUDScale) {
         float scale = HUDScale == 0 ? 1 : (float) CLIENT.getWindow().getScaleFactor() / HUDScale;
         int scaledMouseX = (int) (mouseX * scale);
         int scaledMouseY = (int) (mouseY * scale);
@@ -1076,7 +1104,7 @@ public class EditHUDScreen extends Screen {
     private boolean intersectsBox(int x1, int y1, int x2, int y2, AbstractHUD hud) {
         Box box = hud.getBoundingBox();
 
-        float scale = hud.getSettings().scale == 0 ? 1.0f : (float) MinecraftClient.getInstance().getWindow().getScaleFactor() / hud.getSettings().scale;
+        float scale = hud.getSettings().getScale() == 0 ? 1.0f : (float) MinecraftClient.getInstance().getWindow().getScaleFactor() / hud.getSettings().getScale();
 
         int scaledX1 = (int) (x1 * scale);
         int scaledY1 = (int) (y1 * scale);
@@ -1192,7 +1220,7 @@ public class EditHUDScreen extends Screen {
             directionYButton.visible = true;
             xField.visible = true;
             yField.visible = true;
-            scaleButton.visible = true;
+            scaleField.visible = true;
 
             if (canSelectedHUDUngroup) {
                 GroupedHUD hud = (GroupedHUD) selectedHUDs.getFirst();
@@ -1218,7 +1246,7 @@ public class EditHUDScreen extends Screen {
             directionYButton.visible = false;
             xField.visible = false;
             yField.visible = false;
-            scaleButton.visible = false;
+            scaleField.visible = false;
 
             gapField.visible = false;
             groupAlignmentButton.visible = false;

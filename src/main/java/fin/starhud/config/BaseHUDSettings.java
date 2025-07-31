@@ -36,9 +36,8 @@ public class BaseHUDSettings implements ConfigData {
     @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
     public GrowthDirectionY growthDirectionY;
 
-    @ConfigEntry.BoundedDiscrete(max = 6)
-    @Comment("Set to 0 for default GUI Scale")
-    public int scale = 0;
+    @Comment("Set to 0 or below for default GUI Scale")
+    public float scale = 0;
 
     @Comment("Modify HUD Based on Conditions.")
     public List<ConditionalSettings> conditions = new ArrayList<>();
@@ -53,7 +52,7 @@ public class BaseHUDSettings implements ConfigData {
         this.growthDirectionY = growthDirectionY;
     }
 
-    public BaseHUDSettings(int x, int y, ScreenAlignmentX originX, ScreenAlignmentY originY, GrowthDirectionX growthDirectionX, GrowthDirectionY growthDirectionY, int scale) {
+    public BaseHUDSettings(int x, int y, ScreenAlignmentX originX, ScreenAlignmentY originY, GrowthDirectionX growthDirectionX, GrowthDirectionY growthDirectionY, float scale) {
         this(true, x , y, originX, originY, growthDirectionX, growthDirectionY);
         this.scale = scale;
     }
@@ -128,7 +127,9 @@ public class BaseHUDSettings implements ConfigData {
         return originY;
     }
 
-    public int getScale() {
+    public float getScale() {
+        if (scale < 0)
+            scale = 0;
         return scale;
     }
 
@@ -194,7 +195,7 @@ public class BaseHUDSettings implements ConfigData {
     // get the scaled factor
     // this can either make your HUD bigger or smaller.
     public float getScaledFactor() {
-        return this.getScale() == 0 ? 1 : (float) MinecraftClient.getInstance().getWindow().getScaleFactor() / this.getScale();
+        return this.getScale() <= 0 ? 1 : (float) MinecraftClient.getInstance().getWindow().getScaleFactor() / this.getScale();
     }
 
     // this shifts your HUD based on your x point, and alignment on X axis, and place them accordingly in your screen.

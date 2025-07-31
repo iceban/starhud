@@ -5,7 +5,6 @@ import fin.starhud.helper.GrowthDirectionY;
 import fin.starhud.helper.ScreenAlignmentX;
 import fin.starhud.helper.ScreenAlignmentY;
 import fin.starhud.hud.HUDComponent;
-import fin.starhud.hud.HUDId;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
 
 import java.util.ArrayList;

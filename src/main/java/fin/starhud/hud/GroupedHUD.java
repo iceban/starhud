@@ -5,7 +5,10 @@ import fin.starhud.config.GroupedHUDSettings;
 import net.minecraft.client.gui.DrawContext;
 import org.slf4j.Logger;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 public class GroupedHUD extends AbstractHUD {
@@ -64,7 +67,7 @@ public class GroupedHUD extends AbstractHUD {
 
         for (AbstractHUD hud : huds) {
             if (!hud.shouldRender() || !hud.collectHUDInformation()) {
-                shouldRenders.put(hud.getId().toString(), false);
+                shouldRenders.put(hud.getId(), false);
                 continue;
             }
 
@@ -78,7 +81,7 @@ public class GroupedHUD extends AbstractHUD {
                 height = Math.max(height, hud.getHeight());
             }
 
-            shouldRenders.put(hud.getId().toString(), true);
+            shouldRenders.put(hud.getId(), true);
         }
 
         if (renderedCount > 0) {
