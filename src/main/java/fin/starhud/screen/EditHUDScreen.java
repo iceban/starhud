@@ -912,7 +912,7 @@ public class EditHUDScreen extends Screen {
         }
 
         for (AbstractHUD hud : groupedHUDs.values()) {
-            if (hud.shouldRender() && !hud.getBoundingBox().isEmpty()) {
+            if (!hud.isInGroup() && hud.shouldRender() && !hud.getBoundingBox().isEmpty()) {
                 if (intersectsBox(x1, y1, x2, y2, hud)) {
                     boxSelectedHUDs.add(hud);
                 }
