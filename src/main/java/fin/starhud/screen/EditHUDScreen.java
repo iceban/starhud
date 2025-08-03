@@ -10,7 +10,6 @@ import fin.starhud.hud.AbstractHUD;
 import fin.starhud.hud.GroupedHUD;
 import fin.starhud.hud.HUDComponent;
 import fin.starhud.hud.HUDId;
-import fin.starhud.hud.implementation.EffectHUD;
 import me.shedaniel.autoconfig.AutoConfig;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
@@ -443,7 +442,7 @@ public class EditHUDScreen extends Screen {
             groupAlignmentButton.visible = false;
 
             canSelectedHUDUngroup =  (selectedHUDs.size() == 1 && firstHUD instanceof GroupedHUD);
-            canSelectedHUDsGroup = (selectedHUDs.size() > 1 && selectedHUDs.stream().noneMatch(hud -> hud instanceof EffectHUD));
+            canSelectedHUDsGroup = (selectedHUDs.size() > 1);
 
             if (canSelectedHUDsGroup) {
                 groupUngroupButton.setMessage(Text.of("Group"));
@@ -581,7 +580,7 @@ public class EditHUDScreen extends Screen {
             context.fill(x, y, x + width, y + height, (color & 0x00FFFFFF) | 0x80000000);
         }
         if (selectedHUDs.contains(hud)) {
-            if (hud instanceof GroupedHUD || hud instanceof EffectHUD) // effect hud is a special case.
+            if (hud instanceof GroupedHUD)
                 context.fill(x, y, x + width, y + height, selectedGroupColor);
             else
                 context.fill(x, y, x + width, y + height, selectedColor);
@@ -1161,7 +1160,7 @@ public class EditHUDScreen extends Screen {
 
         for (HUDId id : HUDId.values()) {
             AbstractHUD hud = HUDComponent.getInstance().getHUD(id);
-            BaseHUDSettings original = oldHUDSettings.get(id.getString());
+            BaseHUDSettings original = oldHUDSettings.get(id.toString());
             if (original != null) {
                 hud.getSettings().copySettings(original);
 //                LOGGER.info("Reverting {} Settings", hud.getName());

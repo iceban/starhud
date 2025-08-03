@@ -21,6 +21,6 @@ public class HelmetHUD extends AbstractArmorHUD {
 
     @Override
     public String getId() {
-        return HUDId.HELMET.getString();
+        return HUDId.HELMET.toString();
     }
 }

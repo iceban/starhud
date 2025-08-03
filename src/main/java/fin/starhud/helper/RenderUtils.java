@@ -1,5 +1,7 @@
 package fin.starhud.helper;
 
+import fin.starhud.Main;
+import fin.starhud.config.GeneralSettings;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
@@ -10,6 +12,7 @@ import net.minecraft.util.Identifier;
 public class RenderUtils {
 
     private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
+    private static final GeneralSettings.HUDSettings HUD_SETTINGS = Main.settings.generalSettings.hudSettings;
 
     public static void drawSmallHUD(DrawContext context, String infoStr, int x, int y, int width, int height, Identifier iconTexture, float u, float v, int textureWidth, int textureHeight, int iconWidth, int iconHeight, int color, int iconColor) {
         RenderUtils.drawTextureHUD(context, iconTexture, x, y, u, v, iconWidth, iconHeight, textureWidth, textureHeight, iconColor);
@@ -53,10 +56,10 @@ public class RenderUtils {
 
     public static void drawTextHUD(DrawContext context, String str, int x, int y, int color, boolean shadow) {
         OrderedText orderedText = OrderedText.styledForwardsVisitedString(str, Style.EMPTY);
-        context.drawText(CLIENT.textRenderer, orderedText, x , y, color, shadow);
+        context.drawText(CLIENT.textRenderer, orderedText, x , y + HUD_SETTINGS.textYOffset, color, shadow);
     }
 
     public static void drawTextHUD(DrawContext context, OrderedText text, int x, int y, int color, boolean shadow) {
-        context.drawText(CLIENT.textRenderer, text, x, y, color, shadow);
+        context.drawText(CLIENT.textRenderer, text, x, y + HUD_SETTINGS.textYOffset, color, shadow);
     }
 }

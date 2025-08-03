@@ -19,7 +19,7 @@ public class Settings implements ConfigData {
 
     @ConfigEntry.Category("hudList")
     @ConfigEntry.Gui.TransitiveObject
-    public HUDSettings hudList = new HUDSettings();
+    public HUDList hudList = new HUDList();
 
     @ConfigEntry.Category("armor")
     @ConfigEntry.Gui.TransitiveObject
@@ -121,7 +121,15 @@ public class Settings implements ConfigData {
 
     @ConfigEntry.Category("effect")
     @ConfigEntry.Gui.TransitiveObject
-    public EffectSettings effectSettings = new EffectSettings();
+    public Effect effectSettings = new Effect();
+
+    public static class Effect {
+        @ConfigEntry.Gui.CollapsibleObject
+        public EffectSettings positiveSettings = new EffectSettings(new BaseHUDSettings(true, -5, 5, ScreenAlignmentX.RIGHT, ScreenAlignmentY.TOP, GrowthDirectionX.LEFT, GrowthDirectionY.DOWN));
+
+        @ConfigEntry.Gui.CollapsibleObject
+        public EffectSettings negativeSettings = new EffectSettings(new BaseHUDSettings(true, -5, 39, ScreenAlignmentX.RIGHT, ScreenAlignmentY.TOP, GrowthDirectionX.LEFT, GrowthDirectionY.DOWN));
+    }
 
     @ConfigEntry.Category("targeted")
     @ConfigEntry.Gui.TransitiveObject
@@ -235,8 +243,13 @@ public class Settings implements ConfigData {
             handSettings.rightHandSettings.durabilitySettings = new DurabilitySettings();
         }
 
-        if (effectSettings.base == null)
-            effectSettings = new EffectSettings();
+        EffectSettings positive = effectSettings.positiveSettings;
+        if (positive.base == null)
+            effectSettings.positiveSettings = new EffectSettings(new BaseHUDSettings(true, -5, 5, ScreenAlignmentX.RIGHT, ScreenAlignmentY.TOP, GrowthDirectionX.LEFT, GrowthDirectionY.DOWN));
+
+        EffectSettings negative = effectSettings.negativeSettings;
+        if (negative.base == null)
+            effectSettings.negativeSettings = new EffectSettings(new BaseHUDSettings(true, -5, 39, ScreenAlignmentX.RIGHT, ScreenAlignmentY.TOP, GrowthDirectionX.LEFT, GrowthDirectionY.DOWN));
 
         if (targetedCrosshairSettings.base == null)
             targetedCrosshairSettings = new TargetedCrosshairSettings();

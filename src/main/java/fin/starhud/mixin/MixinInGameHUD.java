@@ -3,7 +3,8 @@ package fin.starhud.mixin;
 import fin.starhud.helper.condition.ScoreboardHUD;
 import fin.starhud.hud.HUDComponent;
 import fin.starhud.hud.HUDId;
-import fin.starhud.hud.implementation.EffectHUD;
+import fin.starhud.hud.implementation.NegativeEffectHUD;
+import fin.starhud.hud.implementation.PositiveEffectHUD;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.client.render.RenderTickCounter;
@@ -18,12 +19,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class MixinInGameHUD {
 
     @Unique
-    private static final EffectHUD EFFECT_HUD = (EffectHUD) HUDComponent.getInstance().getHUD(HUDId.EFFECT);
+    private static final PositiveEffectHUD POSITIVE_EFFECT_HUD = (PositiveEffectHUD) HUDComponent.getInstance().getHUD(HUDId.POSITIVE_EFFECT);
+
+    @Unique
+    private static final NegativeEffectHUD NEGATIVE_EFFECT_HUD = (NegativeEffectHUD) HUDComponent.getInstance().getHUD(HUDId.NEGATIVE_EFFECT);
 
     // Mixin used to override vanilla effect HUD, I'm not sure whether this can be done using HUDElementRegistry
     @Inject(at = @At("HEAD"), method = "renderStatusEffectOverlay", cancellable = true)
     private void renderStatusEffectOverlay(DrawContext context, RenderTickCounter tickCounter, CallbackInfo ci) {
-        if (EFFECT_HUD.shouldRender()) ci.cancel();
+        if (POSITIVE_EFFECT_HUD.shouldRender() || NEGATIVE_EFFECT_HUD.shouldRender()) ci.cancel();
     }
 
     @Redirect(

@@ -20,6 +20,6 @@ public class ChestplateHUD extends AbstractArmorHUD{
 
     @Override
     public String getId() {
-        return HUDId.CHESTPLATE.getString();
+        return HUDId.CHESTPLATE.toString();
     }
 }

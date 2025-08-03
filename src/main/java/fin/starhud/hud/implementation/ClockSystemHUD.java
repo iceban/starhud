@@ -42,7 +42,7 @@ public class ClockSystemHUD extends AbstractHUD {
 
     @Override
     public String getId() {
-        return HUDId.CLOCK_SYSTEM.getString();
+        return HUDId.CLOCK_SYSTEM.toString();
     }
 
     private int width;

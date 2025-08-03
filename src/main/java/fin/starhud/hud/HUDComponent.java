@@ -2,7 +2,7 @@ package fin.starhud.hud;
 
 import fin.starhud.Main;
 import fin.starhud.config.GroupedHUDSettings;
-import fin.starhud.config.HUDSettings;
+import fin.starhud.config.HUDList;
 import fin.starhud.hud.implementation.*;
 import net.minecraft.client.gui.DrawContext;
 import org.slf4j.Logger;
@@ -64,7 +64,9 @@ public class HUDComponent {
         registerHUD(new InventoryHUD());
         registerHUD(new PingHUD());
         registerHUD(new TargetedCrosshairHUD());
-        registerHUD(new EffectHUD());
+
+        registerHUD(new PositiveEffectHUD());
+        registerHUD(new NegativeEffectHUD());
     }
 
     public Map<String, AbstractHUD> getHudMap() {
@@ -80,7 +82,7 @@ public class HUDComponent {
     }
 
     public void loadActiveHUDsFromConfig() {
-        HUDSettings hudConfig = Main.settings.hudList;
+        HUDList hudConfig = Main.settings.hudList;
 
         individualHUDs.clear();
 
@@ -130,7 +132,7 @@ public class HUDComponent {
     }
 
     public AbstractHUD getHUD(HUDId id) {
-        return hudMap.get(id.getString());
+        return hudMap.get(id.toString());
     }
 
     public void renderAll(DrawContext context) {

@@ -22,7 +22,7 @@ public class LeftHandHUD extends AbstractHandHUD {
 
     @Override
     public String getId() {
-        return HUDId.LEFT_HAND.getString();
+        return HUDId.LEFT_HAND.toString();
     }
 
     @Override

@@ -59,7 +59,7 @@ public class TargetedCrosshairHUD extends AbstractHUD {
 
     @Override
     public String getId() {
-        return HUDId.TARGETED_CROSSHAIR.getString();
+        return HUDId.TARGETED_CROSSHAIR.toString();
     }
 
     public static boolean isShown() {
@@ -68,6 +68,11 @@ public class TargetedCrosshairHUD extends AbstractHUD {
             return false;
 
         return CLIENT.crosshairTarget != null && CLIENT.crosshairTarget.getType() != HitResult.Type.MISS;
+    }
+
+    @Override
+    public boolean shouldRender() {
+        return super.shouldRender() && CLIENT.crosshairTarget.getType() != HitResult.Type.MISS;
     }
 
     private int width;

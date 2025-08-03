@@ -10,7 +10,7 @@ import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
 
 import java.util.*;
 
-public class HUDSettings {
+public class HUDList {
 
     @ConfigEntry.Gui.Excluded
     public List<String> individualHudIds = new ArrayList<>();
@@ -18,35 +18,44 @@ public class HUDSettings {
     @Comment("It's not recommended to modify grouped HUD directly on the configuration screen.")
     public List<GroupedHUDSettings> groupedHuds = new ArrayList<>();
 
-    public HUDSettings(List<String> individualHudIds, List<GroupedHUDSettings> groupedHuds) {
+    public HUDList(List<String> individualHudIds, List<GroupedHUDSettings> groupedHuds) {
         this.individualHudIds = individualHudIds;
         this.groupedHuds = groupedHuds;
     }
 
-    public HUDSettings() {
+    public HUDList() {
         groupedHuds.add(
                 new GroupedHUDSettings(
                         new BaseHUDSettings(true, 5, 0, ScreenAlignmentX.LEFT, ScreenAlignmentY.MIDDLE, GrowthDirectionX.RIGHT, GrowthDirectionY.MIDDLE),
-                        3,
+                        1,
                         1,
                         true,
                         0xFFFFFF,
-                        new ArrayList<>(List.of(HUDId.HELMET.getString(), HUDId.CHESTPLATE.getString(), HUDId.LEGGINGS.getString(), HUDId.BOOTS.getString()))
+                        new ArrayList<>(List.of(HUDId.HELMET.toString(), HUDId.CHESTPLATE.toString(), HUDId.LEGGINGS.toString(), HUDId.BOOTS.toString()))
+                )
+        );
+        groupedHuds.add(
+                new GroupedHUDSettings(
+                        new BaseHUDSettings(true, -5, 5, ScreenAlignmentX.RIGHT, ScreenAlignmentY.TOP, GrowthDirectionX.LEFT, GrowthDirectionY.DOWN),
+                        2,
+                        2,
+                        true,
+                        0xd5feef,
+                        new ArrayList<>(List.of(HUDId.POSITIVE_EFFECT.toString(), HUDId.NEGATIVE_EFFECT.toString()))
                 )
         );
 
         individualHudIds.addAll(
                 List.of(
-                        HUDId.FPS.getString(),
-                        HUDId.DIRECTION.getString(),
-                        HUDId.DAY.getString(),
-                        HUDId.INVENTORY.getString(),
-                        HUDId.EFFECT.getString(),
-                        HUDId.TARGETED_CROSSHAIR.getString(),
-                        HUDId.PING.getString(),
-                        HUDId.BIOME.getString(),
-                        HUDId.CLOCK_SYSTEM.getString(), HUDId.CLOCK_INGAME.getString(),
-                        HUDId.X_COORDINATE.getString(), HUDId.Y_COORDINATE.getString(), HUDId.Z_COORDINATE.getString()
+                        HUDId.FPS.toString(),
+                        HUDId.DIRECTION.toString(),
+                        HUDId.DAY.toString(),
+                        HUDId.INVENTORY.toString(),
+                        HUDId.TARGETED_CROSSHAIR.toString(),
+                        HUDId.PING.toString(),
+                        HUDId.BIOME.toString(),
+                        HUDId.CLOCK_SYSTEM.toString(), HUDId.CLOCK_INGAME.toString(),
+                        HUDId.X_COORDINATE.toString(), HUDId.Y_COORDINATE.toString(), HUDId.Z_COORDINATE.toString()
                 )
         );
     }
@@ -95,8 +104,8 @@ public class HUDSettings {
         }
 
         for (HUDId id : HUDId.values()) {
-            if (!allRepresentedIds.contains(id.getString())) {
-                individualHudIds.add(id.getString());
+            if (!allRepresentedIds.contains(id.toString())) {
+                individualHudIds.add(id.toString());
             }
         }
     }

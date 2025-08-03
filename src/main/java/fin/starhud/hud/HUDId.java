@@ -1,36 +1,29 @@
 package fin.starhud.hud;
 
 public enum HUDId {
-    HELMET("helmet"),
-    CHESTPLATE("chestplate"),
-    LEGGINGS("leggings"),
-    BOOTS("boots"),
+    HELMET,
+    CHESTPLATE,
+    LEGGINGS,
+    BOOTS,
 
-    X_COORDINATE("x_coordinate"),
-    Y_COORDINATE("y_coordinate"),
-    Z_COORDINATE("z_coordinate"),
+    X_COORDINATE,
+    Y_COORDINATE,
+    Z_COORDINATE,
 
-    LEFT_HAND("left_hand"),
-    RIGHT_HAND("right_hand"),
+    LEFT_HAND,
+    RIGHT_HAND,
 
-    CLOCK_INGAME("clock_ingame"),
-    CLOCK_SYSTEM("clock_system"),
+    CLOCK_INGAME,
+    CLOCK_SYSTEM,
 
-    BIOME("biome"),
-    DAY("day"),
-    DIRECTION("direction"),
-    FPS("fps"),
-    PING("ping"),
-    INVENTORY("inventory"),
-    TARGETED_CROSSHAIR("targeted_crosshair"),
-    EFFECT("effect");
+    BIOME,
+    DAY,
+    DIRECTION,
+    FPS,
+    PING,
+    INVENTORY,
+    TARGETED_CROSSHAIR,
 
-    private final String str;
-    HUDId(String str) {
-        this.str = str;
-    }
-
-    public String getString() {
-        return str;
-    }
+    POSITIVE_EFFECT,
+    NEGATIVE_EFFECT;
 }

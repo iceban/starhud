@@ -11,6 +11,9 @@ public class GeneralSettings {
     @ConfigEntry.Gui.CollapsibleObject
     public InGameHUDSettings inGameSettings = new InGameHUDSettings();
 
+    @ConfigEntry.Gui.CollapsibleObject
+    public HUDSettings hudSettings = new HUDSettings();
+
     public static class EditHUDScreenSettings {
 
         @ConfigEntry.ColorPicker
@@ -27,5 +30,11 @@ public class GeneralSettings {
 
         @Comment("Completely disable HUD Rendering.")
         public boolean disableHUDRendering = false;
+    }
+
+    public static class HUDSettings {
+
+        @Comment("Since some fonts may have a different font heights, try adjusting this to your liking. Default is 0.")
+        public int textYOffset = 0;
     }
 }

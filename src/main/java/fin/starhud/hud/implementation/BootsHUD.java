@@ -21,7 +21,7 @@ public class BootsHUD extends AbstractArmorHUD {
 
     @Override
     public String getId() {
-        return HUDId.BOOTS.getString();
+        return HUDId.BOOTS.toString();
     }
 
 }

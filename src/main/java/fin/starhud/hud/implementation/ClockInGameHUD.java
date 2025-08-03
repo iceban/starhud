@@ -39,7 +39,7 @@ public class ClockInGameHUD extends AbstractHUD {
 
     @Override
     public String getId() {
-        return HUDId.CLOCK_INGAME.getString();
+        return HUDId.CLOCK_INGAME.toString();
     }
 
     private int width;

@@ -33,7 +33,7 @@ public class FPSHUD extends AbstractHUD {
 
     @Override
     public String getId() {
-        return HUDId.FPS.getString();
+        return HUDId.FPS.toString();
     }
 
     private String fpsStr;

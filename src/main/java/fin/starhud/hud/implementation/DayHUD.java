@@ -38,7 +38,7 @@ public class DayHUD extends AbstractHUD {
 
     @Override
     public String getId() {
-        return HUDId.DAY.getString();
+        return HUDId.DAY.toString();
     }
 
     private int width;
