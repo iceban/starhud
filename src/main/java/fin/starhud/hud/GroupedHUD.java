@@ -93,18 +93,18 @@ public class GroupedHUD extends AbstractHUD {
         } else
             return false;
 
-        getBoundingBox().setWidth(width);
-        getBoundingBox().setHeight(height);
+        x -= getGrowthDirectionHorizontal(width);
+        y -= getGrowthDirectionVertical(height);
+
+        setBoundingBox(x, y, width, height);
 
         return true;
     }
 
     @Override
     public boolean renderHUD(DrawContext context, int x, int y) {
-        x -= getGrowthDirectionHorizontal(width);
-        y -= getGrowthDirectionVertical(height);
-
-        setBoundingBox(x, y, width, height);
+        int w = getWidth();
+        int h = getHeight();
 
         int drawX = x;
         int drawY = y;
@@ -114,9 +114,9 @@ public class GroupedHUD extends AbstractHUD {
                 continue;
 
             if (groupSettings.alignVertical) {
-                drawX = x + getGrowthDirectionHorizontal(width - hud.getWidth());
+                drawX = x + getGrowthDirectionHorizontal(w - hud.getWidth());
             } else {
-                drawY = y + getGrowthDirectionVertical(height - hud.getHeight());
+                drawY = y + getGrowthDirectionVertical(h - hud.getHeight());
             }
 
             if (!hud.renderHUD(context, drawX, drawY))

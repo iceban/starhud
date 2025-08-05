@@ -82,8 +82,9 @@ public abstract class AbstractDurabilityHUD extends AbstractHUD {
         width = processWidth();
         height = drawItem ? BIG_DURABILITY_BACKGROUND_TEXTURE_HEIGHT : DURABILITY_BACKGROUND_TEXTURE_HEIGHT;
 
-        setWidth(width);
-        setHeight(height);
+        x -= getGrowthDirectionHorizontal(width);
+        y -= getGrowthDirectionVertical(height);
+        setBoundingBox(x, y, width, height, iconColor);
 
         return true;
     }
@@ -116,7 +117,7 @@ public abstract class AbstractDurabilityHUD extends AbstractHUD {
         step = getItemBarStep(stackDamage, stackMaxDamage, 10);
         durabilityColor = getItemBarColor(step, 10) | 0xFF000000;
 
-        return ITEM_BACKGROUND_TEXTURE_WIDTH + 1 + 5 + BIG_DURABILITY_TEXTURE_WIDTH + 5;
+        return ITEM_BACKGROUND_TEXTURE_WIDTH + 1 + BIG_DURABILITY_BACKGROUND_TEXTURE_WIDTH;
     }
 
     public int processWidthItemNumber() {
@@ -137,7 +138,7 @@ public abstract class AbstractDurabilityHUD extends AbstractHUD {
         step = getItemBarStep(stackDamage, stackMaxDamage, 10);
         durabilityColor = getItemBarColor(step, 10) | 0xFF000000;
 
-        return 13 + 1 + 5 + (DURABILITY_TEXTURE_WIDTH - 1) + 5;
+        return 13 + 1 + DURABILITY_BACKGROUND_TEXTURE_WIDTH;
     }
 
     public int processWidthIconNumber() {
@@ -168,10 +169,6 @@ public abstract class AbstractDurabilityHUD extends AbstractHUD {
     }
 
     public void renderDurabilityHUD(DrawContext context, Identifier iconTexture, int x, int y, float u, float v, int textureWidth, int textureHeight, int iconWidth, int iconHeight) {
-        x -= getGrowthDirectionHorizontal(width);
-        y -= getGrowthDirectionVertical(height);
-        setBoundingBox(x, y, width, height, iconColor);
-
         if (drawItem) {
             renderItemDurability(context, x , y);
         } else {
@@ -211,7 +208,7 @@ public abstract class AbstractDurabilityHUD extends AbstractHUD {
 
     public void renderItemDurabilityNumber(DrawContext context, int x, int y) {
         RenderUtils.drawTextureHUD(context, ITEM_BACKGROUND_TEXTURE, x, y, 0.0F, 0.0F, ITEM_BACKGROUND_TEXTURE_WIDTH, ITEM_BACKGROUND_TEXTURE_HEIGHT, ITEM_BACKGROUND_TEXTURE_WIDTH, ITEM_BACKGROUND_TEXTURE_HEIGHT);
-        RenderUtils.fillRoundedRightSide(context, x + ITEM_BACKGROUND_TEXTURE_WIDTH + 1, y, x + width, y + height, 0x80000000);
+        RenderUtils.fillRoundedRightSide(context, x + ITEM_BACKGROUND_TEXTURE_WIDTH + 1, y, x + getWidth(), y + getHeight(), 0x80000000);
 
         context.drawItem(stack, x + 3, y + 3);
         RenderUtils.drawTextHUD(context, str, x + ITEM_BACKGROUND_TEXTURE_WIDTH + 1 + 5, y + 7, durabilityColor, false);
@@ -229,7 +226,7 @@ public abstract class AbstractDurabilityHUD extends AbstractHUD {
     // example render: ¹²³⁴/₅₆₇₈
     public void renderDurabilityNumber(DrawContext context, Identifier ICON, int x, int y, float u, float v, int textureWidth, int textureHeight, int iconWidth, int iconHeight) {
         RenderUtils.drawTextureHUD(context, ICON, x, y, u, v, iconWidth, iconHeight, textureWidth, textureHeight, iconColor);
-        RenderUtils.fillRoundedRightSide(context, x + 14,  y, x + width, y + height, 0x80000000);
+        RenderUtils.fillRoundedRightSide(context, x + 14,  y, x + getWidth(), y + getHeight(), 0x80000000);
 
         // this is gore of my comfort character, call drawText twice except the second one has a -1 pixel offset.
         // Minecraft default subscript's font is 1 pixel to deep for my liking, so I have to shift them up.

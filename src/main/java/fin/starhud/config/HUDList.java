@@ -48,6 +48,7 @@ public class HUDList {
         individualHudIds.addAll(
                 List.of(
                         HUDId.FPS.toString(),
+                        HUDId.TPS.toString(),
                         HUDId.DIRECTION.toString(),
                         HUDId.DAY.toString(),
                         HUDId.INVENTORY.toString(),

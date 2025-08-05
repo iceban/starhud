@@ -11,7 +11,10 @@ public class ConditionalSettings {
     public Condition condition = Condition.DEBUG_HUD_OPENED;
 
     @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
-    public ConditionMode mode = ConditionMode.SHOW;
+    public PositionMode positionMode = PositionMode.NONE;
+
+    @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
+    public RenderMode renderMode = RenderMode.SHOW;
 
     @Comment("Shifts this HUD in the X Axis")
     public int xOffset = 0;
@@ -19,16 +22,22 @@ public class ConditionalSettings {
     @Comment("Shifts this HUD in the Y Axis")
     public int yOffset = 0;
 
+    public boolean renderIfActive() {
+        return (renderMode == RenderMode.RENDER_IF_ACTIVE && isConditionMet());
+    }
+
     public boolean shouldRender() {
         return !shouldHide();
     }
 
     public boolean shouldHide() {
-        return mode == ConditionMode.HIDE && isConditionMet();
+        return (renderMode == RenderMode.HIDE && isConditionMet());
     }
 
     public int getXOffset(float scaleFactor) {
-        return switch (mode) {
+        if (positionMode == null) positionMode = PositionMode.NONE;
+
+        return switch (positionMode) {
             case ADD_WIDTH -> xOffset + (int) (condition.getWidth() * scaleFactor);
             case SUBTRACT_WIDTH -> xOffset - (int) (condition.getWidth() * scaleFactor);
             default -> xOffset;
@@ -36,7 +45,9 @@ public class ConditionalSettings {
     }
 
     public int getYOffset(float scaleFactor) {
-        return switch(mode) {
+        if (positionMode == null) positionMode = PositionMode.NONE;
+
+        return switch (positionMode) {
             case ADD_HEIGHT -> yOffset + (int) (condition.getHeight() * scaleFactor);
             case SUBTRACT_HEIGHT -> yOffset - (int) (condition.getHeight() * scaleFactor);
             default -> yOffset;
@@ -50,9 +61,14 @@ public class ConditionalSettings {
         return this.condition.isConditionMet();
     }
 
-    public enum ConditionMode {
+    public enum RenderMode {
         SHOW,
         HIDE,
+        RENDER_IF_ACTIVE;
+    }
+
+    public enum PositionMode {
+        NONE,
         ADD_WIDTH,
         SUBTRACT_WIDTH,
         ADD_HEIGHT,

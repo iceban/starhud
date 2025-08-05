@@ -20,6 +20,7 @@ public enum HUDId {
     DAY,
     DIRECTION,
     FPS,
+    TPS,
     PING,
     INVENTORY,
     TARGETED_CROSSHAIR,

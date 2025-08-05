@@ -51,6 +51,10 @@ public class Settings implements ConfigData {
     @ConfigEntry.Gui.TransitiveObject
     public FPSSettings fpsSettings = new FPSSettings();
 
+    @ConfigEntry.Category("tps")
+    @ConfigEntry.Gui.TransitiveObject
+    public TPSSettings tpsSettings = new TPSSettings();
+
     @ConfigEntry.Category("coord")
     @ConfigEntry.Gui.TransitiveObject
     public Coord coordSettings = new Coord();
@@ -182,6 +186,9 @@ public class Settings implements ConfigData {
         if (fpsSettings.base == null)
             fpsSettings = new FPSSettings();
 
+        if (tpsSettings.base == null)
+            tpsSettings = new TPSSettings();
+
         CoordSettings coordX = coordSettings.X;
         if (coordX.base == null) {
             coordSettings.X = new CoordSettings(
@@ -253,5 +260,7 @@ public class Settings implements ConfigData {
 
         if (targetedCrosshairSettings.base == null)
             targetedCrosshairSettings = new TargetedCrosshairSettings();
+
+        this.hudList.onConfigSaved();
     }
 }

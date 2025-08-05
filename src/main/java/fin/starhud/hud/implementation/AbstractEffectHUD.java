@@ -77,16 +77,16 @@ public abstract class AbstractEffectHUD extends AbstractHUD {
         drawVertical = effectSettings.drawVertical;
         sameTypeGap = getSameTypeGap();
 
+        x -= getGrowthDirectionHorizontal(width);
+        y -= getGrowthDirectionVertical(height);
+
+        setBoundingBox(x, y, width, height);
+
         return true;
     }
 
     @Override
     public boolean renderHUD(DrawContext context, int x, int y) {
-
-        x -= getGrowthDirectionHorizontal(width);
-        y -= getGrowthDirectionVertical(height);
-
-        setBoundingBox(x, y, width, height);
 
         for (StatusEffectInstance statusEffectInstance : collection) {
 
@@ -97,6 +97,7 @@ public abstract class AbstractEffectHUD extends AbstractHUD {
                     x += sameTypeGap;
                 }
             }
+
         }
 
         return true;

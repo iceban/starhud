@@ -81,11 +81,13 @@ public class PingHUD extends AbstractHUD {
 
                 step = Math.min((int) currentPing / 150, 3);
                 color = getPingColor(step) | 0xFF000000;
-
-                setWidth(width);
-                setHeight(height);
             }
         }
+
+        x -= getGrowthDirectionHorizontal(width);
+        y -= getGrowthDirectionVertical(height);
+
+        setBoundingBox(x, y, width, height, color);
 
         return pingStr != null;
     }
@@ -93,16 +95,14 @@ public class PingHUD extends AbstractHUD {
     @Override
     public boolean renderHUD(DrawContext context, int x, int y) {
 
-        x -= getGrowthDirectionHorizontal(width);
-        y -= getGrowthDirectionVertical(height);
-
-        setBoundingBox(x, y, width, height, color);
+        int w = getWidth();
+        int h = getHeight();
 
         RenderUtils.drawSmallHUD(
                 context,
                 pingStr,
                 x, y,
-                width, height,
+                w, h,
                 PING_TEXTURE,
                 0.0F, ICON_HEIGHT * step,
                 TEXTURE_WIDTH, TEXTURE_HEIGHT,

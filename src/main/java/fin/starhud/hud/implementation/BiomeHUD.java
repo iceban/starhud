@@ -82,8 +82,9 @@ public class  BiomeHUD extends AbstractHUD {
         width = ICON_WIDTH + 1 + 5 + cachedTextWidth + 5;
         height = ICON_HEIGHT;
 
-        setWidth(width);
-        setHeight(height);
+        x -= getGrowthDirectionHorizontal(width);
+        y -= getGrowthDirectionVertical(height);
+        setBoundingBox(x, y, width, height, color);
 
         return true;
     }
@@ -101,16 +102,11 @@ public class  BiomeHUD extends AbstractHUD {
     @Override
     public boolean renderHUD(DrawContext context, int x, int y) {
 
-        x -= getGrowthDirectionHorizontal(width);
-        y -= getGrowthDirectionVertical(height);
-
-        setBoundingBox(x, y, width, height, color);
-
         RenderUtils.drawSmallHUD(
                 context,
                 cachedBiomeNameText,
                 x, y,
-                width, height,
+                getWidth(), getHeight(),
                 DIMENSION_TEXTURE,
                 0.0F, ICON_HEIGHT * dimensionIndex,
                 TEXTURE_WIDTH, TEXTURE_HEIGHT,

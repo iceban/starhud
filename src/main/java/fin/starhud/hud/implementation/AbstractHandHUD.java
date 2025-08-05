@@ -79,8 +79,9 @@ public abstract class AbstractHandHUD extends AbstractDurabilityHUD {
         width = (drawItem ? ITEM_TEXTURE_WIDTH : ICON_WIDTH) + 1 + 5 + strWidth + 5;
         height = drawItem ? ITEM_TEXTURE_HEIGHT : ICON_HEIGHT;
 
-        setWidth(width);
-        setHeight(height);
+        x -= getGrowthDirectionHorizontal(width);
+        y -= getGrowthDirectionVertical(height);
+        setBoundingBox(x, y, width, height, iconColor);
 
         return true;
     }
@@ -109,9 +110,6 @@ public abstract class AbstractHandHUD extends AbstractDurabilityHUD {
     }
 
     private void renderStackCountHUD(DrawContext context, int x, int y) {
-        x -= getGrowthDirectionHorizontal(width);
-        y -= getGrowthDirectionVertical(height);
-        setBoundingBox(x, y, width, height, iconColor);
 
         if (drawItem) {
             renderStackCountItemHUD(context, x, y);
@@ -122,7 +120,7 @@ public abstract class AbstractHandHUD extends AbstractDurabilityHUD {
 
     private void renderStackCountItemHUD(DrawContext context, int x, int y) {
         RenderUtils.drawTextureHUD(context, ITEM_BACKGROUND_TEXTURE, x, y, 0.0F, 0.0F, ITEM_TEXTURE_WIDTH, ITEM_TEXTURE_HEIGHT, ITEM_TEXTURE_WIDTH, ITEM_TEXTURE_HEIGHT);
-        RenderUtils.fillRoundedRightSide(context, x + ITEM_TEXTURE_WIDTH + 1, y, x + width, y + ITEM_TEXTURE_HEIGHT, 0x80000000);
+        RenderUtils.fillRoundedRightSide(context, x + ITEM_TEXTURE_WIDTH + 1, y, x + getWidth(), y + getHeight(), 0x80000000);
         context.drawItem(item, x + 3, y + 3);
         RenderUtils.drawTextHUD(context, amountStr, x + ITEM_TEXTURE_WIDTH + 1 + 5, y + 7, iconColor, false);
     }
@@ -132,7 +130,7 @@ public abstract class AbstractHandHUD extends AbstractDurabilityHUD {
                 context,
                 amountStr,
                 x, y,
-                width, height,
+                getWidth(), getHeight(),
                 ICON_TEXTURE,
                 0.0F, 0.0F,
                 TEXTURE_WIDTH, TEXTURE_HEIGHT,

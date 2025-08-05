@@ -51,24 +51,25 @@ public class FPSHUD extends AbstractHUD {
 
         color = FPS_SETTINGS.color | 0xFF000000;
 
-        setWidth(width);
-        setHeight(height);
+        x -= getGrowthDirectionHorizontal(width);
+        y -= getGrowthDirectionVertical(height);
+
+        setBoundingBox(x, y, width, height, color);
+
         return true;
     }
 
     @Override
     public boolean renderHUD(DrawContext context, int x, int y) {
 
-        x -= getGrowthDirectionHorizontal(width);
-        y -= getGrowthDirectionVertical(height);
-
-        setBoundingBox(x, y, width, height, color);
+        int w = getWidth();
+        int h = getHeight();
 
         RenderUtils.drawSmallHUD(
                 context,
                 fpsStr,
                 x, y,
-                width, height,
+                w, h,
                 FPS_TEXTURE,
                 0.0F, 0.0F,
                 TEXTURE_WIDTH, TEXTURE_HEIGHT,

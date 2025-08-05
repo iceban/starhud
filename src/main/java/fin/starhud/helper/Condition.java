@@ -30,6 +30,12 @@ public enum Condition {
             ScoreboardHUD::getHeight
     ),
 
+    PLAYER_LIST_SHOWN(
+            PlayerListHUD::isShown,
+            PlayerListHUD::getWidth,
+            PlayerListHUD::getHeight
+    ),
+
     POSITIVE_EFFECT_SHOWN(
             StatusEffectHUD::isPositiveShown,
             StatusEffectHUD::getPositiveWidth,

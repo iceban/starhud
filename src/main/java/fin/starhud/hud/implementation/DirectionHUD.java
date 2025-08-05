@@ -75,23 +75,25 @@ public class DirectionHUD extends AbstractHUD {
             color = getDirectionColor(iconIndex * 2) | 0xFF000000;
         }
 
-        setWidth(width);
-        setHeight(height);
+        x -= getGrowthDirectionHorizontal(width);
+        y -= getGrowthDirectionVertical(height);
+        setBoundingBox(x, y, width, height, color);
+
         return true;
     }
 
     @Override
     public boolean renderHUD(DrawContext context, int x, int y) {
-        x -= getGrowthDirectionHorizontal(width);
-        y -= getGrowthDirectionVertical(height);
-        setBoundingBox(x, y, width, height, color);
+
+        int w = getWidth();
+        int h = getHeight();
 
         if (includeOrdinal) {
             RenderUtils.drawSmallHUD(
                     context,
                     yawStr,
                     x, y,
-                    width, height,
+                    w, h,
                     DIRECTION_ORDINAL_TEXTURE,
                     0.0F, ORDINAL_ICON_HEIGHT * iconIndex,
                     ORDINAL_TEXTURE_WIDTH, ORDINAL_TEXTURE_HEIGHT,
@@ -104,7 +106,7 @@ public class DirectionHUD extends AbstractHUD {
                     context,
                     yawStr,
                     x, y,
-                    width, height,
+                    w, h,
                     DIRECTION_CARDINAL_TEXTURE,
                     0.0F, CARDINAL_ICON_HEIGHT * iconIndex,
                     CARDINAL_TEXTURE_WIDTH, CARDINAL_TEXTURE_HEIGHT,

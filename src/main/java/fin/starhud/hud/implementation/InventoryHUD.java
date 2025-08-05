@@ -47,8 +47,10 @@ public class InventoryHUD extends AbstractHUD {
             drawVertical = INVENTORY_SETTINGS.drawVertical;
             width = drawVertical ? TEXTURE_WIDTH_VERTICAL : TEXTURE_WIDTH_HORIZONTAL;
             height = drawVertical ? TEXTURE_HEIGHT_VERTICAL : TEXTURE_HEIGHT_HORIZONTAL;
-            getBoundingBox().setWidth(width);
-            getBoundingBox().setHeight(height);
+
+            x -= getGrowthDirectionHorizontal(width);
+            y -= getGrowthDirectionVertical(height);
+            setBoundingBox(x, y, width, height);
             return true;
         } else {
             return false;
@@ -71,9 +73,6 @@ public class InventoryHUD extends AbstractHUD {
 
     @Override
     public boolean renderHUD(DrawContext context, int x, int y) {
-        x -= getGrowthDirectionHorizontal(width);
-        y -= getGrowthDirectionVertical(height);
-        setBoundingBox(x, y, width, height);
         if (drawVertical) {
             return drawInventoryVertical(context, x, y);
         } else {

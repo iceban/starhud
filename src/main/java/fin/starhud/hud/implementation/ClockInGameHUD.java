@@ -73,8 +73,10 @@ public class ClockInGameHUD extends AbstractHUD {
         width = ICON_WIDTH + 1 + 5 + cachedStrWidth + 5;
         height = ICON_HEIGHT;
 
-        setWidth(width);
-        setHeight(height);
+        x -= getGrowthDirectionHorizontal(width);
+        y -= getGrowthDirectionVertical(height);
+
+        setBoundingBox(x, y, width, height, color);
 
         return true;
     }
@@ -82,16 +84,14 @@ public class ClockInGameHUD extends AbstractHUD {
     @Override
     public boolean renderHUD(DrawContext context, int x, int y) {
 
-        x -= getGrowthDirectionHorizontal(width);
-        y -= getGrowthDirectionVertical(height);
-
-        setBoundingBox(x, y, width, height, color);
+        int w = getWidth();
+        int h = getHeight();
 
         RenderUtils.drawSmallHUD(
                 context,
                 cachedMinecraftTimeString,
                 x, y,
-                width, height,
+                w, h,
                 CLOCK_IN_GAME_TEXTURE,
                 0.0F, ICON_HEIGHT * iconIndex,
                 TEXTURE_WIDTH, TEXTURE_HEIGHT,

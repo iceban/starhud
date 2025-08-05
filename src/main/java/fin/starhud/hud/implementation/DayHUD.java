@@ -61,24 +61,25 @@ public class DayHUD extends AbstractHUD {
         width = ICON_WIDTH + 1 + 5 + cachedTextWidth + 5;
         height = ICON_HEIGHT;
 
-        setWidth(width);
-        setHeight(height);
+        x -= getGrowthDirectionHorizontal(width);
+        y -= getGrowthDirectionVertical(height);
+
+        setBoundingBox(x, y, width, height, color);
+
         return true;
     }
 
     @Override
     public boolean renderHUD(DrawContext context, int x, int y) {
 
-        x -= getGrowthDirectionHorizontal(width);
-        y -= getGrowthDirectionVertical(height);
-
-        setBoundingBox(x, y, width, height, color);
+        int w = getWidth();
+        int h = getHeight();
 
         RenderUtils.drawSmallHUD(
                 context,
                 cachedDayString,
                 x, y,
-                width, height,
+                w, h,
                 DAY_TEXTURE,
                 0.0F, 0.0F,
                 TEXTURE_WIDTH, TEXTURE_HEIGHT,

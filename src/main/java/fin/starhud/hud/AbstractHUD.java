@@ -10,8 +10,8 @@ public abstract class AbstractHUD implements HUDInterface {
 
     protected final BaseHUDSettings baseHUDSettings;
 
-    private int x;
-    private int y;
+    protected int x;
+    protected int y;
 
     private int baseX;
     private int baseY;
@@ -39,11 +39,11 @@ public abstract class AbstractHUD implements HUDInterface {
     @Override
     public boolean render(DrawContext context) {
 
-        if (!collectHUDInformation())
-            return false;
-
         // modify our X and Y points based on conditions.
         modifyXY();
+
+        if (!collectHUDInformation())
+            return false;
 
         if (!isScaled())
             return renderHUD(context, x, y);
@@ -122,11 +122,11 @@ public abstract class AbstractHUD implements HUDInterface {
     }
 
     public int getGrowthDirectionHorizontal(int dynamicWidth) {
-        return isInGroup() ? 0 : getSettings().getGrowthDirectionX().getGrowthDirection(dynamicWidth);
+        return getSettings().getGrowthDirectionX().getGrowthDirection(dynamicWidth);
     }
 
     public int getGrowthDirectionVertical(int dynamicHeight) {
-        return isInGroup() ? 0 : getSettings().getGrowthDirectionY().getGrowthDirection(dynamicHeight);
+        return getSettings().getGrowthDirectionY().getGrowthDirection(dynamicHeight);
     }
 
     public int getX() {
