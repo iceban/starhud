@@ -139,6 +139,10 @@ public class Settings implements ConfigData {
     @ConfigEntry.Gui.TransitiveObject
     public TargetedCrosshairSettings targetedCrosshairSettings = new TargetedCrosshairSettings();
 
+    @ConfigEntry.Category("speed")
+    @ConfigEntry.Gui.TransitiveObject
+    public SpeedSettings speedSettings = new SpeedSettings();
+
     @Override
     public void validatePostLoad() {
         if (generalSettings.inGameSettings == null)
@@ -260,6 +264,9 @@ public class Settings implements ConfigData {
 
         if (targetedCrosshairSettings.base == null)
             targetedCrosshairSettings = new TargetedCrosshairSettings();
+
+        if (speedSettings.base == null)
+            speedSettings = new SpeedSettings();
 
         this.hudList.onConfigSaved();
     }

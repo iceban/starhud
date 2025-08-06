@@ -174,13 +174,11 @@ public class TargetedCrosshairHUD extends AbstractHUD {
         int w = getWidth();
         int h = getHeight();
 
-        RenderUtils.drawTextureHUD(
+        RenderUtils.fillRoundedLeftSide(
                 context,
-                ICON_BACKGROUND_TEXTURE,
                 x, y,
-                0, 0,
-                ICON_BACKGROUND_WIDTH, ICON_BACKGROUND_HEIGHT,
-                ICON_BACKGROUND_WIDTH, ICON_BACKGROUND_HEIGHT
+                x + ICON_BACKGROUND_WIDTH, y + h,
+                0x80000000
         );
         RenderUtils.fillRoundedRightSide(
                 context,
@@ -214,6 +212,19 @@ public class TargetedCrosshairHUD extends AbstractHUD {
         int w = getWidth();
         int h = getHeight();
 
+        RenderUtils.fillRoundedLeftSide(
+                context,
+                x, y,
+                x + ICON_BACKGROUND_WIDTH, y + h,
+                0x80000000
+        );
+        RenderUtils.fillRoundedRightSide(
+                context,
+                x + ICON_BACKGROUND_WIDTH + 1, y,
+                x + w, y + h,
+                0x80000000
+        );
+
         RenderUtils.drawTextureHUD(
                 context,
                 ENTITY_ICON_TEXTURE,
@@ -222,12 +233,6 @@ public class TargetedCrosshairHUD extends AbstractHUD {
                 ICON_BACKGROUND_WIDTH, ICON_BACKGROUND_HEIGHT,
                 ICON_BACKGROUND_WIDTH, ICON_BACKGROUND_HEIGHT * 5,
                 color
-        );
-        RenderUtils.fillRoundedRightSide(
-                context,
-                x + ICON_BACKGROUND_WIDTH + 1, y,
-                x + w, y + h,
-                0x80000000
         );
 
         RenderUtils.drawTextHUD(

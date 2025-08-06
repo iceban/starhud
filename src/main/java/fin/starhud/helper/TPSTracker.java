@@ -15,7 +15,6 @@ public class TPSTracker {
     private static long lastTickTime = -1;
     private static long lastWorldTime = -1;
 
-
     private static double tps = 20;
     private static double mspt = -1;
 

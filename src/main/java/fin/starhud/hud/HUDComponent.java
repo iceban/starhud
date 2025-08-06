@@ -64,6 +64,7 @@ public class HUDComponent {
         registerHUD(new TPSHUD());
         registerHUD(new InventoryHUD());
         registerHUD(new PingHUD());
+        registerHUD(new SpeedHUD());
         registerHUD(new TargetedCrosshairHUD());
 
         registerHUD(new PositiveEffectHUD());

@@ -22,6 +22,7 @@ public enum HUDId {
     FPS,
     TPS,
     PING,
+    SPEED,
     INVENTORY,
     TARGETED_CROSSHAIR,
 

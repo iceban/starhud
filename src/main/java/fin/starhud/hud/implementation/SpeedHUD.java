@@ -1,64 +1,54 @@
 package fin.starhud.hud.implementation;
 
 import fin.starhud.Main;
-import fin.starhud.config.hud.TPSSettings;
+import fin.starhud.config.hud.SpeedSettings;
 import fin.starhud.helper.RenderUtils;
-import fin.starhud.helper.TPSTracker;
 import fin.starhud.hud.AbstractHUD;
 import fin.starhud.hud.HUDId;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Vec3d;
 
-public class TPSHUD extends AbstractHUD {
+public class SpeedHUD extends AbstractHUD {
 
-    private static final TPSSettings SETTINGS = Main.settings.tpsSettings;
     private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
+    private static final Identifier TEXTURE = Identifier.of("starhud", "hud/speed.png");
 
-    private static final Identifier TEXTURE = Identifier.of("starhud", "hud/tps.png");
-
-    private static final int ICON_HEIGHT = 13;
-    private static final int ICON_WIDTH = 13;
     private static final int TEXTURE_WIDTH = 13;
-    private static final int TEXTURE_HEIGHT = ICON_HEIGHT * 5;
+    private static final int TEXTURE_HEIGHT = 13;
+    private static final int ICON_WIDTH = 13;
+    private static final int ICON_HEIGHT = 13;
 
-    public TPSHUD() {
+    private static final SpeedSettings SETTINGS = Main.settings.speedSettings;
+
+    public SpeedHUD() {
         super(SETTINGS.base);
     }
 
     private String str;
-    private int width;
-    private int height;
-    private int color;
-    private int step;
+    private int width, height, color;
 
     @Override
     public boolean collectHUDInformation() {
 
-        double tps = TPSTracker.getTPS();
+        Vec3d vel = CLIENT.player.getVelocity();
 
-        step = getStep(tps);
-        str = tps + " TPS";
+        double horizontalSpeed = (double) Math.round(vel.horizontalLength() * 20.0 * 10) / 10;
+
+        str = horizontalSpeed + " BPS";
+
         int strWidth = CLIENT.textRenderer.getWidth(str) - 1;
 
+        width = ICON_WIDTH + 1 + 5 + strWidth + 5;
         height = ICON_HEIGHT;
-        width = ICON_WIDTH + 1 + 5 + (strWidth) + 5;
-
-        color = (SETTINGS.useDynamicColor ? (AbstractDurabilityHUD.getItemBarColor(4 - step, 4)) : SETTINGS.color) | 0xFF000000;
+        color = SETTINGS.color | 0xff000000;
 
         x -= getGrowthDirectionHorizontal(width);
         y -= getGrowthDirectionVertical(height);
         setBoundingBox(x, y, width, height, color);
 
         return true;
-    }
-
-    public int getStep(double tps) {
-        if (tps >= 19.9) return 0;
-        else if (tps >= 19.5) return 1;
-        else if (tps >= 18.0) return 2;
-        else if (tps >= 15) return 3;
-        else return 4;
     }
 
     @Override
@@ -73,7 +63,7 @@ public class TPSHUD extends AbstractHUD {
                 x, y,
                 w, h,
                 TEXTURE,
-                0.0F, ICON_HEIGHT * step,
+                0.0F, 0.0F,
                 TEXTURE_WIDTH, TEXTURE_HEIGHT,
                 ICON_WIDTH, ICON_HEIGHT,
                 color
@@ -84,11 +74,11 @@ public class TPSHUD extends AbstractHUD {
 
     @Override
     public String getName() {
-        return "TPS HUD";
+        return "Speed HUD";
     }
 
     @Override
     public String getId() {
-        return HUDId.TPS.toString();
+        return HUDId.SPEED.toString();
     }
 }

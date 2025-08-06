@@ -5,6 +5,7 @@ import fin.starhud.config.GeneralSettings;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.item.ItemStack;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Style;
 import net.minecraft.util.Identifier;
@@ -14,33 +15,52 @@ public class RenderUtils {
     private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
     private static final GeneralSettings.HUDSettings HUD_SETTINGS = Main.settings.generalSettings.hudSettings;
 
+    private static final int ITEM_HUD_ICON_WIDTH = 22;
+    private static final int ITEM_HUD_ICON_HEIGHT = 22;
+
     public static void drawSmallHUD(DrawContext context, String infoStr, int x, int y, int width, int height, Identifier iconTexture, float u, float v, int textureWidth, int textureHeight, int iconWidth, int iconHeight, int color, int iconColor) {
-        RenderUtils.drawTextureHUD(context, iconTexture, x, y, u, v, iconWidth, iconHeight, textureWidth, textureHeight, iconColor);
-        RenderUtils.fillRoundedRightSide(context, x + iconWidth + 1, y, x + width, y + height, 0x80000000);
-        RenderUtils.drawTextHUD(context, infoStr, x + iconWidth + 1 + 5, y + 3, color, false);
+        OrderedText orderedText = OrderedText.styledForwardsVisitedString(infoStr, Style.EMPTY);
+        drawSmallHUD(context, orderedText, x, y, width, height, iconTexture, u, v, textureWidth, textureHeight, iconWidth, iconHeight, color, iconColor);
     }
 
     public static void drawSmallHUD(DrawContext context, OrderedText infoText, int x, int y, int width, int height, Identifier iconTexture, float u, float v, int textureWidth, int textureHeight, int iconWidth, int iconHeight, int color, int iconColor) {
-        RenderUtils.drawTextureHUD(context, iconTexture, x, y, u, v, iconWidth, iconHeight, textureWidth, textureHeight, iconColor);
+        RenderUtils.fillRoundedLeftSide(context, x, y, x + iconWidth, y + height, 0x80000000);
         RenderUtils.fillRoundedRightSide(context, x + iconWidth + 1, y, x + width, y + height, 0x80000000);
+
+        RenderUtils.drawTextureHUD(context, iconTexture, x, y, u, v, iconWidth, iconHeight, textureWidth, textureHeight, iconColor);
         RenderUtils.drawTextHUD(context, infoText, x + iconWidth + 1 + 5, y + 3, color, false);
     }
 
-
     public static void drawSmallHUD(DrawContext context, String infoStr, int x, int y, int width, int height, Identifier iconTexture, float u, float v, int textureWidth, int textureHeight, int iconWidth, int iconHeight, int color) {
-        RenderUtils.drawTextureHUD(context, iconTexture, x, y, u, v, iconWidth, iconHeight, textureWidth, textureHeight, color);
-        RenderUtils.fillRoundedRightSide(context, x + iconWidth + 1, y, x + width, y + height, 0x80000000);
-        RenderUtils.drawTextHUD(context, infoStr, x + iconWidth + 1 + 5, y + 3, color, false);
+        OrderedText orderedText = OrderedText.styledForwardsVisitedString(infoStr, Style.EMPTY);
+        drawSmallHUD(context, orderedText, x, y, width, height, iconTexture, u, v, textureWidth, textureHeight, iconWidth, iconHeight, color, color);
     }
 
     public static void drawSmallHUD(DrawContext context, OrderedText infoText, int x, int y, int width, int height, Identifier iconTexture, float u, float v, int textureWidth, int textureHeight, int iconWidth, int iconHeight, int color) {
-        RenderUtils.drawTextureHUD(context, iconTexture, x, y, u, v, iconWidth, iconHeight, textureWidth, textureHeight, color);
-        RenderUtils.fillRoundedRightSide(context, x + iconWidth + 1, y, x + width, y + height, 0x80000000);
-        RenderUtils.drawTextHUD(context, infoText, x + iconWidth + 1 + 5, y + 3, color, false);
+        drawSmallHUD(context, infoText, x, y, width, height, iconTexture, u, v, textureWidth, textureHeight, iconWidth, iconHeight, color, color);
+    }
+
+    public static void drawItemHUD(DrawContext context, String str, int x, int y, int width, int height, ItemStack itemAsIcon, int textColor) {
+        fillRoundedLeftSide(context, x, y, x + ITEM_HUD_ICON_WIDTH, y + height, 0x80000000);
+        fillRoundedRightSide(context, x + ITEM_HUD_ICON_WIDTH + 1, y, x + width, y + height, 0x80000000);
+
+        context.drawItem(itemAsIcon, x + 3, y + 3);
+        drawTextHUD(context, str, x + ITEM_HUD_ICON_WIDTH + 1 + 5, y + 7, textColor, false);
     }
 
     public static void fillRoundedRightSide(DrawContext context, int x1, int y1, int x2, int y2, int color) {
         context.fill(x1, y1, x2 - 1, y2, color);
+        context.fill(x2 - 1, y1 + 1, x2, y2 - 1, color);
+    }
+
+    public static void fillRoundedLeftSide(DrawContext context, int x1, int y1, int x2, int y2, int color) {
+        context.fill(x1, y1 + 1, x1 + 1, y2 - 1, color);
+        context.fill(x1 + 1, y1, x2, y2, color);
+    }
+
+    public static void fillRounded(DrawContext context, int x1, int y1, int x2, int y2, int color) {
+        context.fill(x1, y1 + 1, x1 + 1, y2 - 1, color);
+        context.fill(x1 + 1, y1, x2 - 1, y2, color);
         context.fill(x2 - 1, y1 + 1, x2, y2 - 1, color);
     }
 
