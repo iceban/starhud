@@ -3,6 +3,7 @@ package fin.starhud.hud.implementation;
 import fin.starhud.Helper;
 import fin.starhud.Main;
 import fin.starhud.config.hud.BiomeSettings;
+import fin.starhud.helper.HUDDisplayMode;
 import fin.starhud.helper.RenderUtils;
 import fin.starhud.hud.AbstractHUD;
 import fin.starhud.hud.HUDId;
@@ -48,9 +49,12 @@ public class  BiomeHUD extends AbstractHUD {
     private int color;
     private int dimensionIndex;
 
+    private HUDDisplayMode displayMode;
+
     @Override
     public boolean collectHUDInformation() {
         TextRenderer textRenderer = CLIENT.textRenderer;
+        displayMode = getSettings().getDisplayMode();
 
         BlockPos blockPos = CLIENT.player.getBlockPos();
         RegistryEntry<Biome> currentBiome = CLIENT.world.getBiome(blockPos);
@@ -79,7 +83,7 @@ public class  BiomeHUD extends AbstractHUD {
         dimensionIndex = getDimensionIndex(CLIENT.world.getRegistryKey());
         color = getTextColorFromDimension(dimensionIndex) | 0xFF000000;
 
-        width = ICON_WIDTH + 1 + 5 + cachedTextWidth + 5;
+        width = displayMode.calculateWidth(ICON_WIDTH, cachedTextWidth);
         height = ICON_HEIGHT;
 
         x -= getGrowthDirectionHorizontal(width);
@@ -112,7 +116,8 @@ public class  BiomeHUD extends AbstractHUD {
                 TEXTURE_WIDTH, TEXTURE_HEIGHT,
                 ICON_WIDTH, ICON_HEIGHT,
                 color,
-                0xFFFFFFFF
+                0xFFFFFFFF,
+                displayMode
         );
 
         return true;

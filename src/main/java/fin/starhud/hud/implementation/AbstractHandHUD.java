@@ -1,6 +1,7 @@
 package fin.starhud.hud.implementation;
 
 import fin.starhud.config.hud.HandSettings;
+import fin.starhud.helper.HUDDisplayMode;
 import fin.starhud.helper.RenderUtils;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
@@ -55,6 +56,8 @@ public abstract class AbstractHandHUD extends AbstractDurabilityHUD {
     private boolean showCount;
     private boolean drawItem;
 
+    private HUDDisplayMode displayMode;
+
     @Override
     public boolean collectHUDInformation() {
         item = getStack();
@@ -64,6 +67,7 @@ public abstract class AbstractHandHUD extends AbstractDurabilityHUD {
         showDurability = handSettings.showDurability;
         showCount = handSettings.showCount;
         drawItem = handSettings.durabilitySettings.drawItem;
+        displayMode = getSettings().getDisplayMode();
 
         if (showDurability && item.isDamageable()) {
             return super.collectHUDInformation();
@@ -76,7 +80,7 @@ public abstract class AbstractHandHUD extends AbstractDurabilityHUD {
         amountStr = Integer.toString(getItemCount(CLIENT.player.getInventory(), item));
 
         int strWidth = CLIENT.textRenderer.getWidth(amountStr) - 1;
-        width = (drawItem ? ITEM_TEXTURE_WIDTH : ICON_WIDTH) + 1 + 5 + strWidth + 5;
+        width = displayMode.calculateWidth((drawItem ? ITEM_TEXTURE_WIDTH : ICON_WIDTH), strWidth);
         height = drawItem ? ITEM_TEXTURE_HEIGHT : ICON_HEIGHT;
 
         x -= getGrowthDirectionHorizontal(width);
@@ -93,7 +97,7 @@ public abstract class AbstractHandHUD extends AbstractDurabilityHUD {
 
     public boolean renderHandHUD(DrawContext context, int x, int y) {
         // either draw the durability or the amount of item in the inventory.
-        if (handSettings.showDurability && item.isDamageable()) {
+        if (showDurability && item.isDamageable()) {
             renderDurabilityHUD(
                     context,
                     ICON_TEXTURE,
@@ -102,7 +106,7 @@ public abstract class AbstractHandHUD extends AbstractDurabilityHUD {
                     TEXTURE_WIDTH, TEXTURE_HEIGHT,
                     ICON_WIDTH, ICON_HEIGHT
             );
-        } else if (handSettings.showCount) {
+        } else if (showCount) {
             renderStackCountHUD(context, x, y);
         }
 
@@ -125,7 +129,8 @@ public abstract class AbstractHandHUD extends AbstractDurabilityHUD {
                 x, y,
                 getWidth(), getHeight(),
                 item,
-                iconColor
+                iconColor,
+                displayMode
         );
     }
 
@@ -139,7 +144,8 @@ public abstract class AbstractHandHUD extends AbstractDurabilityHUD {
                 0.0F, 0.0F,
                 TEXTURE_WIDTH, TEXTURE_HEIGHT,
                 ICON_WIDTH, ICON_HEIGHT,
-                iconColor
+                iconColor,
+                displayMode
         );
     }
 

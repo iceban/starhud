@@ -2,6 +2,7 @@ package fin.starhud.hud.implementation;
 
 import fin.starhud.Main;
 import fin.starhud.config.hud.ClockSystemSettings;
+import fin.starhud.helper.HUDDisplayMode;
 import fin.starhud.helper.RenderUtils;
 import fin.starhud.hud.AbstractHUD;
 import fin.starhud.hud.HUDId;
@@ -49,6 +50,8 @@ public class ClockSystemHUD extends AbstractHUD {
     private int height;
     private int color;
 
+    private HUDDisplayMode displayMode;
+
     @Override
     public boolean collectHUDInformation() {
         // update each minute
@@ -68,9 +71,10 @@ public class ClockSystemHUD extends AbstractHUD {
             cachedStrWidth = CLIENT.textRenderer.getWidth(cachedSystemTimeString) - 1;
         }
 
+        displayMode = getSettings().getDisplayMode();
         color = CLOCK_SYSTEM_SETTINGS.color | 0xFF000000;
 
-        width = ICON_WIDTH + 1 + 5 + cachedStrWidth + 5;
+        width = displayMode.calculateWidth(ICON_WIDTH, cachedStrWidth);
         height = ICON_HEIGHT;
 
         x -= getGrowthDirectionHorizontal(width);
@@ -96,7 +100,8 @@ public class ClockSystemHUD extends AbstractHUD {
                 0.0F, 0.0F,
                 TEXTURE_WIDTH, TEXTURE_HEIGHT,
                 ICON_WIDTH, ICON_HEIGHT,
-                color
+                color,
+                displayMode
         );
 
         return true;

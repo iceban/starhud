@@ -2,6 +2,7 @@ package fin.starhud.hud.implementation;
 
 import fin.starhud.Main;
 import fin.starhud.config.hud.TPSSettings;
+import fin.starhud.helper.HUDDisplayMode;
 import fin.starhud.helper.RenderUtils;
 import fin.starhud.helper.TPSTracker;
 import fin.starhud.hud.AbstractHUD;
@@ -31,6 +32,7 @@ public class TPSHUD extends AbstractHUD {
     private int height;
     private int color;
     private int step;
+    private HUDDisplayMode displayMode;
 
     @Override
     public boolean collectHUDInformation() {
@@ -41,8 +43,9 @@ public class TPSHUD extends AbstractHUD {
         str = tps + " TPS";
         int strWidth = CLIENT.textRenderer.getWidth(str) - 1;
 
+        displayMode = getSettings().getDisplayMode();
         height = ICON_HEIGHT;
-        width = ICON_WIDTH + 1 + 5 + (strWidth) + 5;
+        width = displayMode.calculateWidth(ICON_WIDTH, strWidth);
 
         color = (SETTINGS.useDynamicColor ? (AbstractDurabilityHUD.getItemBarColor(4 - step, 4)) : SETTINGS.color) | 0xFF000000;
 
@@ -76,7 +79,8 @@ public class TPSHUD extends AbstractHUD {
                 0.0F, ICON_HEIGHT * step,
                 TEXTURE_WIDTH, TEXTURE_HEIGHT,
                 ICON_WIDTH, ICON_HEIGHT,
-                color
+                color,
+                displayMode
         );
 
         return true;

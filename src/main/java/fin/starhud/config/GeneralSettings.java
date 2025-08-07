@@ -36,5 +36,9 @@ public class GeneralSettings {
 
         @Comment("Since some fonts may have a different font heights, try adjusting this to your liking. Default is 0.")
         public int textYOffset = 0;
+
+        public int textPadding = 5;
+
+        public int iconInfoGap = 1;
     }
 }

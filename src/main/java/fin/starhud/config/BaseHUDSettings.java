@@ -1,14 +1,13 @@
 package fin.starhud.config;
 
-import fin.starhud.helper.GrowthDirectionX;
-import fin.starhud.helper.GrowthDirectionY;
-import fin.starhud.helper.ScreenAlignmentX;
-import fin.starhud.helper.ScreenAlignmentY;
+import fin.starhud.helper.*;
 import me.shedaniel.autoconfig.ConfigData;
+import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.Window;
+import org.spongepowered.asm.mixin.injection.ModifyArgs;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +34,9 @@ public class BaseHUDSettings implements ConfigData {
     @Comment("Which way should the HUD goes when the length increases vertically? (Recommended to go the opposite way from Alignment)")
     @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
     public GrowthDirectionY growthDirectionY;
+
+    @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
+    public HUDDisplayMode displayMode = HUDDisplayMode.BOTH;
 
     @Comment("Set to 0 or below for default GUI Scale")
     public float scale = 0;
@@ -143,6 +145,11 @@ public class BaseHUDSettings implements ConfigData {
             }
         }
         return originY;
+    }
+
+    public HUDDisplayMode getDisplayMode() {
+        if (displayMode == null) displayMode = HUDDisplayMode.BOTH;
+        return displayMode;
     }
 
     public float getScale() {

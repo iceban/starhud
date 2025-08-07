@@ -56,20 +56,24 @@ public class GroupedHUD extends AbstractHUD {
     private int width;
     private int height;
 
-    private final Map<String, Boolean> shouldRenders = new HashMap<>();
+    private final List<AbstractHUD> renderedHUDs = new ArrayList<>();
+    private final List<Integer> xOffsets = new ArrayList<>();
+    private final List<Integer> yOffsets = new ArrayList<>();
 
     @Override
     public boolean collectHUDInformation() {
+        renderedHUDs.clear();
+        xOffsets.clear();
+        yOffsets.clear();
+
         width = 0;
         height = 0;
 
         int renderedCount = 0;
 
         for (AbstractHUD hud : huds) {
-            if (!hud.shouldRender() || !hud.collectHUDInformation()) {
-                shouldRenders.put(hud.getId(), false);
+            if (!hud.shouldRender() || !hud.collectHUDInformation())
                 continue;
-            }
 
             renderedCount++;
 
@@ -81,7 +85,7 @@ public class GroupedHUD extends AbstractHUD {
                 height = Math.max(height, hud.getHeight());
             }
 
-            shouldRenders.put(hud.getId(), true);
+            renderedHUDs.add(hud);
         }
 
         if (renderedCount > 0) {
@@ -93,6 +97,23 @@ public class GroupedHUD extends AbstractHUD {
         } else
             return false;
 
+        int xOffset = 0, yOffset = 0;
+        for (AbstractHUD hud : renderedHUDs) {
+            if (groupSettings.alignVertical) {
+                xOffset = getGrowthDirectionHorizontal(width - hud.getWidth());
+                xOffsets.add(xOffset);
+                yOffsets.add(yOffset);
+
+                yOffset += hud.getHeight() + groupSettings.gap;
+            } else {
+                yOffset = getGrowthDirectionVertical(height - hud.getHeight());
+                xOffsets.add(xOffset);
+                yOffsets.add(yOffset);
+
+                xOffset += hud.getWidth() + groupSettings.gap;
+            }
+        }
+
         x -= getGrowthDirectionHorizontal(width);
         y -= getGrowthDirectionVertical(height);
 
@@ -103,30 +124,14 @@ public class GroupedHUD extends AbstractHUD {
 
     @Override
     public boolean renderHUD(DrawContext context, int x, int y) {
-        int w = getWidth();
-        int h = getHeight();
+        int size = renderedHUDs.size();
 
-        int drawX = x;
-        int drawY = y;
+        for (int i = 0; i < size; ++i) {
+            AbstractHUD hud = renderedHUDs.get(i);
+            int xOffset = xOffsets.get(i);
+            int yOffset = yOffsets.get(i);
 
-        for (AbstractHUD hud : huds) {
-            if (!shouldRenders.get(hud.getId()))
-                continue;
-
-            if (groupSettings.alignVertical) {
-                drawX = x + getGrowthDirectionHorizontal(w - hud.getWidth());
-            } else {
-                drawY = y + getGrowthDirectionVertical(h - hud.getHeight());
-            }
-
-            if (!hud.renderHUD(context, drawX, drawY))
-                continue;
-
-            if (groupSettings.alignVertical) {
-                drawY += hud.getHeight() + groupSettings.gap;
-            } else {
-                drawX += hud.getWidth() + groupSettings.gap;
-            }
+            hud.renderHUD(context, x + xOffset, y + yOffset);
         }
 
         return true;

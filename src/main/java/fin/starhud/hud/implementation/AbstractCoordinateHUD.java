@@ -1,6 +1,7 @@
 package fin.starhud.hud.implementation;
 
 import fin.starhud.config.hud.CoordSettings;
+import fin.starhud.helper.HUDDisplayMode;
 import fin.starhud.helper.RenderUtils;
 import fin.starhud.hud.AbstractHUD;
 import net.minecraft.client.MinecraftClient;
@@ -32,12 +33,16 @@ public abstract class AbstractCoordinateHUD extends AbstractHUD {
     private int width;
     private int height;
     private int color;
+    private HUDDisplayMode displayMode;
 
     @Override
     public boolean collectHUDInformation() {
         coordStr = Integer.toString(getCoord());
         int strWidth = CLIENT.textRenderer.getWidth(coordStr) - 1;
-        width = ICON_WIDTH + 1 + 5 + strWidth + 5;
+
+        displayMode = getSettings().getDisplayMode();
+
+        width = displayMode.calculateWidth(ICON_WIDTH, strWidth);
         height = ICON_HEIGHT;
 
         color = SETTINGS.color | 0xFF000000;
@@ -65,7 +70,8 @@ public abstract class AbstractCoordinateHUD extends AbstractHUD {
                 0.0F, 0.0F,
                 TEXTURE_WIDTH, TEXTURE_HEIGHT,
                 ICON_WIDTH, ICON_HEIGHT,
-                color
+                color,
+                displayMode
         );
 
         return true;

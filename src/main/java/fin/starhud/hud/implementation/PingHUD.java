@@ -2,6 +2,7 @@ package fin.starhud.hud.implementation;
 
 import fin.starhud.Main;
 import fin.starhud.config.hud.PingSettings;
+import fin.starhud.helper.HUDDisplayMode;
 import fin.starhud.helper.RenderUtils;
 import fin.starhud.hud.AbstractHUD;
 import fin.starhud.hud.HUDId;
@@ -49,10 +50,11 @@ public class PingHUD extends AbstractHUD {
     private int color;
     private int step;
 
+    private HUDDisplayMode displayMode;
+
     @Override
     public boolean collectHUDInformation() {
-        if (CLIENT.isInSingleplayer())
-            return false;
+        displayMode = getSettings().getDisplayMode();
 
         MultiValueDebugSampleLogImpl pingLog = CLIENT.getDebugHud().getPingLog();
 
@@ -76,7 +78,7 @@ public class PingHUD extends AbstractHUD {
                 pingStr = currentPing + " ms";
                 int strWidth = CLIENT.textRenderer.getWidth(pingStr) - 1;
 
-                width = ICON_WIDTH + 1 + 5 + strWidth + 5;
+                width = displayMode.calculateWidth(ICON_WIDTH, strWidth);
                 height = ICON_HEIGHT;
 
                 step = Math.min((int) currentPing / 150, 3);
@@ -107,7 +109,8 @@ public class PingHUD extends AbstractHUD {
                 0.0F, ICON_HEIGHT * step,
                 TEXTURE_WIDTH, TEXTURE_HEIGHT,
                 ICON_WIDTH, ICON_HEIGHT,
-                color
+                color,
+                displayMode
         );
 
         return true;

@@ -2,6 +2,7 @@ package fin.starhud.hud.implementation;
 
 import fin.starhud.Main;
 import fin.starhud.config.hud.FPSSettings;
+import fin.starhud.helper.HUDDisplayMode;
 import fin.starhud.helper.RenderUtils;
 import fin.starhud.hud.AbstractHUD;
 import fin.starhud.hud.HUDId;
@@ -40,13 +41,16 @@ public class FPSHUD extends AbstractHUD {
     private int width;
     private int height;
     private int color;
+    private HUDDisplayMode displayMode;
 
     @Override
     public boolean collectHUDInformation() {
         fpsStr = CLIENT.getCurrentFps() + " FPS";
         int strWidth = CLIENT.textRenderer.getWidth(fpsStr) - 1;
 
-        width = TEXTURE_WIDTH + 1 + 5 + strWidth + 5;
+        displayMode = getSettings().getDisplayMode();
+
+        width = displayMode.calculateWidth(ICON_WIDTH, strWidth);
         height = TEXTURE_HEIGHT;
 
         color = FPS_SETTINGS.color | 0xFF000000;
@@ -74,7 +78,8 @@ public class FPSHUD extends AbstractHUD {
                 0.0F, 0.0F,
                 TEXTURE_WIDTH, TEXTURE_HEIGHT,
                 ICON_WIDTH, ICON_HEIGHT,
-                color
+                color,
+                displayMode
         );
         return true;
     }

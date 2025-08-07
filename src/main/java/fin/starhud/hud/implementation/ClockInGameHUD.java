@@ -2,6 +2,7 @@ package fin.starhud.hud.implementation;
 
 import fin.starhud.Main;
 import fin.starhud.config.hud.ClockInGameSettings;
+import fin.starhud.helper.HUDDisplayMode;
 import fin.starhud.helper.RenderUtils;
 import fin.starhud.hud.AbstractHUD;
 import fin.starhud.hud.HUDId;
@@ -47,6 +48,8 @@ public class ClockInGameHUD extends AbstractHUD {
     private int color;
     private int iconIndex;
 
+    private HUDDisplayMode displayMode;
+
     @Override
     public boolean collectHUDInformation() {
         ClientWorld world = CLIENT.world;
@@ -54,6 +57,7 @@ public class ClockInGameHUD extends AbstractHUD {
         long time = world.getTimeOfDay() % 24000;
 
         boolean use12Hour = CLOCK_IN_GAME_SETTINGS.use12Hour;
+        displayMode = getSettings().getDisplayMode();
 
         int minutes = (int) ((time % 1000) * 3 / 50);
         int hours = (int) ((time / 1000) + 6) % 24;
@@ -70,7 +74,7 @@ public class ClockInGameHUD extends AbstractHUD {
         iconIndex = getWeatherOrTime(world);
         color = getIconColor(iconIndex) | 0xFF000000;
 
-        width = ICON_WIDTH + 1 + 5 + cachedStrWidth + 5;
+        width = displayMode.calculateWidth(ICON_WIDTH, cachedStrWidth);
         height = ICON_HEIGHT;
 
         x -= getGrowthDirectionHorizontal(width);
@@ -96,7 +100,8 @@ public class ClockInGameHUD extends AbstractHUD {
                 0.0F, ICON_HEIGHT * iconIndex,
                 TEXTURE_WIDTH, TEXTURE_HEIGHT,
                 ICON_WIDTH, ICON_HEIGHT,
-                color
+                color,
+                displayMode
         );
 
         return true;

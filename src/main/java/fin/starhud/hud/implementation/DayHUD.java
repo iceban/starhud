@@ -2,6 +2,7 @@ package fin.starhud.hud.implementation;
 
 import fin.starhud.Main;
 import fin.starhud.config.hud.DaySettings;
+import fin.starhud.helper.HUDDisplayMode;
 import fin.starhud.helper.RenderUtils;
 import fin.starhud.hud.AbstractHUD;
 import fin.starhud.hud.HUDId;
@@ -45,6 +46,8 @@ public class DayHUD extends AbstractHUD {
     private int height;
     private int color;
 
+    private HUDDisplayMode displayMode;
+
     @Override
     public boolean collectHUDInformation() {
         long day = CLIENT.world.getTimeOfDay() / 24000L;
@@ -57,8 +60,9 @@ public class DayHUD extends AbstractHUD {
             cachedTextWidth = CLIENT.textRenderer.getWidth(cachedDayString) - 1;
         }
 
+        displayMode = getSettings().getDisplayMode();
         color = DAY_SETTINGS.color | 0xFF000000;
-        width = ICON_WIDTH + 1 + 5 + cachedTextWidth + 5;
+        width = displayMode.calculateWidth(ICON_WIDTH, cachedTextWidth);
         height = ICON_HEIGHT;
 
         x -= getGrowthDirectionHorizontal(width);
@@ -84,8 +88,10 @@ public class DayHUD extends AbstractHUD {
                 0.0F, 0.0F,
                 TEXTURE_WIDTH, TEXTURE_HEIGHT,
                 ICON_WIDTH, ICON_HEIGHT,
-                color
+                color,
+                displayMode
         );
+
         return true;
     }
 }

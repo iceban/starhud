@@ -2,6 +2,7 @@ package fin.starhud.hud.implementation;
 
 import fin.starhud.Main;
 import fin.starhud.config.hud.SpeedSettings;
+import fin.starhud.helper.HUDDisplayMode;
 import fin.starhud.helper.RenderUtils;
 import fin.starhud.hud.AbstractHUD;
 import fin.starhud.hud.HUDId;
@@ -28,6 +29,7 @@ public class SpeedHUD extends AbstractHUD {
 
     private String str;
     private int width, height, color;
+    private HUDDisplayMode displayMode;
 
     @Override
     public boolean collectHUDInformation() {
@@ -40,7 +42,8 @@ public class SpeedHUD extends AbstractHUD {
 
         int strWidth = CLIENT.textRenderer.getWidth(str) - 1;
 
-        width = ICON_WIDTH + 1 + 5 + strWidth + 5;
+        displayMode = getSettings().getDisplayMode();
+        width = displayMode.calculateWidth(ICON_WIDTH, strWidth);
         height = ICON_HEIGHT;
         color = SETTINGS.color | 0xff000000;
 
@@ -66,7 +69,8 @@ public class SpeedHUD extends AbstractHUD {
                 0.0F, 0.0F,
                 TEXTURE_WIDTH, TEXTURE_HEIGHT,
                 ICON_WIDTH, ICON_HEIGHT,
-                color
+                color,
+                displayMode
         );
 
         return true;

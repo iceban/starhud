@@ -2,7 +2,9 @@ package fin.starhud.hud.implementation;
 
 import fin.starhud.Helper;
 import fin.starhud.Main;
+import fin.starhud.config.GeneralSettings;
 import fin.starhud.config.hud.TargetedCrosshairSettings;
+import fin.starhud.helper.HUDDisplayMode;
 import fin.starhud.helper.RenderUtils;
 import fin.starhud.hud.AbstractHUD;
 import fin.starhud.hud.HUDId;
@@ -36,20 +38,20 @@ import net.minecraft.util.math.BlockPos;
 // HUD similar to JADE's. TargetedCrosshairHUD.
 public class TargetedCrosshairHUD extends AbstractHUD {
 
-    private static final TargetedCrosshairSettings TARGETED_CROSSHAIR_SETTINGS = Main.settings.targetedCrosshairSettings;
+    private static final TargetedCrosshairSettings SETTINGS = Main.settings.targetedCrosshairSettings;
+    private static final GeneralSettings.HUDSettings HUD_SETTINGS = Main.settings.generalSettings.hudSettings;
 
-    private static final Identifier ICON_BACKGROUND_TEXTURE = Identifier.of("starhud", "hud/item.png");
     private static final Identifier ENTITY_ICON_TEXTURE = Identifier.of("starhud", "hud/targeted_icon_entity.png");
 
     // left padding + texture + right padding
-    private static final int ICON_BACKGROUND_WIDTH = 3 + 16 + 3;
-    private static final int ICON_BACKGROUND_HEIGHT = 3 + 16 + 3;
+    private static final int ICON_WIDTH = 3 + 16 + 3;
+    private static final int ICON_HEIGHT = 3 + 16 + 3;
 
     private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
 
 
     public TargetedCrosshairHUD() {
-        super(TARGETED_CROSSHAIR_SETTINGS.base);
+        super(SETTINGS.base);
     }
 
     @Override
@@ -64,7 +66,7 @@ public class TargetedCrosshairHUD extends AbstractHUD {
 
     public static boolean isShown() {
 
-        if (!TARGETED_CROSSHAIR_SETTINGS.base.shouldRender())
+        if (!SETTINGS.base.shouldRender())
             return false;
 
         return CLIENT.crosshairTarget != null && CLIENT.crosshairTarget.getType() != HitResult.Type.MISS;
@@ -78,10 +80,12 @@ public class TargetedCrosshairHUD extends AbstractHUD {
     private int width;
     private int height;
     private HitResult.Type hitResultType;
+    private HUDDisplayMode displayMode;
 
     @Override
     public boolean collectHUDInformation() {
         hitResultType = CLIENT.crosshairTarget.getType();
+        displayMode = getSettings().getDisplayMode();
         return switch (hitResultType) {
             case BLOCK -> collectDataBlock();
             case ENTITY -> collectDataEntity();
@@ -94,6 +98,8 @@ public class TargetedCrosshairHUD extends AbstractHUD {
     private OrderedText cachedBlockName = null;
     private String cachedBlockModName = null;
     private int cachedBlockMaxWidth = -1;
+    private int targetedNameColor;
+    private int modNameColor;
 
     public boolean collectDataBlock() {
         BlockPos pos = ((BlockHitResult) CLIENT.crosshairTarget).getBlockPos();
@@ -116,17 +122,18 @@ public class TargetedCrosshairHUD extends AbstractHUD {
             cachedBlockMaxWidth = Math.max(modNameWidth, blockNameWidth) - 1;
         }
 
-        width = ICON_BACKGROUND_WIDTH + 1 + 5 + cachedBlockMaxWidth + 5;
-        height = ICON_BACKGROUND_HEIGHT;
+        targetedNameColor = SETTINGS.targetedNameColor | 0x80000000;
+        modNameColor = SETTINGS.modNameColor | 0x80000000;
+        width = displayMode.calculateWidth(ICON_WIDTH, cachedBlockMaxWidth);
+        height = ICON_HEIGHT;
 
         x -= getGrowthDirectionHorizontal(width);
         y -= getGrowthDirectionVertical(height);
 
-        setBoundingBox(x, y, width, height);
+        setBoundingBox(x, y, width, height, targetedNameColor);
         return true;
     }
 
-    private int color;
     private Entity cachedTargetedEntity = null;
     private OrderedText cachedEntityName = null;
     private String cachedEntityModName = null;
@@ -148,14 +155,15 @@ public class TargetedCrosshairHUD extends AbstractHUD {
             cachedIndex = getEntityIconIndex(targetedEntity);
         }
 
-        width = ICON_BACKGROUND_WIDTH + 1 + 5 + cachedEntityMaxWidth + 5;
-        height = ICON_BACKGROUND_HEIGHT;
-        color = getEntityIconColor(cachedIndex) | 0xFF000000;
+        width = displayMode.calculateWidth(ICON_WIDTH, cachedEntityMaxWidth);
+        height = ICON_HEIGHT;
+        targetedNameColor = getEntityIconColor(cachedIndex) | 0xFF000000;
+        modNameColor = SETTINGS.modNameColor | 0x80000000;
 
         x -= getGrowthDirectionHorizontal(width);
         y -= getGrowthDirectionVertical(height);
 
-        setBoundingBox(x, y, width, height, color);
+        setBoundingBox(x, y, width, height, targetedNameColor);
 
         return true;
     }
@@ -174,35 +182,60 @@ public class TargetedCrosshairHUD extends AbstractHUD {
         int w = getWidth();
         int h = getHeight();
 
-        RenderUtils.fillRoundedLeftSide(
-                context,
-                x, y,
-                x + ICON_BACKGROUND_WIDTH, y + h,
-                0x80000000
-        );
-        RenderUtils.fillRoundedRightSide(
-                context,
-                x + ICON_BACKGROUND_WIDTH + 1, y,
-                x + w, y + h,
-                0x80000000
-        );
+        int padding = HUD_SETTINGS.textPadding;
+        int gap = HUD_SETTINGS.iconInfoGap;
 
-        context.drawItem(blockStack, x + 3, y + 3);
-        RenderUtils.drawTextHUD(
-                context,
-                cachedBlockName,
-                x + ICON_BACKGROUND_WIDTH + 1 + 5, y + 3,
-                TARGETED_CROSSHAIR_SETTINGS.targetedNameColor | 0xFF000000,
-                false
-        );
-        RenderUtils.drawTextHUD(
-                context,
-                cachedBlockModName,
-                x + ICON_BACKGROUND_WIDTH + 1 + 5,
-                y + ICON_BACKGROUND_HEIGHT - 3 - 7,
-                TARGETED_CROSSHAIR_SETTINGS.modNameColor | 0xFF000000,
-                false
-        );
+        switch (displayMode) {
+            case ICON_ONLY -> {
+                RenderUtils.fillRounded(context, x, y, x + ICON_WIDTH, y + ICON_HEIGHT, 0x80000000);
+                context.drawItem(blockStack, x + 3, y + 3);
+            }
+            case INFO_ONLY -> {
+                RenderUtils.fillRounded(context, x, y, x + w, y + h, 0x80000000);
+                RenderUtils.drawTextHUD(context, cachedBlockName, x + padding, y + 3, targetedNameColor, false);
+                RenderUtils.drawTextHUD(context, cachedBlockModName, x + padding, y + h - 3 - 7, modNameColor, false);
+            }
+            case BOTH -> {
+                if (gap == 0)
+                    RenderUtils.fillRounded(
+                            context,
+                            x, y,
+                            x + w, y + h,
+                            0x80000000
+                    );
+                else {
+                    RenderUtils.fillRoundedLeftSide(
+                            context,
+                            x, y,
+                            x + ICON_WIDTH, y + h,
+                            0x80000000
+                    );
+                    RenderUtils.fillRoundedRightSide(
+                            context,
+                            x + ICON_WIDTH + gap, y,
+                            x + w, y + h,
+                            0x80000000
+                    );
+                }
+
+                context.drawItem(blockStack, x + 3, y + 3);
+                RenderUtils.drawTextHUD(
+                        context,
+                        cachedBlockName,
+                        x + ICON_WIDTH + gap + padding, y + 3,
+                        SETTINGS.targetedNameColor | 0xFF000000,
+                        false
+                );
+                RenderUtils.drawTextHUD(
+                        context,
+                        cachedBlockModName,
+                        x + ICON_WIDTH + gap + padding,
+                        y + ICON_HEIGHT - 3 - 7,
+                        SETTINGS.modNameColor | 0xFF000000,
+                        false
+                );
+            }
+        }
 
         return true;
     }
@@ -212,43 +245,68 @@ public class TargetedCrosshairHUD extends AbstractHUD {
         int w = getWidth();
         int h = getHeight();
 
-        RenderUtils.fillRoundedLeftSide(
-                context,
-                x, y,
-                x + ICON_BACKGROUND_WIDTH, y + h,
-                0x80000000
-        );
-        RenderUtils.fillRoundedRightSide(
-                context,
-                x + ICON_BACKGROUND_WIDTH + 1, y,
-                x + w, y + h,
-                0x80000000
-        );
+        int padding = HUD_SETTINGS.textPadding;
+        int gap = HUD_SETTINGS.iconInfoGap;
 
-        RenderUtils.drawTextureHUD(
-                context,
-                ENTITY_ICON_TEXTURE,
-                x, y,
-                0, 22 * cachedIndex,
-                ICON_BACKGROUND_WIDTH, ICON_BACKGROUND_HEIGHT,
-                ICON_BACKGROUND_WIDTH, ICON_BACKGROUND_HEIGHT * 5,
-                color
-        );
+        switch (displayMode) {
+            case ICON_ONLY -> {
+                RenderUtils.fillRounded(context, x, y, x + ICON_WIDTH, y + ICON_HEIGHT, 0x80000000);
+                RenderUtils.drawTextureHUD(context, ENTITY_ICON_TEXTURE, x, y, 0, 22 * cachedIndex, ICON_WIDTH, ICON_HEIGHT, ICON_WIDTH, ICON_HEIGHT * 5, targetedNameColor);
+            }
+            case INFO_ONLY -> {
+                RenderUtils.fillRounded(context, x, y, x + w, y + h, 0x80000000);
+                RenderUtils.drawTextHUD(context, cachedEntityName, x + padding, y + 3, targetedNameColor, false);
+                RenderUtils.drawTextHUD(context, cachedEntityModName, x + padding, y + h - 3 - 7, modNameColor, false);
+            }
+            case BOTH -> {
+                if (gap == 0)
+                    RenderUtils.fillRounded(
+                            context,
+                            x, y,
+                            x + w, y + h,
+                            0x80000000
+                    );
+                else {
+                    RenderUtils.fillRoundedLeftSide(
+                            context,
+                            x, y,
+                            x + ICON_WIDTH, y + h,
+                            0x80000000
+                    );
+                    RenderUtils.fillRoundedRightSide(
+                            context,
+                            x + ICON_WIDTH + gap, y,
+                            x + w, y + h,
+                            0x80000000
+                    );
+                }
 
-        RenderUtils.drawTextHUD(
-                context,
-                cachedEntityName,
-                x + ICON_BACKGROUND_WIDTH + 1 + 5, y + 3,
-                color,
-                false
-        );
-        RenderUtils.drawTextHUD(
-                context,
-                cachedEntityModName,
-                x + ICON_BACKGROUND_WIDTH + 1 + 5, y + ICON_BACKGROUND_HEIGHT - 3 - 7,
-                TARGETED_CROSSHAIR_SETTINGS.modNameColor | 0xFF000000,
-                false
-        );
+                RenderUtils.drawTextureHUD(
+                        context,
+                        ENTITY_ICON_TEXTURE,
+                        x, y,
+                        0, 22 * cachedIndex,
+                        ICON_WIDTH, ICON_HEIGHT,
+                        ICON_WIDTH, ICON_HEIGHT * 5,
+                        targetedNameColor
+                );
+
+                RenderUtils.drawTextHUD(
+                        context,
+                        cachedEntityName,
+                        x + ICON_WIDTH + gap + padding, y + 3,
+                        targetedNameColor,
+                        false
+                );
+                RenderUtils.drawTextHUD(
+                        context,
+                        cachedEntityModName,
+                        x + ICON_WIDTH + gap + padding, y + ICON_HEIGHT - 3 - 7,
+                        SETTINGS.modNameColor | 0xFF000000,
+                        false
+                );
+            }
+        }
 
         return true;
     }
@@ -263,11 +321,11 @@ public class TargetedCrosshairHUD extends AbstractHUD {
 
     private int getEntityIconColor(int index) {
         return switch (index) {
-            case 0 -> TARGETED_CROSSHAIR_SETTINGS.entityColors.hostile;
-            case 1 -> TARGETED_CROSSHAIR_SETTINGS.entityColors.angerable;
-            case 2 -> TARGETED_CROSSHAIR_SETTINGS.entityColors.passive;
-            case 3 -> TARGETED_CROSSHAIR_SETTINGS.entityColors.player;
-            default -> TARGETED_CROSSHAIR_SETTINGS.entityColors.unknown;
+            case 0 -> SETTINGS.entityColors.hostile;
+            case 1 -> SETTINGS.entityColors.angerable;
+            case 2 -> SETTINGS.entityColors.passive;
+            case 3 -> SETTINGS.entityColors.player;
+            default -> SETTINGS.entityColors.unknown;
         };
     }
 
