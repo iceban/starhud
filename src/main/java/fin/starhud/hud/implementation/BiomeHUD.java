@@ -104,7 +104,7 @@ public class  BiomeHUD extends AbstractHUD {
     }
 
     @Override
-    public boolean renderHUD(DrawContext context, int x, int y) {
+    public boolean renderHUD(DrawContext context, int x, int y, boolean drawBackground) {
 
         RenderUtils.drawSmallHUD(
                 context,
@@ -117,7 +117,8 @@ public class  BiomeHUD extends AbstractHUD {
                 ICON_WIDTH, ICON_HEIGHT,
                 color,
                 0xFFFFFFFF,
-                displayMode
+                displayMode,
+                drawBackground
         );
 
         return true;

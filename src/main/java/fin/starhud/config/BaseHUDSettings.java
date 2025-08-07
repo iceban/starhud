@@ -38,6 +38,8 @@ public class BaseHUDSettings implements ConfigData {
     @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
     public HUDDisplayMode displayMode = HUDDisplayMode.BOTH;
 
+    public boolean drawBackground;
+
     @Comment("Set to 0 or below for default GUI Scale")
     public float scale = 0;
 
@@ -52,11 +54,25 @@ public class BaseHUDSettings implements ConfigData {
         this.originY = originY;
         this.growthDirectionX = growthDirectionX;
         this.growthDirectionY = growthDirectionY;
+        this.drawBackground = true;
     }
 
-    public BaseHUDSettings(int x, int y, ScreenAlignmentX originX, ScreenAlignmentY originY, GrowthDirectionX growthDirectionX, GrowthDirectionY growthDirectionY, float scale) {
-        this(true, x , y, originX, originY, growthDirectionX, growthDirectionY);
+    public BaseHUDSettings(boolean shouldRender, int x, int y, ScreenAlignmentX originX, ScreenAlignmentY originY, GrowthDirectionX growthDirectionX, GrowthDirectionY growthDirectionY, float scale, HUDDisplayMode displayMode, boolean drawBackground) {
+        this(shouldRender, x , y, originX, originY, growthDirectionX, growthDirectionY);
         this.scale = scale;
+        this.displayMode = displayMode;
+        this.drawBackground = drawBackground;
+    }
+
+    public BaseHUDSettings(boolean shouldRender, int x, int y, ScreenAlignmentX originX, ScreenAlignmentY originY, GrowthDirectionX growthDirectionX, GrowthDirectionY growthDirectionY, boolean drawBackground) {
+        this.shouldRender = shouldRender;
+        this.x = x;
+        this.y = y;
+        this.originX = originX;
+        this.originY = originY;
+        this.growthDirectionX = growthDirectionX;
+        this.growthDirectionY = growthDirectionY;
+        this.drawBackground = drawBackground;
     }
 
     public boolean shouldRender() {

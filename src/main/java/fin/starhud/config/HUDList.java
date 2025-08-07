@@ -26,7 +26,7 @@ public class HUDList {
     public HUDList() {
         groupedHuds.add(
                 new GroupedHUDSettings(
-                        new BaseHUDSettings(true, 5, 0, ScreenAlignmentX.LEFT, ScreenAlignmentY.MIDDLE, GrowthDirectionX.RIGHT, GrowthDirectionY.MIDDLE),
+                        new BaseHUDSettings(true, 5, 0, ScreenAlignmentX.LEFT, ScreenAlignmentY.MIDDLE, GrowthDirectionX.RIGHT, GrowthDirectionY.MIDDLE, false),
                         1,
                         1,
                         true,
@@ -36,7 +36,7 @@ public class HUDList {
         );
         groupedHuds.add(
                 new GroupedHUDSettings(
-                        new BaseHUDSettings(true, -5, 5, ScreenAlignmentX.RIGHT, ScreenAlignmentY.TOP, GrowthDirectionX.LEFT, GrowthDirectionY.DOWN),
+                        new BaseHUDSettings(true, -5, 5, ScreenAlignmentX.RIGHT, ScreenAlignmentY.TOP, GrowthDirectionX.LEFT, GrowthDirectionY.DOWN, false),
                         2,
                         2,
                         true,

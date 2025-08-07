@@ -72,18 +72,20 @@ public class InventoryHUD extends AbstractHUD {
     }
 
     @Override
-    public boolean renderHUD(DrawContext context, int x, int y) {
+    public boolean renderHUD(DrawContext context, int x, int y, boolean drawBackground) {
         if (drawVertical) {
-            return drawInventoryVertical(context, x, y);
+            return drawInventoryVertical(context, x, y, drawBackground);
         } else {
-            return drawInventoryHorizontal(context, x, y);
+            return drawInventoryHorizontal(context, x, y, drawBackground);
         }
     }
 
-    private boolean drawInventoryVertical(DrawContext context, int x, int y) {
+    private boolean drawInventoryVertical(DrawContext context, int x, int y, boolean drawBackground) {
         PlayerInventory inventory = CLIENT.player.getInventory();
 
-        RenderUtils.drawTextureHUD(context, INVENTORY_TEXTURE_VERTICAL, x, y, 0.0F, 0.0F, TEXTURE_WIDTH_VERTICAL, TEXTURE_HEIGHT_VERTICAL, TEXTURE_WIDTH_VERTICAL, TEXTURE_HEIGHT_VERTICAL);
+        if (drawBackground)
+            RenderUtils.drawTextureHUD(context, INVENTORY_TEXTURE_VERTICAL, x, y, 0.0F, 0.0F, TEXTURE_WIDTH_VERTICAL, TEXTURE_HEIGHT_VERTICAL, TEXTURE_WIDTH_VERTICAL, TEXTURE_HEIGHT_VERTICAL);
+
         for (int itemIndex = 0; itemIndex < 27; ++itemIndex) {
 
             ItemStack stack = inventory.getMainStacks().get(itemIndex + 9);
@@ -101,10 +103,12 @@ public class InventoryHUD extends AbstractHUD {
         return true;
     }
 
-    private boolean drawInventoryHorizontal(DrawContext context, int x, int y) {
+    private boolean drawInventoryHorizontal(DrawContext context, int x, int y, boolean drawBackground) {
         PlayerInventory inventory = CLIENT.player.getInventory();
 
-        RenderUtils.drawTextureHUD(context, INVENTORY_TEXTURE, x, y, 0.0F, 0.0F, TEXTURE_WIDTH_HORIZONTAL, TEXTURE_HEIGHT_HORIZONTAL, TEXTURE_WIDTH_HORIZONTAL, TEXTURE_HEIGHT_HORIZONTAL);
+        if (drawBackground)
+            RenderUtils.drawTextureHUD(context, INVENTORY_TEXTURE, x, y, 0.0F, 0.0F, TEXTURE_WIDTH_HORIZONTAL, TEXTURE_HEIGHT_HORIZONTAL, TEXTURE_WIDTH_HORIZONTAL, TEXTURE_HEIGHT_HORIZONTAL);
+
         for (int itemIndex = 0; itemIndex < 27; ++itemIndex) {
 
             ItemStack stack = inventory.getMainStacks().get(itemIndex + 9);

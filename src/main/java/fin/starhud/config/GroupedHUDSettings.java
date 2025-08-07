@@ -18,6 +18,9 @@ public class GroupedHUDSettings {
 
     public boolean alignVertical = false;
 
+    @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
+    public ChildAlignment childAlignment = ChildAlignment.THIS;
+
     @ConfigEntry.ColorPicker
     public int boxColor = 0xFFFFFF;
 
@@ -51,7 +54,7 @@ public class GroupedHUDSettings {
     }
 
     public GroupedHUDSettings() {
-        this(new BaseHUDSettings(true, 0, 0, ScreenAlignmentX.LEFT, ScreenAlignmentY.TOP, GrowthDirectionX.RIGHT, GrowthDirectionY.DOWN));
+        this(new BaseHUDSettings(true, 0, 0, ScreenAlignmentX.LEFT, ScreenAlignmentY.TOP, GrowthDirectionX.RIGHT, GrowthDirectionY.DOWN, false));
     }
 
     public boolean isEqual(GroupedHUDSettings other) {
@@ -89,4 +92,21 @@ public class GroupedHUDSettings {
                 '}';
     }
 
+    public static enum ChildAlignment {
+        THIS,
+        CHILD,
+        START,
+        CENTER,
+        END;
+
+        public ChildAlignment next() {
+            return switch (this) {
+                case THIS -> CHILD;
+                case CHILD -> START;
+                case START -> CENTER;
+                case CENTER -> END;
+                case END -> THIS;
+            };
+        }
+    }
 }

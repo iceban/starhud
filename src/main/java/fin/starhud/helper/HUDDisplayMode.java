@@ -4,8 +4,8 @@ import fin.starhud.Main;
 import fin.starhud.config.GeneralSettings;
 
 public enum HUDDisplayMode {
-    ICON_ONLY,
-    INFO_ONLY,
+    ICON,
+    INFO,
     BOTH;
 
     public int calculateWidth(int iconWidth, int infoWidth) {
@@ -14,9 +14,17 @@ public enum HUDDisplayMode {
         int gap = SETTINGS.iconInfoGap;
 
         return switch (this) {
-            case ICON_ONLY -> iconWidth;
-            case INFO_ONLY -> padding + infoWidth + padding;
+            case ICON -> iconWidth;
+            case INFO -> padding + infoWidth + padding;
             case BOTH -> iconWidth + gap + padding + infoWidth + padding;
+        };
+    }
+
+    public HUDDisplayMode next() {
+        return switch (this) {
+            case ICON -> INFO;
+            case INFO -> BOTH;
+            case BOTH -> ICON;
         };
     }
 }

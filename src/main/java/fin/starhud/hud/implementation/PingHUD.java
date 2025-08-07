@@ -45,6 +45,7 @@ public class PingHUD extends AbstractHUD {
     }
 
     private String pingStr;
+    private int strWidth;
     private int width;
     private int height;
     private int color;
@@ -76,16 +77,15 @@ public class PingHUD extends AbstractHUD {
             if (pingLogLen > 0) {
                 long currentPing = pingLog.get(pingLogLen - 1);
                 pingStr = currentPing + " ms";
-                int strWidth = CLIENT.textRenderer.getWidth(pingStr) - 1;
-
-                width = displayMode.calculateWidth(ICON_WIDTH, strWidth);
-                height = ICON_HEIGHT;
+                strWidth = CLIENT.textRenderer.getWidth(pingStr) - 1;
 
                 step = Math.min((int) currentPing / 150, 3);
                 color = getPingColor(step) | 0xFF000000;
             }
         }
 
+        width = displayMode.calculateWidth(ICON_WIDTH, strWidth);
+        height = ICON_HEIGHT;
         x -= getGrowthDirectionHorizontal(width);
         y -= getGrowthDirectionVertical(height);
 
@@ -95,7 +95,7 @@ public class PingHUD extends AbstractHUD {
     }
 
     @Override
-    public boolean renderHUD(DrawContext context, int x, int y) {
+    public boolean renderHUD(DrawContext context, int x, int y, boolean drawBackground) {
 
         int w = getWidth();
         int h = getHeight();
@@ -110,7 +110,8 @@ public class PingHUD extends AbstractHUD {
                 TEXTURE_WIDTH, TEXTURE_HEIGHT,
                 ICON_WIDTH, ICON_HEIGHT,
                 color,
-                displayMode
+                displayMode,
+                drawBackground
         );
 
         return true;

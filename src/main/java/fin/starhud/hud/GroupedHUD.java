@@ -2,13 +2,12 @@ package fin.starhud.hud;
 
 import fin.starhud.Main;
 import fin.starhud.config.GroupedHUDSettings;
+import fin.starhud.helper.RenderUtils;
 import net.minecraft.client.gui.DrawContext;
 import org.slf4j.Logger;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 public class GroupedHUD extends AbstractHUD {
@@ -100,13 +99,13 @@ public class GroupedHUD extends AbstractHUD {
         int xOffset = 0, yOffset = 0;
         for (AbstractHUD hud : renderedHUDs) {
             if (groupSettings.alignVertical) {
-                xOffset = getGrowthDirectionHorizontal(width - hud.getWidth());
+                xOffset = getAlignmentOffset(hud, width - hud.getWidth());
                 xOffsets.add(xOffset);
                 yOffsets.add(yOffset);
 
                 yOffset += hud.getHeight() + groupSettings.gap;
             } else {
-                yOffset = getGrowthDirectionVertical(height - hud.getHeight());
+                yOffset = getAlignmentOffset(hud, height - hud.getHeight());
                 xOffsets.add(xOffset);
                 yOffsets.add(yOffset);
 
@@ -123,15 +122,38 @@ public class GroupedHUD extends AbstractHUD {
     }
 
     @Override
-    public boolean renderHUD(DrawContext context, int x, int y) {
+    public boolean renderHUD(DrawContext context, int x, int y, boolean drawBackground) {
+        return renderHUD(context, x, y, drawBackground, false);
+    }
+
+    public boolean renderHUD(DrawContext context, int x, int y, boolean drawBackground, boolean parentDrewBackground) {
+        int w = getWidth();
+        int h = getHeight();
         int size = renderedHUDs.size();
+
+        boolean drewBackground = false;
+
+        // Only draw background if this group is not inside another that already drew one
+        if (!parentDrewBackground && drawBackground) {
+            RenderUtils.fillRounded(context, x, y, x + w, y + h, 0x80000000);
+            drewBackground = true;
+        }
+
+        boolean thisDrewBackground = parentDrewBackground || drewBackground;
 
         for (int i = 0; i < size; ++i) {
             AbstractHUD hud = renderedHUDs.get(i);
             int xOffset = xOffsets.get(i);
             int yOffset = yOffsets.get(i);
 
-            hud.renderHUD(context, x + xOffset, y + yOffset);
+            // if grouped hud decided to draw background, child shouldn't.
+            boolean childShouldDrawBackground = !thisDrewBackground && hud.shouldDrawBackground();
+
+            if (hud instanceof GroupedHUD group) {
+                group.renderHUD(context, x + xOffset, y + yOffset, childShouldDrawBackground, thisDrewBackground);
+            } else {
+                hud.renderHUD(context, x + xOffset, y + yOffset, childShouldDrawBackground);
+            }
         }
 
         return true;
@@ -154,6 +176,16 @@ public class GroupedHUD extends AbstractHUD {
         }
 
         getBoundingBox().setColor(groupSettings.boxColor | 0xFF000000);
+    }
+
+    public int getAlignmentOffset(AbstractHUD childHUD, int length) {
+        return switch (groupSettings.childAlignment) {
+            case THIS -> groupSettings.alignVertical ? getSettings().getOriginX().getAlignmentPos(length) : getSettings().getOriginY().getAlignmentPos(length);
+            case CHILD -> groupSettings.alignVertical ? childHUD.getSettings().getOriginX().getAlignmentPos(length) : childHUD.getSettings().getOriginY().getAlignmentPos(length);
+            case START -> 0;
+            case CENTER -> length / 2;
+            case END -> length;
+        };
     }
 
     public void updateActiveHUDsFromConfig() {

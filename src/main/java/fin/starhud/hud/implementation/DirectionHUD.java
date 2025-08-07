@@ -87,7 +87,7 @@ public class DirectionHUD extends AbstractHUD {
     }
 
     @Override
-    public boolean renderHUD(DrawContext context, int x, int y) {
+    public boolean renderHUD(DrawContext context, int x, int y, boolean drawBackground) {
 
         int w = getWidth();
         int h = getHeight();
@@ -103,7 +103,8 @@ public class DirectionHUD extends AbstractHUD {
                     ORDINAL_TEXTURE_WIDTH, ORDINAL_TEXTURE_HEIGHT,
                     ORDINAL_ICON_WIDTH, ORDINAL_ICON_HEIGHT,
                     color,
-                    displayMode
+                    displayMode,
+                    drawBackground
             );
 
         } else {
@@ -117,7 +118,8 @@ public class DirectionHUD extends AbstractHUD {
                     CARDINAL_TEXTURE_WIDTH, CARDINAL_TEXTURE_HEIGHT,
                     CARDINAL_ICON_WIDTH, CARDINAL_ICON_HEIGHT,
                     color,
-                    displayMode
+                    displayMode,
+                    drawBackground
             );
         }
         return true;

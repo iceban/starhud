@@ -223,23 +223,23 @@ public abstract class AbstractDurabilityHUD extends AbstractHUD {
         return MathHelper.hsvToRgb(0.35F * stackStep / (float) maxStep, 0.45F, 0.95F);
     }
 
-    public void renderDurabilityHUD(DrawContext context, Identifier iconTexture, int x, int y, float u, float v, int textureWidth, int textureHeight, int iconWidth, int iconHeight) {
+    public void renderDurabilityHUD(DrawContext context, Identifier iconTexture, int x, int y, float u, float v, int textureWidth, int textureHeight, int iconWidth, int iconHeight, boolean drawBackground) {
         if (drawItem) {
-            renderItemDurability(context, x , y);
+            renderItemDurability(context, x , y, drawBackground);
         } else {
-            renderDurability(context, iconTexture, x, y, u, v, textureWidth, textureHeight, iconWidth, iconHeight);
+            renderDurability(context, iconTexture, x, y, u, v, textureWidth, textureHeight, iconWidth, iconHeight, drawBackground);
         }
     }
 
-    public void renderItemDurability(DrawContext context, int x, int y) {
+    public void renderItemDurability(DrawContext context, int x, int y, boolean drawBackground) {
         switch (displayMode) {
-            case FRACTIONAL, VALUE_ONLY, PERCENTAGE -> RenderUtils.drawItemHUD(context, str, x, y, getWidth(), getHeight(), stack, durabilityColor, hudDisplayMode);
-            case BAR -> renderItemDurabilityBar(context, x, y);
-            case COMPACT -> renderItemDurabilityCompact(context, x, y);
+            case FRACTIONAL, VALUE_ONLY, PERCENTAGE -> RenderUtils.drawItemHUD(context, str, x, y, getWidth(), getHeight(), stack, durabilityColor, hudDisplayMode, drawBackground);
+            case BAR -> renderItemDurabilityBar(context, x, y, drawBackground);
+            case COMPACT -> renderItemDurabilityCompact(context, x, y, drawBackground);
         }
     }
 
-    public void renderItemDurabilityBar(DrawContext context, int x, int y) {
+    public void renderItemDurabilityBar(DrawContext context, int x, int y, boolean drawBackground) {
         int w = getWidth();
         int h = getHeight();
 
@@ -247,23 +247,27 @@ public abstract class AbstractDurabilityHUD extends AbstractHUD {
         int gap = HUD_SETTINGS.iconInfoGap;
 
         switch (hudDisplayMode) {
-            case ICON_ONLY -> {
-                RenderUtils.fillRounded(context, x, y, x + w, y + h, 0x80000000);
+            case ICON -> {
+                if (drawBackground)
+                    RenderUtils.fillRounded(context, x, y, x + w, y + h, 0x80000000);
                 context.drawItem(stack, x + 3, y + 3);
             }
-            case INFO_ONLY -> {
-                RenderUtils.fillRounded(context, x, y, x + w, y + h, 0x80000000);
+            case INFO -> {
+                if (drawBackground)
+                    RenderUtils.fillRounded(context, x, y, x + w, y + h, 0x80000000);
                 RenderUtils.drawTextureHUD(context, BIG_DURABILITY_BACKGROUND_TEXTURE, x + padding, y + 4, 0.0F, 0.0F, BIG_DURABILITY_TEXTURE_WIDTH, BIG_DURABILITY_TEXTURE_HEIGHT, BIG_DURABILITY_TEXTURE_WIDTH, BIG_DURABILITY_TEXTURE_HEIGHT);
                 if (step != 0)
                     RenderUtils.drawTextureHUD(context, BIG_DURABILITY_TEXTURE, x + padding, y + 4, 0.0F, 0.0F, step * 7, BIG_DURABILITY_TEXTURE_HEIGHT, BIG_DURABILITY_TEXTURE_WIDTH, BIG_DURABILITY_TEXTURE_HEIGHT, durabilityColor);
             }
             case BOTH -> { // WIP INFO_ONLY
                 // draw background for the item texture
-                if (gap == 0) {
-                    RenderUtils.fillRounded(context, x, y, x + w, y + h, 0x80000000);
-                } else {
-                    RenderUtils.fillRoundedLeftSide(context, x, y, x + ITEM_BACKGROUND_WIDTH, y + h, 0x80000000);
-                    RenderUtils.fillRoundedRightSide(context, x + ITEM_BACKGROUND_WIDTH + gap, y, x + w, y + h, 0x80000000);
+                if (drawBackground) {
+                    if (gap == 0) {
+                        RenderUtils.fillRounded(context, x, y, x + w, y + h, 0x80000000);
+                    } else {
+                        RenderUtils.fillRoundedLeftSide(context, x, y, x + ITEM_BACKGROUND_WIDTH, y + h, 0x80000000);
+                        RenderUtils.fillRoundedRightSide(context, x + ITEM_BACKGROUND_WIDTH + gap, y, x + w, y + h, 0x80000000);
+                    }
                 }
                 // draw content
                 context.drawItem(stack, x + 3, y + 3);
@@ -275,23 +279,24 @@ public abstract class AbstractDurabilityHUD extends AbstractHUD {
         }
     }
 
-    public void renderItemDurabilityCompact(DrawContext context, int x, int y) {
-        RenderUtils.fillRounded(context, x, y, x + getWidth(), y + getHeight(), 0x80000000);
+    public void renderItemDurabilityCompact(DrawContext context, int x, int y, boolean drawBackground) {
+        if (drawBackground)
+            RenderUtils.fillRounded(context, x, y, x + getWidth(), y + getHeight(), 0x80000000);
 
         context.drawItem(stack, x + 3, y + 3);
         context.drawStackOverlay(CLIENT.textRenderer, stack, x + 3, y + 3);
     }
 
-    public void renderDurability(DrawContext context, Identifier ICON, int x, int y, float u, float v, int textureWidth, int textureHeight, int iconWidth, int iconHeight) {
+    public void renderDurability(DrawContext context, Identifier ICON, int x, int y, float u, float v, int textureWidth, int textureHeight, int iconWidth, int iconHeight, boolean drawBackground) {
         switch (displayMode) {
-            case FRACTIONAL -> renderDurabilityNumber(context, ICON, x, y, u, v, textureWidth, textureHeight, iconWidth, iconHeight);
-            case BAR -> renderDurabilityBar(context, ICON, x, y, u, v, textureWidth, textureHeight, iconWidth, iconHeight);
-            case VALUE_ONLY, PERCENTAGE -> RenderUtils.drawSmallHUD(context, str, x, y, getWidth(), getHeight(), ICON, u, v, textureWidth, textureHeight, iconWidth, iconHeight, durabilityColor, iconColor, hudDisplayMode);
-            case COMPACT -> renderDurabilityCompact(context, ICON, x, y, u, v, textureWidth, textureHeight, iconWidth, iconHeight);
+            case FRACTIONAL -> renderDurabilityNumber(context, ICON, x, y, u, v, textureWidth, textureHeight, iconWidth, iconHeight, drawBackground);
+            case BAR -> renderDurabilityBar(context, ICON, x, y, u, v, textureWidth, textureHeight, iconWidth, iconHeight, drawBackground);
+            case VALUE_ONLY, PERCENTAGE -> RenderUtils.drawSmallHUD(context, str, x, y, getWidth(), getHeight(), ICON, u, v, textureWidth, textureHeight, iconWidth, iconHeight, durabilityColor, iconColor, hudDisplayMode, drawBackground);
+            case COMPACT -> renderDurabilityCompact(context, ICON, x, y, u, v, textureWidth, textureHeight, iconWidth, iconHeight, drawBackground);
         }
     }
 
-    public void renderDurabilityBar(DrawContext context, Identifier ICON, int x, int y, float u, float v, int textureWidth, int textureHeight, int iconWidth, int iconHeight) {
+    public void renderDurabilityBar(DrawContext context, Identifier ICON, int x, int y, float u, float v, int textureWidth, int textureHeight, int iconWidth, int iconHeight, boolean drawBackground) {
         int w = getWidth();
         int h = getHeight();
 
@@ -299,22 +304,26 @@ public abstract class AbstractDurabilityHUD extends AbstractHUD {
         int gap = HUD_SETTINGS.iconInfoGap;
 
         switch (hudDisplayMode) {
-            case ICON_ONLY -> {
-                RenderUtils.fillRounded(context, x, y, x + iconWidth, y + iconHeight, 0x80000000);
+            case ICON -> {
+                if (drawBackground)
+                    RenderUtils.fillRounded(context, x, y, x + iconWidth, y + iconHeight, 0x80000000);
                 RenderUtils.drawTextureHUD(context, ICON, x, y, u, v, iconWidth, iconHeight, textureWidth, textureHeight, iconColor);
             }
-            case INFO_ONLY -> {
-                RenderUtils.fillRounded(context, x, y, x + w, y + h, 0x80000000);
+            case INFO -> {
+                if (drawBackground)
+                    RenderUtils.fillRounded(context, x, y, x + w, y + h, 0x80000000);
                 RenderUtils.drawTextureHUD(context, DURABILITY_BACKGROUND_TEXTURE, x + padding, y + 3, 0.0F, 0.0F, DURABILITY_TEXTURE_WIDTH, DURABILITY_TEXTURE_HEIGHT, DURABILITY_TEXTURE_WIDTH, DURABILITY_TEXTURE_HEIGHT);
                 if (step != 0) RenderUtils.drawTextureHUD(context, DURABILITY_TEXTURE, x + padding, y + 3, 0.0F, 0.0F, 4 * step, DURABILITY_TEXTURE_HEIGHT, DURABILITY_TEXTURE_WIDTH, DURABILITY_TEXTURE_HEIGHT, this.durabilityColor);
             }
             case BOTH -> { // WIP INFO_ONLY bruh
                 // draw the background
-                if (gap == 0)
-                    RenderUtils.fillRounded(context, x, y, x + w, y + h, 0x80000000);
-                else {
-                    RenderUtils.fillRoundedLeftSide(context, x, y, x + iconWidth, y + h, 0x80000000);
-                    RenderUtils.fillRoundedRightSide(context, x + iconWidth + gap, y, x + w, y + h, 0x80000000);
+                if (drawBackground) {
+                    if (gap == 0)
+                        RenderUtils.fillRounded(context, x, y, x + w, y + h, 0x80000000);
+                    else {
+                        RenderUtils.fillRoundedLeftSide(context, x, y, x + iconWidth, y + h, 0x80000000);
+                        RenderUtils.fillRoundedRightSide(context, x + iconWidth + gap, y, x + w, y + h, 0x80000000);
+                    }
                 }
 
                 RenderUtils.drawTextureHUD(context, ICON, x, y, u, v, iconWidth, iconHeight, textureWidth, textureHeight, iconColor);
@@ -327,7 +336,7 @@ public abstract class AbstractDurabilityHUD extends AbstractHUD {
     }
 
     // example render: ¹²³⁴/₅₆₇₈
-    public void renderDurabilityNumber(DrawContext context, Identifier ICON, int x, int y, float u, float v, int textureWidth, int textureHeight, int iconWidth, int iconHeight) {
+    public void renderDurabilityNumber(DrawContext context, Identifier ICON, int x, int y, float u, float v, int textureWidth, int textureHeight, int iconWidth, int iconHeight, boolean drawBackground) {
         int w = getWidth();
         int h = getHeight();
 
@@ -335,21 +344,26 @@ public abstract class AbstractDurabilityHUD extends AbstractHUD {
         int gap = HUD_SETTINGS.iconInfoGap;
 
         switch (hudDisplayMode) {
-            case ICON_ONLY -> {
-                RenderUtils.fillRounded(context, x, y, x + iconWidth, y + iconHeight, 0x80000000);
+            case ICON -> {
+                if (drawBackground)
+                    RenderUtils.fillRounded(context, x, y, x + iconWidth, y + iconHeight, 0x80000000);
                 RenderUtils.drawTextureHUD(context, ICON, x, y, u, v, iconWidth, iconHeight, textureWidth, textureHeight, iconColor);
             }
-            case INFO_ONLY -> {
-                RenderUtils.fillRounded(context, x, y, x + w, y + h, 0x80000000);
+            case INFO -> {
+                if (drawBackground)
+                    RenderUtils.fillRounded(context, x, y, x + w, y + h, 0x80000000);
                 RenderUtils.drawTextHUD(context, str, x + padding, y + 3, durabilityColor, false);
                 RenderUtils.drawTextHUD(context, str2, x + padding + remainingTextWidth, y + 3 - 1, durabilityColor, false);
             }
             case BOTH ->  {
-                if (gap == 0)
-                    RenderUtils.fillRounded(context, x, y, x + w, y + h, 0x80000000);
-                else {
-                    RenderUtils.fillRoundedLeftSide(context, x, y, x + iconWidth, y + h, 0x80000000);
-                    RenderUtils.fillRoundedRightSide(context, x + iconWidth + gap,  y, x + w, y + h, 0x80000000);
+
+                if (drawBackground) {
+                    if (gap == 0)
+                        RenderUtils.fillRounded(context, x, y, x + w, y + h, 0x80000000);
+                    else {
+                        RenderUtils.fillRoundedLeftSide(context, x, y, x + iconWidth, y + h, 0x80000000);
+                        RenderUtils.fillRoundedRightSide(context, x + iconWidth + gap, y, x + w, y + h, 0x80000000);
+                    }
                 }
                 RenderUtils.drawTextureHUD(context, ICON, x, y, u, v, iconWidth, iconHeight, textureWidth, textureHeight, iconColor);
 
@@ -359,9 +373,10 @@ public abstract class AbstractDurabilityHUD extends AbstractHUD {
         }
     }
 
-    public void renderDurabilityCompact(DrawContext context, Identifier ICON, int x, int y, float u, float v, int textureWidth, int textureHeight, int iconWidth, int iconHeight) {
+    public void renderDurabilityCompact(DrawContext context, Identifier ICON, int x, int y, float u, float v, int textureWidth, int textureHeight, int iconWidth, int iconHeight, boolean drawBackground) {
         // draw the icon
-        RenderUtils.fillRounded(context, x, y, x + iconWidth, y + iconHeight, 0x80000000);
+        if (drawBackground)
+            RenderUtils.fillRounded(context, x, y, x + iconWidth, y + iconHeight, 0x80000000);
         RenderUtils.drawTextureHUD(context, ICON, x, y, u, v, iconWidth, iconHeight, textureWidth, textureHeight, iconColor);
 
         int durabilityWidth = 11;

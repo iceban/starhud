@@ -91,11 +91,11 @@ public abstract class AbstractHandHUD extends AbstractDurabilityHUD {
     }
 
     @Override
-    public boolean renderHUD(DrawContext context, int x, int y) {
-        return renderHandHUD(context, x, y);
+    public boolean renderHUD(DrawContext context, int x, int y, boolean drawBackground) {
+        return renderHandHUD(context, x, y, drawBackground);
     }
 
-    public boolean renderHandHUD(DrawContext context, int x, int y) {
+    public boolean renderHandHUD(DrawContext context, int x, int y, boolean drawBackground) {
         // either draw the durability or the amount of item in the inventory.
         if (showDurability && item.isDamageable()) {
             renderDurabilityHUD(
@@ -104,25 +104,26 @@ public abstract class AbstractHandHUD extends AbstractDurabilityHUD {
                     x, y,
                     0.0F, 0.0F,
                     TEXTURE_WIDTH, TEXTURE_HEIGHT,
-                    ICON_WIDTH, ICON_HEIGHT
+                    ICON_WIDTH, ICON_HEIGHT,
+                    drawBackground
             );
         } else if (showCount) {
-            renderStackCountHUD(context, x, y);
+            renderStackCountHUD(context, x, y, drawBackground);
         }
 
         return true;
     }
 
-    private void renderStackCountHUD(DrawContext context, int x, int y) {
+    private void renderStackCountHUD(DrawContext context, int x, int y, boolean drawBackground) {
 
         if (drawItem) {
-            renderStackCountItemHUD(context, x, y);
+            renderStackCountItemHUD(context, x, y, drawBackground);
         } else {
-            renderStackCountIconHUD(context, x, y);
+            renderStackCountIconHUD(context, x, y, drawBackground);
         }
     }
 
-    private void renderStackCountItemHUD(DrawContext context, int x, int y) {
+    private void renderStackCountItemHUD(DrawContext context, int x, int y, boolean drawBackground) {
         RenderUtils.drawItemHUD(
                 context,
                 amountStr,
@@ -130,11 +131,12 @@ public abstract class AbstractHandHUD extends AbstractDurabilityHUD {
                 getWidth(), getHeight(),
                 item,
                 iconColor,
-                displayMode
+                displayMode,
+                drawBackground
         );
     }
 
-    private void renderStackCountIconHUD(DrawContext context, int x, int y) {
+    private void renderStackCountIconHUD(DrawContext context, int x, int y, boolean drawBackground) {
         RenderUtils.drawSmallHUD(
                 context,
                 amountStr,
@@ -145,7 +147,8 @@ public abstract class AbstractHandHUD extends AbstractDurabilityHUD {
                 TEXTURE_WIDTH, TEXTURE_HEIGHT,
                 ICON_WIDTH, ICON_HEIGHT,
                 iconColor,
-                displayMode
+                displayMode,
+                drawBackground
         );
     }
 

@@ -16,11 +16,13 @@ public class GeneralSettings {
 
     public static class EditHUDScreenSettings {
 
-        @ConfigEntry.ColorPicker
-        public int selectedBoxColor = 0x87ceeb;
+        public boolean drawBorder = true;
 
-        @ConfigEntry.ColorPicker
-        public int selectedGroupBoxColor = 0xFc7871;
+        @ConfigEntry.ColorPicker(allowAlpha = true)
+        public int selectedBoxColor = 0x8087ceeb;
+
+        @ConfigEntry.ColorPicker(allowAlpha = true)
+        public int selectedGroupBoxColor = 0x80Fc7871;
 
         @ConfigEntry.ColorPicker
         public int dragBoxColor = 0xa8d8ea;

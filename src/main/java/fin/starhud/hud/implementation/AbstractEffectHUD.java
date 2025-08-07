@@ -86,11 +86,11 @@ public abstract class AbstractEffectHUD extends AbstractHUD {
     }
 
     @Override
-    public boolean renderHUD(DrawContext context, int x, int y) {
+    public boolean renderHUD(DrawContext context, int x, int y, boolean drawBackground) {
 
         for (StatusEffectInstance statusEffectInstance : collection) {
 
-            if (drawStatusEffectHUD(context, x, y, statusEffectInstance)) {
+            if (drawStatusEffectHUD(context, statusEffectInstance, x, y, drawBackground)) {
                 if (drawVertical) {
                     y += sameTypeGap;
                 } else {
@@ -103,7 +103,7 @@ public abstract class AbstractEffectHUD extends AbstractHUD {
         return true;
     }
 
-    public boolean drawStatusEffectHUD(DrawContext context, int x, int y, StatusEffectInstance statusEffectInstance) {
+    public boolean drawStatusEffectHUD(DrawContext context, StatusEffectInstance statusEffectInstance, int x, int y, boolean drawBackground) {
         if (!statusEffectInstance.shouldShowIcon())
             return false;
 
@@ -114,30 +114,32 @@ public abstract class AbstractEffectHUD extends AbstractHUD {
 
         StatusEffectAttribute statusEffectAttribute = StatusEffectAttribute.getStatusEffectAttribute(statusEffectInstance);
 
-        if (statusEffectInstance.isAmbient()) {
+        if (drawBackground) {
+            if (statusEffectInstance.isAmbient()) {
 
-            // draw soft blue outlined background...
-            RenderUtils.drawTextureHUD(
-                    context,
-                    STATUS_EFFECT_AMBIENT_TEXTURE,
-                    x, y,
-                    0, 0,
-                    STATUS_EFFECT_TEXTURE_WIDTH, STATUS_EFFECT_TEXTURE_HEIGHT,
-                    STATUS_EFFECT_TEXTURE_WIDTH, STATUS_EFFECT_TEXTURE_HEIGHT,
-                    effectSettings.ambientColor | 0xFF000000
-            );
+                // draw soft blue outlined background...
+                RenderUtils.drawTextureHUD(
+                        context,
+                        STATUS_EFFECT_AMBIENT_TEXTURE,
+                        x, y,
+                        0, 0,
+                        STATUS_EFFECT_TEXTURE_WIDTH, STATUS_EFFECT_TEXTURE_HEIGHT,
+                        STATUS_EFFECT_TEXTURE_WIDTH, STATUS_EFFECT_TEXTURE_HEIGHT,
+                        effectSettings.ambientColor | 0xFF000000
+                );
 
-        } else {
+            } else {
 
-            // draw background
-            RenderUtils.drawTextureHUD(
-                    context,
-                    STATUS_EFFECT_BACKGROUND_TEXTURE,
-                    x, y,
-                    0, 0,
-                    STATUS_EFFECT_TEXTURE_WIDTH, STATUS_EFFECT_TEXTURE_HEIGHT,
-                    STATUS_EFFECT_TEXTURE_WIDTH, STATUS_EFFECT_TEXTURE_HEIGHT
-            );
+                // draw background
+                RenderUtils.drawTextureHUD(
+                        context,
+                        STATUS_EFFECT_BACKGROUND_TEXTURE,
+                        x, y,
+                        0, 0,
+                        STATUS_EFFECT_TEXTURE_WIDTH, STATUS_EFFECT_TEXTURE_HEIGHT,
+                        STATUS_EFFECT_TEXTURE_WIDTH, STATUS_EFFECT_TEXTURE_HEIGHT
+                );
+            }
         }
 
         int duration = statusEffectInstance.getDuration();
