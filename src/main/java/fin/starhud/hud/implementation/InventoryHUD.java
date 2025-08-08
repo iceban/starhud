@@ -59,9 +59,7 @@ public class InventoryHUD extends AbstractHUD {
             width = drawVertical ? getTotalSmallerLength() : getTotalLargerLength();
             height = drawVertical ? getTotalLargerLength() : getTotalSmallerLength();
 
-            x -= getGrowthDirectionHorizontal(width);
-            y -= getGrowthDirectionVertical(height);
-            setBoundingBox(x, y, width, height);
+            setWidthHeight(width, height);
             return true;
         } else {
             return false;

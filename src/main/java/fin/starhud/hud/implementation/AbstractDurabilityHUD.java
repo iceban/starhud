@@ -88,9 +88,7 @@ public abstract class AbstractDurabilityHUD extends AbstractHUD {
 
         durabilityColor = getItemBarColor(stackMaxDamage - stackDamage, stackMaxDamage) | 0xFF000000;
 
-        x -= getGrowthDirectionHorizontal(width);
-        y -= getGrowthDirectionVertical(height);
-        setBoundingBox(x, y, width, height, iconColor);
+        setWidthHeightColor(width, height, iconColor);
 
         return true;
     }

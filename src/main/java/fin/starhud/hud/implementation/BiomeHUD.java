@@ -86,9 +86,7 @@ public class  BiomeHUD extends AbstractHUD {
         width = displayMode.calculateWidth(ICON_WIDTH, cachedTextWidth);
         height = ICON_HEIGHT;
 
-        x -= getGrowthDirectionHorizontal(width);
-        y -= getGrowthDirectionVertical(height);
-        setBoundingBox(x, y, width, height, color);
+        setWidthHeightColor(width, height, color);
 
         return true;
     }

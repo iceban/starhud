@@ -92,10 +92,7 @@ public abstract class AbstractEffectHUD extends AbstractHUD {
         drawVertical = effectSettings.drawVertical;
         sameTypeGap = getSameTypeGap();
 
-        x -= getGrowthDirectionHorizontal(width);
-        y -= getGrowthDirectionVertical(height);
-
-        setBoundingBox(x, y, width, height);
+        setWidthHeight(width, height);
 
         return true;
     }

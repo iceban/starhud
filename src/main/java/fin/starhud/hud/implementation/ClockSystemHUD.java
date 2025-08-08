@@ -77,10 +77,7 @@ public class ClockSystemHUD extends AbstractHUD {
         width = displayMode.calculateWidth(ICON_WIDTH, cachedStrWidth);
         height = ICON_HEIGHT;
 
-        x -= getGrowthDirectionHorizontal(width);
-        y -= getGrowthDirectionVertical(height);
-
-        setBoundingBox(x, y, width, height, color);
+        setWidthHeightColor(width, height, color);
 
         return true;
     }

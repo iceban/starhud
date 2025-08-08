@@ -113,10 +113,7 @@ public class GroupedHUD extends AbstractHUD {
             }
         }
 
-        x -= getGrowthDirectionHorizontal(width);
-        y -= getGrowthDirectionVertical(height);
-
-        setBoundingBox(x, y, width, height);
+        setWidthHeight(width, height);
 
         return true;
     }

@@ -10,9 +10,6 @@ public abstract class AbstractHUD implements HUDInterface {
 
     protected final BaseHUDSettings baseHUDSettings;
 
-    protected int x;
-    protected int y;
-
     private int baseX;
     private int baseY;
 
@@ -39,21 +36,21 @@ public abstract class AbstractHUD implements HUDInterface {
     @Override
     public boolean render(DrawContext context) {
 
-        // modify our X and Y points based on conditions.
-        modifyXY();
-
         if (!collectHUDInformation())
             return false;
 
+        // modify our X and Y points based on conditions and hud width height
+        modifyXY();
+
         if (!isScaled())
-            return renderHUD(context, x, y, shouldDrawBackground());
+            return renderHUD(context, getX(), getY(), shouldDrawBackground());
 
         // this is so we can change the scale for one hud but not the others.
         context.getMatrices().pushMatrix();
         setHUDScale(context);
 
         try {
-            return renderHUD(context, x, y, shouldDrawBackground());
+            return renderHUD(context, getX(), getY(), shouldDrawBackground());
         } finally {
             context.getMatrices().popMatrix();
         }
@@ -79,18 +76,20 @@ public abstract class AbstractHUD implements HUDInterface {
     }
 
     public void modifyXY() {
-        int tempX = 0, tempY = 0;
+        int xOffset = 0, yOffset = 0;
 
+        float scaleFactor = getSettings().getScaledFactor();
         for (ConditionalSettings condition : baseHUDSettings.getConditions()) {
-            if (condition.isConditionMet()) {
-                float scaleFactor = getSettings().getScaledFactor();
-                tempX += condition.getXOffset(scaleFactor);
-                tempY += condition.getYOffset(scaleFactor);
+            if (condition.renderMode != ConditionalSettings.RenderMode.HIDE && condition.isConditionMet()) {
+                xOffset += condition.getXOffset(scaleFactor);
+                yOffset += condition.getYOffset(scaleFactor);
             }
         }
 
-        x = baseX + tempX;
-        y = baseY + tempY;
+        int x = baseX + xOffset - getGrowthDirectionHorizontal(getWidth());
+        int y = baseY + yOffset - getGrowthDirectionVertical(getHeight());
+
+        setXY(x, y);
     }
 
     public void updateX() {
@@ -133,38 +132,27 @@ public abstract class AbstractHUD implements HUDInterface {
         return getSettings().drawBackground;
     }
 
-    public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
-    public void setX(int x) {
-        this.x = x;
-    }
-
-    public void setY(int y) {
-        this.y = y;
-    }
-
     // bounding box attribute will return 0 if HUD is not rendered once.
     // the HUD must be rendered at least once to update the bounding box.
 
-    public void setWidth(int width) {
-        getBoundingBox().setWidth(width);
+    public void setWidthHeight(int width, int height) {
+        this.boundingBox.setWidthHeight(width, height);
     }
 
-    public void setHeight(int height) {
-        getBoundingBox().setHeight(height);
+    public void setWidthHeightColor(int width, int height, int color) {
+        this.boundingBox.setWidthHeightColor(width, height, color);
     }
 
-    public int getRawX() {
+    public void setXY(int x, int y) {
+        this.boundingBox.setX(x);
+        this.boundingBox.setY(y);
+    }
+
+    public int getX() {
         return getBoundingBox().getX();
     }
 
-    public int getRawY() {
+    public int getY() {
         return getBoundingBox().getY();
     }
 

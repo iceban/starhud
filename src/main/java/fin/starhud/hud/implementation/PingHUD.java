@@ -80,16 +80,13 @@ public class PingHUD extends AbstractHUD {
                 strWidth = CLIENT.textRenderer.getWidth(pingStr) - 1;
 
                 step = Math.min((int) currentPing / 150, 3);
-                color = getPingColor(step) | 0xFF000000;
             }
         }
 
+        color = getPingColor(step) | 0xFF000000;
         width = displayMode.calculateWidth(ICON_WIDTH, strWidth);
         height = ICON_HEIGHT;
-        x -= getGrowthDirectionHorizontal(width);
-        y -= getGrowthDirectionVertical(height);
-
-        setBoundingBox(x, y, width, height, color);
+        setWidthHeightColor(width, height, color);
 
         return pingStr != null;
     }

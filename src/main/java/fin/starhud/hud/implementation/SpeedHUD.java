@@ -47,9 +47,7 @@ public class SpeedHUD extends AbstractHUD {
         height = ICON_HEIGHT;
         color = SETTINGS.color | 0xff000000;
 
-        x -= getGrowthDirectionHorizontal(width);
-        y -= getGrowthDirectionVertical(height);
-        setBoundingBox(x, y, width, height, color);
+        setWidthHeightColor(width, height, color);
 
         return true;
     }

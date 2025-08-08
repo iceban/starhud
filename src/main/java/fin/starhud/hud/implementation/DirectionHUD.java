@@ -79,9 +79,7 @@ public class DirectionHUD extends AbstractHUD {
             color = getDirectionColor(iconIndex * 2) | 0xFF000000;
         }
 
-        x -= getGrowthDirectionHorizontal(width);
-        y -= getGrowthDirectionVertical(height);
-        setBoundingBox(x, y, width, height, color);
+        setWidthHeightColor(width, height, color);
 
         return true;
     }

@@ -83,9 +83,7 @@ public abstract class AbstractHandHUD extends AbstractDurabilityHUD {
         width = displayMode.calculateWidth((drawItem ? ITEM_TEXTURE_WIDTH : ICON_WIDTH), strWidth);
         height = drawItem ? ITEM_TEXTURE_HEIGHT : ICON_HEIGHT;
 
-        x -= getGrowthDirectionHorizontal(width);
-        y -= getGrowthDirectionVertical(height);
-        setBoundingBox(x, y, width, height, iconColor);
+        setWidthHeightColor(width, height, iconColor);
 
         return true;
     }

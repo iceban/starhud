@@ -49,9 +49,7 @@ public class TPSHUD extends AbstractHUD {
 
         color = (SETTINGS.useDynamicColor ? (AbstractDurabilityHUD.getItemBarColor(4 - step, 4)) : SETTINGS.color) | 0xFF000000;
 
-        x -= getGrowthDirectionHorizontal(width);
-        y -= getGrowthDirectionVertical(height);
-        setBoundingBox(x, y, width, height, color);
+        setWidthHeightColor(width, height, color);
 
         return true;
     }

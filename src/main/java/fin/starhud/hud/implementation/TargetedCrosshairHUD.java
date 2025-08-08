@@ -127,10 +127,7 @@ public class TargetedCrosshairHUD extends AbstractHUD {
         width = displayMode.calculateWidth(ICON_WIDTH, cachedBlockMaxWidth);
         height = ICON_HEIGHT;
 
-        x -= getGrowthDirectionHorizontal(width);
-        y -= getGrowthDirectionVertical(height);
-
-        setBoundingBox(x, y, width, height, targetedNameColor);
+        setWidthHeightColor(width, height, targetedNameColor);
         return true;
     }
 
@@ -160,10 +157,7 @@ public class TargetedCrosshairHUD extends AbstractHUD {
         targetedNameColor = getEntityIconColor(cachedIndex) | 0xFF000000;
         modNameColor = SETTINGS.modNameColor | 0xFF000000;
 
-        x -= getGrowthDirectionHorizontal(width);
-        y -= getGrowthDirectionVertical(height);
-
-        setBoundingBox(x, y, width, height, targetedNameColor);
+        setWidthHeightColor(width, height, targetedNameColor);
 
         return true;
     }
