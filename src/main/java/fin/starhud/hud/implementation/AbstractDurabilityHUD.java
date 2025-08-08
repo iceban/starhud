@@ -14,6 +14,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 
+import static fin.starhud.helper.HUDDisplayMode.*;
+
 public abstract class AbstractDurabilityHUD extends AbstractHUD {
 
     protected final DurabilitySettings durabilitySettings;
@@ -207,7 +209,7 @@ public abstract class AbstractDurabilityHUD extends AbstractHUD {
     }
 
     public int processWidthIconCompact() {
-        step = getItemBarStep(stackDamage, stackMaxDamage, 11);
+        step = getItemBarStep(stackDamage, stackMaxDamage, 9);
         return ICON_BACKGROUND_WIDTH;
     }
 
@@ -257,7 +259,7 @@ public abstract class AbstractDurabilityHUD extends AbstractHUD {
                 if (step != 0)
                     RenderUtils.drawTextureHUD(context, BIG_DURABILITY_TEXTURE, x + padding, y + 4, 0.0F, 0.0F, step * 7, BIG_DURABILITY_TEXTURE_HEIGHT, BIG_DURABILITY_TEXTURE_WIDTH, BIG_DURABILITY_TEXTURE_HEIGHT, durabilityColor);
             }
-            case BOTH -> { // WIP INFO_ONLY
+            case BOTH -> {
                 // draw background for the item texture
                 if (drawBackground) {
                     if (gap <= 0) {
@@ -281,8 +283,11 @@ public abstract class AbstractDurabilityHUD extends AbstractHUD {
         if (drawBackground)
             RenderUtils.fillRounded(context, x, y, x + getWidth(), y + getHeight(), 0x80000000);
 
-        context.drawItem(stack, x + 3, y + 3);
-        context.drawStackOverlay(CLIENT.textRenderer, stack, x + 3, y + 3);
+        if (hudDisplayMode != INFO)
+            context.drawItem(stack, x + 3, y + 3);
+
+        if (hudDisplayMode != ICON)
+            context.drawStackOverlay(CLIENT.textRenderer, stack, x + 3, y + 3);
     }
 
     public void renderDurability(DrawContext context, Identifier ICON, int x, int y, float u, float v, int textureWidth, int textureHeight, int iconWidth, int iconHeight, boolean drawBackground) {
@@ -372,16 +377,21 @@ public abstract class AbstractDurabilityHUD extends AbstractHUD {
     }
 
     public void renderDurabilityCompact(DrawContext context, Identifier ICON, int x, int y, float u, float v, int textureWidth, int textureHeight, int iconWidth, int iconHeight, boolean drawBackground) {
-        // draw the icon
+
         if (drawBackground)
             RenderUtils.fillRounded(context, x, y, x + iconWidth, y + iconHeight, 0x80000000);
-        RenderUtils.drawTextureHUD(context, ICON, x, y, u, v, iconWidth, iconHeight, textureWidth, textureHeight, iconColor);
 
-        int durabilityWidth = 11;
-        int firstX = x + ((iconWidth - durabilityWidth) / 2);
-        int firstY = y + iconHeight - 1;
+        if (hudDisplayMode != INFO) {
+            RenderUtils.drawTextureHUD(context, ICON, x, y, u, v, iconWidth, iconHeight, textureWidth, textureHeight, iconColor);
+        }
 
-        context.fill(firstX, firstY, firstX + durabilityWidth, firstY + 1, 0x80000000);
-        context.fill(firstX, firstY, firstX + step, firstY + 1, durabilityColor);
+        if (hudDisplayMode != HUDDisplayMode.ICON) {
+            int durabilityWidth = 9;
+            int firstX = x + ((iconWidth - durabilityWidth) / 2);
+            int firstY = y + iconHeight - 2;
+
+            context.fill(firstX, firstY, firstX + durabilityWidth, firstY + 1, 0x80000000);
+            context.fill(firstX, firstY, firstX + step, firstY + 1, durabilityColor);
+        }
     }
 }

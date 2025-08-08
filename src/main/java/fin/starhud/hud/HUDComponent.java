@@ -1,12 +1,14 @@
 package fin.starhud.hud;
 
 import fin.starhud.Main;
+import fin.starhud.config.GeneralSettings;
 import fin.starhud.config.GroupedHUDSettings;
 import fin.starhud.config.HUDList;
 import fin.starhud.hud.implementation.*;
 import net.minecraft.client.gui.DrawContext;
 import org.slf4j.Logger;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +19,7 @@ public class HUDComponent {
     private static HUDComponent instance;
 
     private static final Logger LOGGER = Main.LOGGER;
+    private GeneralSettings.HUDSettings HUD_SETTINGS;
 
     // Registered HUDs by ID
     private final Map<String, AbstractHUD> hudMap = new HashMap<>();
@@ -25,7 +28,8 @@ public class HUDComponent {
     private final Map<String, AbstractHUD> individualHUDs = new HashMap<>();
     private final Map<String, GroupedHUD> groupedHUDs = new HashMap<>();
 
-    private boolean renderInGameScreen = true;
+    // rendered HUD
+    public final List<AbstractHUD> renderedHUDs = new ArrayList<>();
 
     private HUDComponent() {}
 
@@ -39,6 +43,8 @@ public class HUDComponent {
     public void init() {
         registerBuiltInHUDs();
         loadActiveHUDsFromConfig();
+
+        HUD_SETTINGS = Main.settings.generalSettings.hudSettings;
     }
 
     private void registerBuiltInHUDs() {
@@ -81,6 +87,10 @@ public class HUDComponent {
 
     public Map<String, GroupedHUD> getGroupedHUDs() {
         return groupedHUDs;
+    }
+
+    public List<AbstractHUD> getRenderedHUDs() {
+        return renderedHUDs;
     }
 
     public void loadActiveHUDsFromConfig() {
@@ -137,23 +147,34 @@ public class HUDComponent {
         return hudMap.get(id.toString());
     }
 
+    private long lastCollect = -1;
+
     public void renderAll(DrawContext context) {
-        renderIndividualHUDs(context);
-        renderGroupedHUDs(context);
+
+        long now = System.nanoTime();
+        long intervalNanos = (long) (HUD_SETTINGS.dataCollectionInterval * 1_000_000_000L);
+
+        if (now - lastCollect >= intervalNanos) {
+            collectAll();
+            lastCollect = now;
+        }
+
+        for (HUDInterface hud : renderedHUDs)
+            hud.render(context);
     }
 
-    private void renderIndividualHUDs(DrawContext context) {
-        for (HUDInterface hud : individualHUDs.values()) {
-            if (hud.shouldRender()) {
-                hud.render(context);
+    public void collectAll() {
+        renderedHUDs.clear();
+        for (AbstractHUD hud : individualHUDs.values()) {
+            if (hud.shouldRender() && hud.collect()) {
+                renderedHUDs.add(hud);
             }
         }
-    }
 
-    private void renderGroupedHUDs(DrawContext context) {
         for (GroupedHUD group : groupedHUDs.values()) {
-            if (!group.isInGroup() && group.shouldRender())
-                group.render(context);
+            if (!group.isInGroup() && group.shouldRender() && group.collect()) {
+                renderedHUDs.add(group);
+            }
         }
     }
 
@@ -185,13 +206,5 @@ public class HUDComponent {
             id = "group_" + index++;
         } while (groupedHUDs.containsKey(id));
         return id;
-    }
-
-    public void setRenderInGameScreen(boolean value) {
-        this.renderInGameScreen = value;
-    }
-
-    public boolean isRenderInGameScreen() {
-        return this.renderInGameScreen;
     }
 }

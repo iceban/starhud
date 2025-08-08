@@ -84,6 +84,12 @@ public enum Condition {
             ArmorBarHUD::getHeight
     ),
 
+    OVERLAY_MESSAGE_SHOWN(
+            HeldItemTooltip::isShown,
+            HeldItemTooltip::getWidth,
+            HeldItemTooltip::getHeight
+    ),
+
     TARGETED_HUD_SHOWN(
             TargetedCrosshair::isShown,
             TargetedCrosshair::getWidth,

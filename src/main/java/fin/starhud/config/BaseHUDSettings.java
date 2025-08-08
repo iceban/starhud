@@ -191,14 +191,16 @@ public class BaseHUDSettings implements ConfigData {
     }
 
 
-    public boolean isEqual(BaseHUDSettings b) {
-        return (this.x == b.x)
-                && (this.y == b.y)
-                && (this.originX == b.originX)
-                && (this.originY == b.originY)
-                && (this.growthDirectionX == b.growthDirectionX)
-                && (this.growthDirectionY == b.growthDirectionY)
-                && (this.scale == b.scale);
+    public boolean isEqual(BaseHUDSettings other) {
+        return (this.x == other.x)
+                && (this.y == other.y)
+                && (this.originX == other.originX)
+                && (this.originY == other.originY)
+                && (this.growthDirectionX == other.growthDirectionX)
+                && (this.growthDirectionY == other.growthDirectionY)
+                && (this.scale == other.scale)
+                && (this.displayMode == other.displayMode)
+                && (this.drawBackground == other.drawBackground);
     }
 
     public void copyFrom(BaseHUDSettings other) {
@@ -220,6 +222,8 @@ public class BaseHUDSettings implements ConfigData {
         this.growthDirectionX = src.growthDirectionX;
         this.growthDirectionY = src.growthDirectionY;
         this.scale = src.scale;
+        this.displayMode = src.displayMode;
+        this.drawBackground = src.drawBackground;
     }
 
     public int getGrowthDirectionHorizontal(int dynamicWidth) {

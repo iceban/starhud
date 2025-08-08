@@ -36,6 +36,9 @@ public class GeneralSettings {
 
     public static class HUDSettings {
 
+        @Comment("The Interval between each data collection, the higher the longer it takes for the hud to update.")
+        public float dataCollectionInterval = 0.1F;
+
         @Comment("Since some fonts may have a different font heights, try adjusting this to your liking. Default is 0.")
         public int textYOffset = 0;
 

@@ -25,6 +25,7 @@ public class ClockInGameHUD extends AbstractHUD {
 
     private static String cachedMinecraftTimeString = "";
     private static int cachedMinecraftMinute = -1;
+    private static int cachedMinecraftHours = -1;
     private static int cachedStrWidth = -1;
 
     private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
@@ -61,8 +62,9 @@ public class ClockInGameHUD extends AbstractHUD {
 
         int minutes = (int) ((time % 1000) * 3 / 50);
         int hours = (int) ((time / 1000) + 6) % 24;
-        if (minutes != cachedMinecraftMinute) {
+        if (minutes != cachedMinecraftMinute || hours != cachedMinecraftHours) {
             cachedMinecraftMinute = minutes;
+            cachedMinecraftHours = hours;
 
             cachedMinecraftTimeString = use12Hour ?
                     buildMinecraftTime12String(hours, minutes) :
@@ -152,5 +154,6 @@ public class ClockInGameHUD extends AbstractHUD {
     public void update(){
         super.update();
         cachedMinecraftMinute = -1;
+        cachedMinecraftHours = -1;
     }
 }

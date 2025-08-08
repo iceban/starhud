@@ -35,7 +35,7 @@ public class EventInit {
     public static void onHUDRender(DrawContext context, RenderTickCounter tickCounter) {
         if (SETTINGS.disableHUDRendering) return;
         if (MinecraftClient.getInstance().options.hudHidden) return;
-        if (!HUDComponent.getInstance().isRenderInGameScreen()) return;
+        if (MinecraftClient.getInstance().currentScreen instanceof EditHUDScreen) return;
 
         HUDComponent.getInstance().renderAll(context);
     }

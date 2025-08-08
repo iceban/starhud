@@ -61,6 +61,7 @@ public class GroupedHUDSettings {
         return this.base.isEqual(other.base)
                 && this.gap == other.gap
                 && this.alignVertical == other.alignVertical
+                && this.childAlignment == other.childAlignment
                 && this.hudIds.equals(other.hudIds)
                 && this.id.equals(other.id);
     }

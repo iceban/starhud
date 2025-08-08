@@ -13,6 +13,9 @@ public abstract class AbstractHUD implements HUDInterface {
     private int baseX;
     private int baseY;
 
+    private int totalXOffset;
+    private int totalYOffset;
+
     protected final Box boundingBox = new Box(-1, -1, -1, -1);
 
     public String groupId = null;
@@ -29,19 +32,13 @@ public abstract class AbstractHUD implements HUDInterface {
     // we update every HUD's x and y points here.
     @Override
     public void update() {
-        updateX();
-        updateY();
+        baseX = getSettings().getCalculatedPosX();
+        baseY = getSettings().getCalculatedPosY();
+        setXY(baseX + totalXOffset, baseY + totalYOffset);
     }
 
     @Override
     public boolean render(DrawContext context) {
-
-        if (!collectHUDInformation())
-            return false;
-
-        // modify our X and Y points based on conditions and hud width height
-        modifyXY();
-
         if (!isScaled())
             return renderHUD(context, getX(), getY(), shouldDrawBackground());
 
@@ -54,6 +51,17 @@ public abstract class AbstractHUD implements HUDInterface {
         } finally {
             context.getMatrices().popMatrix();
         }
+    }
+
+    @Override
+    public boolean collect() {
+        if (!collectHUDInformation())
+            return false;
+
+        modifyXY();
+
+        setXY(baseX + totalXOffset, baseY + totalYOffset);
+        return true;
     }
 
     // collect what is needed for the hud to render.
@@ -86,18 +94,8 @@ public abstract class AbstractHUD implements HUDInterface {
             }
         }
 
-        int x = baseX + xOffset - getGrowthDirectionHorizontal(getWidth());
-        int y = baseY + yOffset - getGrowthDirectionVertical(getHeight());
-
-        setXY(x, y);
-    }
-
-    public void updateX() {
-        baseX = getSettings().getCalculatedPosX();
-    }
-
-    public void updateY() {
-        baseY = getSettings().getCalculatedPosY();
+        totalXOffset = xOffset - getGrowthDirectionHorizontal(getWidth());
+        totalYOffset = yOffset - getGrowthDirectionVertical(getHeight());
     }
 
     public boolean isScaled() {
@@ -121,11 +119,11 @@ public abstract class AbstractHUD implements HUDInterface {
     }
 
     public int getGrowthDirectionHorizontal(int dynamicWidth) {
-        return getSettings().getGrowthDirectionX().getGrowthDirection(dynamicWidth);
+        return getSettings().getGrowthDirectionHorizontal(dynamicWidth);
     }
 
     public int getGrowthDirectionVertical(int dynamicHeight) {
-        return getSettings().getGrowthDirectionY().getGrowthDirection(dynamicHeight);
+        return getSettings().getGrowthDirectionVertical(dynamicHeight);
     }
 
     public boolean shouldDrawBackground() {
