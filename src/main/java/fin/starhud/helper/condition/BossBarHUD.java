@@ -13,7 +13,7 @@ public class BossBarHUD {
     private static int cachedBossBarAmount;
     private static int cachedScreenHeight = -1;
 
-    public static boolean isShown() {
+    public static boolean isShown(String ignored) {
         return !((AccessorBossBarHud) CLIENT.inGameHud.getBossBarHud()).getBossBars().isEmpty();
     }
 

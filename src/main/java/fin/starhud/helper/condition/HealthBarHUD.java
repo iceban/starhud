@@ -11,7 +11,7 @@ public class HealthBarHUD {
     private static int height;
     private static int cachedHeartAmount = -1;
 
-    public static boolean isShown() {
+    public static boolean isShown(String ignored) {
         return CLIENT.interactionManager.hasStatusBars();
     }
 

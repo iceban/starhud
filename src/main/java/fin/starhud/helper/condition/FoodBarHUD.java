@@ -6,7 +6,7 @@ public class FoodBarHUD {
 
     private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
 
-    public static boolean isShown() {
+    public static boolean isShown(String ignored) {
         return CLIENT.interactionManager.hasStatusBars();
     }
 

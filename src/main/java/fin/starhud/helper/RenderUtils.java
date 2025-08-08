@@ -40,7 +40,7 @@ public class RenderUtils {
             }
             case BOTH ->  {
                 if (drawBackground) {
-                    if (gap == 0)
+                    if (gap <= 0)
                         fillRounded(context, x, y, x + width, y + height, 0x80000000);
                     else {
                         fillRoundedLeftSide(context, x, y, x + iconWidth, y + height, 0x80000000);
@@ -79,7 +79,7 @@ public class RenderUtils {
             }
             case BOTH -> {
                 if (drawBackground) {
-                    if (gap == 0)
+                    if (gap <= 0)
                         fillRounded(context, x, y, x + width, y + height, 0x80000000);
                     else {
                         fillRoundedLeftSide(context, x, y, x + ITEM_HUD_ICON_WIDTH, y + height, 0x80000000);
@@ -103,10 +103,25 @@ public class RenderUtils {
         context.fill(x1 + 1, y1, x2, y2, color);
     }
 
+    public static void fillRoundedUpperSide(DrawContext context, int x1, int y1, int x2, int y2, int color) {
+        context.fill(x1 + 1, y1, x2 - 1, y1 + 1, color);
+        context.fill(x1, y1 + 1, x2, y2, color);
+    }
+
+    public static void fillRoundedBottomSide(DrawContext context, int x1, int y1, int x2, int y2, int color) {
+        context.fill(x1, y1, x2, y2 - 1, color);
+        context.fill(x1 + 1, y2 - 1, x2 - 1, y2, color);
+    }
+
     public static void fillRounded(DrawContext context, int x1, int y1, int x2, int y2, int color) {
         context.fill(x1, y1 + 1, x1 + 1, y2 - 1, color);
         context.fill(x1 + 1, y1, x2 - 1, y2, color);
         context.fill(x2 - 1, y1 + 1, x2, y2 - 1, color);
+    }
+
+    public static void drawBorderedFill(DrawContext context, int x1, int y1, int x2, int y2, int fillColor, int borderColor) {
+        context.fill(x1 + 1, y1 + 1, x2 - 1, y2 - 1, fillColor);
+        context.drawBorder(x1, y1, x2 - x1, y2 - y1, borderColor);
     }
 
     // for easier version porting.

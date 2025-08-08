@@ -10,7 +10,7 @@ public class StatusEffectHUD {
     private static final PositiveEffectHUD POSITIVE_EFFECT_HUD = (PositiveEffectHUD) HUDComponent.getInstance().getHUD(HUDId.POSITIVE_EFFECT);
     private static final NegativeEffectHUD NEGATIVE_EFFECT_HUD = (NegativeEffectHUD) HUDComponent.getInstance().getHUD(HUDId.NEGATIVE_EFFECT);
 
-    public static boolean isPositiveShown() {
+    public static boolean isPositiveShown(String ignored) {
         return POSITIVE_EFFECT_HUD.size > 0;
     }
 
@@ -30,7 +30,7 @@ public class StatusEffectHUD {
         }
     }
 
-    public static boolean isNegativeShown() {
+    public static boolean isNegativeShown(String ignored) {
         return NEGATIVE_EFFECT_HUD.size > 0;
     }
 

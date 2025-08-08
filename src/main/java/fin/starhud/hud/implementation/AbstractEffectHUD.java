@@ -1,6 +1,8 @@
 package fin.starhud.hud.implementation;
 
 import fin.starhud.Helper;
+import fin.starhud.Main;
+import fin.starhud.config.GeneralSettings;
 import fin.starhud.config.hud.EffectSettings;
 import fin.starhud.helper.RenderUtils;
 import fin.starhud.helper.StatusEffectAttribute;
@@ -23,13 +25,23 @@ import java.util.Map;
 public abstract class AbstractEffectHUD extends AbstractHUD {
 
     private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
+    private static final GeneralSettings.HUDSettings HUD_SETTINGS = Main.settings.generalSettings.hudSettings;
 
-    private static final Identifier STATUS_EFFECT_BACKGROUND_TEXTURE = Identifier.of("starhud", "hud/effect.png");
     private static final Identifier STATUS_EFFECT_BAR_TEXTURE = Identifier.of("starhud", "hud/effect_bar.png");
-    private static final Identifier STATUS_EFFECT_AMBIENT_TEXTURE = Identifier.of("starhud", "hud/effect_ambient.png");
+    private static final Identifier STATUS_EFFECT_BAR_BACKGROUND_TEXTURE = Identifier.of("starhud", "hud/effect_bar_background.png");
 
-    private static final int STATUS_EFFECT_TEXTURE_WIDTH = 24;
+    private static final Identifier STATUS_EFFECT_TEXTURE = Identifier.of("starhud", "hud/effect.png");
+    private static final Identifier STATUS_EFFECT_AMBIENT_TEXTURE = Identifier.of("starhud", "hud/effect_ambient.png");
+    private static final Identifier STATUS_EFFECT_AMBIENT_COMBINED_TEXTURE = Identifier.of("starhud", "hud/effect_ambient_combined.png");
+
+    private static final int ICON_WIDTH = 24;
+    private static final int ICON_HEIGHT = 24;
+
+    private static final int INFO_WIDTH = 24;
+    private static final int INFO_HEIGHT = 7;
+
     private static final int STATUS_EFFECT_TEXTURE_HEIGHT = 32;
+    private static final int STATUS_EFFECT_TEXTURE_WIDTH = 24;
     private static final int STATUS_EFFECT_BAR_TEXTURE_WIDTH = 21;
     private static final int STATUS_EFFECT_BAR_TEXTURE_HEIGHT = 3;
 
@@ -48,6 +60,7 @@ public abstract class AbstractEffectHUD extends AbstractHUD {
     private int width;
     private int height;
     private int sameTypeGap;
+    private int iconInfoGap;
 
     private boolean drawVertical;
 
@@ -70,6 +83,8 @@ public abstract class AbstractEffectHUD extends AbstractHUD {
         }
 
         if (size == 0) return false;
+
+        iconInfoGap = Math.min(HUD_SETTINGS.iconInfoGap, 1);
 
         width = getDynamicWidth(size);
         height = getDynamicHeight(size);
@@ -113,31 +128,37 @@ public abstract class AbstractEffectHUD extends AbstractHUD {
             return false;
 
         StatusEffectAttribute statusEffectAttribute = StatusEffectAttribute.getStatusEffectAttribute(statusEffectInstance);
+        int gap = iconInfoGap;
 
         if (drawBackground) {
-            if (statusEffectInstance.isAmbient()) {
+            if (gap <= 0) {
+                if (statusEffectInstance.isAmbient()) {
+                    // evil stretching hack.
+                    int iconHeight = ICON_HEIGHT + INFO_HEIGHT;
+                    int stretchHeight = ICON_HEIGHT + gap + INFO_HEIGHT;
+                    float uvScale = (float)stretchHeight / iconHeight;
 
-                // draw soft blue outlined background...
-                RenderUtils.drawTextureHUD(
-                        context,
-                        STATUS_EFFECT_AMBIENT_TEXTURE,
-                        x, y,
-                        0, 0,
-                        STATUS_EFFECT_TEXTURE_WIDTH, STATUS_EFFECT_TEXTURE_HEIGHT,
-                        STATUS_EFFECT_TEXTURE_WIDTH, STATUS_EFFECT_TEXTURE_HEIGHT,
-                        effectSettings.ambientColor | 0xFF000000
-                );
-
+                    RenderUtils.drawTextureHUD(
+                            context,
+                            STATUS_EFFECT_AMBIENT_COMBINED_TEXTURE,
+                            x, y,
+                            0.0F, 0.0F,
+                            ICON_WIDTH, stretchHeight,
+                            ICON_WIDTH, (int)(iconHeight * uvScale),
+                            effectSettings.ambientColor | 0xff000000
+                    );
+                } else {
+                    RenderUtils.fillRounded(context, x, y, x + ICON_WIDTH, y + ICON_HEIGHT + gap + INFO_HEIGHT, 0x80000000);
+                }
             } else {
-
-                // draw background
                 RenderUtils.drawTextureHUD(
                         context,
-                        STATUS_EFFECT_BACKGROUND_TEXTURE,
+                        statusEffectInstance.isAmbient() ? STATUS_EFFECT_AMBIENT_TEXTURE : STATUS_EFFECT_TEXTURE,
                         x, y,
-                        0, 0,
+                        0.0F, 0.0F,
                         STATUS_EFFECT_TEXTURE_WIDTH, STATUS_EFFECT_TEXTURE_HEIGHT,
-                        STATUS_EFFECT_TEXTURE_WIDTH, STATUS_EFFECT_TEXTURE_HEIGHT
+                        STATUS_EFFECT_TEXTURE_WIDTH, STATUS_EFFECT_TEXTURE_HEIGHT,
+                        statusEffectInstance.isAmbient() ? effectSettings.ambientColor | 0xFF000000 : 0xFFFFFFFF
                 );
             }
         }
@@ -158,8 +179,16 @@ public abstract class AbstractEffectHUD extends AbstractHUD {
         // draw timer bar
         RenderUtils.drawTextureHUD(
                 context,
+                STATUS_EFFECT_BAR_BACKGROUND_TEXTURE,
+                x + 2, y + ICON_HEIGHT + gap + 2,
+                0, 0,
+                STATUS_EFFECT_BAR_TEXTURE_WIDTH, STATUS_EFFECT_BAR_TEXTURE_HEIGHT,
+                STATUS_EFFECT_BAR_TEXTURE_WIDTH, STATUS_EFFECT_BAR_TEXTURE_HEIGHT
+        );
+        RenderUtils.drawTextureHUD(
+                context,
                 STATUS_EFFECT_BAR_TEXTURE,
-                x + 2, y + 27,
+                x + 2, y + ICON_HEIGHT + gap + 2,
                 0, 0,
                 3 * step, STATUS_EFFECT_BAR_TEXTURE_HEIGHT,
                 STATUS_EFFECT_BAR_TEXTURE_WIDTH, STATUS_EFFECT_BAR_TEXTURE_HEIGHT,
@@ -214,11 +243,15 @@ public abstract class AbstractEffectHUD extends AbstractHUD {
         // if the HUD is drawn Vertically, the Height should be the whole row of Effect HUDs
         return effectSettings.drawVertical ? (size * getSameTypeGap()) - effectSettings.sameTypeGap
                 // else, the height is just the same as the texture height.
-                : STATUS_EFFECT_TEXTURE_HEIGHT;
+                : getInstanceHeight();
+    }
+
+    public int getInstanceHeight() {
+        return ICON_HEIGHT + iconInfoGap + INFO_HEIGHT;
     }
 
     public int getSameTypeGap() {
-        return (effectSettings.drawVertical ? STATUS_EFFECT_TEXTURE_HEIGHT : STATUS_EFFECT_TEXTURE_WIDTH) + effectSettings.sameTypeGap;
+        return (effectSettings.drawVertical ? getInstanceHeight(): STATUS_EFFECT_TEXTURE_WIDTH) + effectSettings.sameTypeGap;
     }
 
     public static Identifier getStatusEffectTexture(RegistryEntry<StatusEffect> effect) {

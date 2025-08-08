@@ -262,7 +262,7 @@ public abstract class AbstractDurabilityHUD extends AbstractHUD {
             case BOTH -> { // WIP INFO_ONLY
                 // draw background for the item texture
                 if (drawBackground) {
-                    if (gap == 0) {
+                    if (gap <= 0) {
                         RenderUtils.fillRounded(context, x, y, x + w, y + h, 0x80000000);
                     } else {
                         RenderUtils.fillRoundedLeftSide(context, x, y, x + ITEM_BACKGROUND_WIDTH, y + h, 0x80000000);
@@ -318,7 +318,7 @@ public abstract class AbstractDurabilityHUD extends AbstractHUD {
             case BOTH -> { // WIP INFO_ONLY bruh
                 // draw the background
                 if (drawBackground) {
-                    if (gap == 0)
+                    if (gap <= 0)
                         RenderUtils.fillRounded(context, x, y, x + w, y + h, 0x80000000);
                     else {
                         RenderUtils.fillRoundedLeftSide(context, x, y, x + iconWidth, y + h, 0x80000000);
@@ -358,7 +358,7 @@ public abstract class AbstractDurabilityHUD extends AbstractHUD {
             case BOTH ->  {
 
                 if (drawBackground) {
-                    if (gap == 0)
+                    if (gap <= 0)
                         RenderUtils.fillRounded(context, x, y, x + w, y + h, 0x80000000);
                     else {
                         RenderUtils.fillRoundedLeftSide(context, x, y, x + iconWidth, y + h, 0x80000000);

@@ -16,6 +16,9 @@ public class ConditionalSettings {
     @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
     public RenderMode renderMode = RenderMode.SHOW;
 
+    @Comment("Server IP Address and Mod ID requires this field.")
+    public String additionalString = "";
+
     @Comment("Shifts this HUD in the X Axis")
     public int xOffset = 0;
 
@@ -58,7 +61,7 @@ public class ConditionalSettings {
         if (condition == null) {
             condition = Condition.DEBUG_HUD_OPENED;
         }
-        return this.condition.isConditionMet();
+        return this.condition.isConditionMet(additionalString);
     }
 
     public enum RenderMode {

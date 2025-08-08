@@ -2,7 +2,7 @@ package fin.starhud.helper;
 
 import fin.starhud.helper.condition.*;
 
-import java.util.function.BooleanSupplier;
+import java.util.function.Function;
 import java.util.function.IntSupplier;
 
 public enum Condition {
@@ -88,20 +88,32 @@ public enum Condition {
             TargetedCrosshair::isShown,
             TargetedCrosshair::getWidth,
             TargetedCrosshair::getHeight
+    ),
+
+    IS_MOD_LOADED(
+            Other::isModLoaded,
+            () -> 0,
+            () -> 0
+    ),
+
+    IS_ON_SERVER(
+            Other::isOnServer,
+            () -> 0,
+            () -> 0
     );
 
-    private final BooleanSupplier shownCheck;
+    private final Function<String, Boolean> shownCheck;
     private final IntSupplier widthSupplier;
     private final IntSupplier heightSupplier;
 
-    Condition(BooleanSupplier shownCheck, IntSupplier widthSupplier, IntSupplier heightSupplier) {
+    Condition(Function<String, Boolean> shownCheck, IntSupplier widthSupplier, IntSupplier heightSupplier) {
         this.shownCheck = shownCheck;
         this.widthSupplier = widthSupplier;
         this.heightSupplier = heightSupplier;
     }
 
-    public boolean isConditionMet() {
-        return shownCheck.getAsBoolean();
+    public boolean isConditionMet(String arg) {
+        return shownCheck.apply(arg);
     }
 
     public int getWidth(){

@@ -8,7 +8,7 @@ public class TargetedCrosshair {
 
     private static final TargetedCrosshairHUD TARGETED_CROSSHAIR_HUD = (TargetedCrosshairHUD) HUDComponent.getInstance().getHUD(HUDId.TARGETED_CROSSHAIR);
 
-    public static boolean isShown() {
+    public static boolean isShown(String ignored) {
         return TargetedCrosshairHUD.isShown();
     }
 

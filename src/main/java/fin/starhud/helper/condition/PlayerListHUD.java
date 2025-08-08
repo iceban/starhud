@@ -10,7 +10,7 @@ public class PlayerListHUD {
 
     public static final Box boundingBox = new Box(0,0);
 
-    public static boolean isShown() {
+    public static boolean isShown(String ignored) {
         return ((AccessorPlayerListHud) CLIENT.inGameHud.getPlayerListHud()).isVisible();
     }
 

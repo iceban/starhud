@@ -7,7 +7,7 @@ public class AirBubbleBarHUD {
 
     private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
 
-    public static boolean isShown() {
+    public static boolean isShown(String ignored) {
         return CLIENT.interactionManager.hasStatusBars() && CLIENT.player.isSubmergedIn(FluidTags.WATER) || CLIENT.player.getAir() < CLIENT.player.getMaxAir();
     }
 

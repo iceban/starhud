@@ -81,9 +81,6 @@ public class BaseHUDSettings implements ConfigData {
         boolean hasAnyRenderIfActive = false;
 
         for (ConditionalSettings condition : conditions) {
-            if (condition.renderMode == null)
-                condition.renderMode = ConditionalSettings.RenderMode.SHOW;
-
             switch (condition.renderMode) {
                 case HIDE -> {
                     if (condition.isConditionMet()) return false;

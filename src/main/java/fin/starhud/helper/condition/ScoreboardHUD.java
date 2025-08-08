@@ -10,7 +10,7 @@ public class ScoreboardHUD {
 
     private static final Box boundingBox = new Box(0,0);
 
-    public static boolean isShown() {
+    public static boolean isShown(String ignored) {
         return CLIENT.world.getScoreboard().getObjectiveForSlot(ScoreboardDisplaySlot.SIDEBAR) != null;
     }
 

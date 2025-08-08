@@ -199,7 +199,7 @@ public class TargetedCrosshairHUD extends AbstractHUD {
             }
             case BOTH -> {
                 if (drawBackground) {
-                    if (gap == 0)
+                    if (gap <= 0)
                         RenderUtils.fillRounded(
                                 context,
                                 x, y,
@@ -266,7 +266,7 @@ public class TargetedCrosshairHUD extends AbstractHUD {
             }
             case BOTH -> {
                 if (drawBackground) {
-                    if (gap == 0)
+                    if (gap <= 0)
                         RenderUtils.fillRounded(
                                 context,
                                 x, y,
