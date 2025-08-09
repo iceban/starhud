@@ -21,6 +21,7 @@ public class EventInit {
 
         // register keybinding event, on openEditHUDKey pressed -> move screen to edit hud screen.
         ClientTickEvents.END_CLIENT_TICK.register(EventInit::onOpenEditHUDKeyPressed);
+        ClientTickEvents.END_CLIENT_TICK.register(EventInit::onToggleHUDKeyPressed);
 
         // register hud element into before hotbar. I hope this was safe enough.
         HudElementRegistry.attachElementBefore(VanillaHudElements.HOTBAR, Identifier.of("starhud"), EventInit::onHUDRender);
@@ -29,6 +30,12 @@ public class EventInit {
     public static void onOpenEditHUDKeyPressed(MinecraftClient client) {
         while (Main.openEditHUDKey.wasPressed()) {
             client.setScreen(new EditHUDScreen(Text.of("Edit HUD"), client.currentScreen));
+        }
+    }
+
+    public static void onToggleHUDKeyPressed(MinecraftClient client) {
+        while (Main.toggleHUDKey.wasPressed()) {
+            Main.settings.generalSettings.inGameSettings.disableHUDRendering = !Main.settings.generalSettings.inGameSettings.disableHUDRendering;
         }
     }
 

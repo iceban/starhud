@@ -3,6 +3,7 @@
 
   "category.starhud" : "StarHUD",
   "key.starhud.open_edithud": "Open HUD Edit Screen",
+  "key.starhud.toggle_hud": "Toggle HUD In Game",
 
   "text.autoconfig.starhud.category.general": "General",
 
@@ -33,7 +34,7 @@
   "text.autoconfig.starhud.option.GroupedHUDSettings.base.originY": "Vertical Alignment",
   "text.autoconfig.starhud.option.GroupedHUDSettings.base.growthDirectionX": "Horizontal Growth Direction",
   "text.autoconfig.starhud.option.GroupedHUDSettings.base.growthDirectionY": "Vertical Growth Direction",
-  "text.autoconfig.starhud.option.GroupedHUDSettings.base.displayMode": "HUD Display Mode",
+  "text.autoconfig.starhud.option.GroupedHUDSettings.base.displayMode": "HUD Display Mode (IGNORED)",
   "text.autoconfig.starhud.option.GroupedHUDSettings.base.drawBackground": "Draw Background",
   "text.autoconfig.starhud.option.GroupedHUDSettings.base.scale": "HUD Scale",
   "text.autoconfig.starhud.option.GroupedHUDSettings.base.conditions": "Conditions",
@@ -307,7 +308,7 @@
   "text.autoconfig.starhud.option.inventorySettings.base.originY": "Vertical Alignment",
   "text.autoconfig.starhud.option.inventorySettings.base.growthDirectionX": "Horizontal Growth Direction",
   "text.autoconfig.starhud.option.inventorySettings.base.growthDirectionY": "Vertical Growth Direction",
-  "text.autoconfig.starhud.option.inventorySettings.base.displayMode": "HUD Display Mode",
+  "text.autoconfig.starhud.option.inventorySettings.base.displayMode": "HUD Display Mode (IGNORED)",
   "text.autoconfig.starhud.option.inventorySettings.base.drawBackground": "Draw Background",
   "text.autoconfig.starhud.option.inventorySettings.base.scale": "HUD Scale",
   "text.autoconfig.starhud.option.inventorySettings.base.conditions": "Conditions",
@@ -359,7 +360,7 @@
   "text.autoconfig.starhud.option.effectSettings.positiveSettings.base.originY": "Vertical Alignment",
   "text.autoconfig.starhud.option.effectSettings.positiveSettings.base.growthDirectionX": "Horizontal Growth Direction",
   "text.autoconfig.starhud.option.effectSettings.positiveSettings.base.growthDirectionY": "Vertical Growth Direction",
-  "text.autoconfig.starhud.option.effectSettings.positiveSettings.base.displayMode": "HUD Display Mode",
+  "text.autoconfig.starhud.option.effectSettings.positiveSettings.base.displayMode": "HUD Display Mode (IGNORED)",
   "text.autoconfig.starhud.option.effectSettings.positiveSettings.base.drawBackground": "Draw Background",
   "text.autoconfig.starhud.option.effectSettings.positiveSettings.base.scale": "HUD Scale",
   "text.autoconfig.starhud.option.effectSettings.positiveSettings.base.conditions": "Conditions",
@@ -378,7 +379,7 @@
   "text.autoconfig.starhud.option.effectSettings.negativeSettings.base.originY": "Vertical Alignment",
   "text.autoconfig.starhud.option.effectSettings.negativeSettings.base.growthDirectionX": "Horizontal Growth Direction",
   "text.autoconfig.starhud.option.effectSettings.negativeSettings.base.growthDirectionY": "Vertical Growth Direction",
-  "text.autoconfig.starhud.option.effectSettings.negativeSettings.base.displayMode": "HUD Display Mode",
+  "text.autoconfig.starhud.option.effectSettings.negativeSettings.base.displayMode": "HUD Display Mode (IGNORED)",
   "text.autoconfig.starhud.option.effectSettings.negativeSettings.base.drawBackground": "Draw Background",
   "text.autoconfig.starhud.option.effectSettings.negativeSettings.base.scale": "HUD Scale",
   "text.autoconfig.starhud.option.effectSettings.negativeSettings.base.conditions": "Conditions",

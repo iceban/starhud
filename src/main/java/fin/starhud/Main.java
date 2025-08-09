@@ -15,7 +15,9 @@ public class Main implements ClientModInitializer {
     public static final Logger LOGGER = LoggerFactory.getLogger("starhud");
 
     public static Settings settings;
+
     public static KeyBinding openEditHUDKey;
+    public static KeyBinding toggleHUDKey;
 
     @Override
     public void onInitializeClient() {
