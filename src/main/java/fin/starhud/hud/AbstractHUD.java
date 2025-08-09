@@ -34,7 +34,7 @@ public abstract class AbstractHUD implements HUDInterface {
     public void update() {
         baseX = getSettings().getCalculatedPosX();
         baseY = getSettings().getCalculatedPosY();
-        setXY(baseX + totalXOffset, baseY + totalYOffset);
+        setXY(baseX + totalXOffset - getGrowthDirectionHorizontal(getWidth()), baseY + totalYOffset - getGrowthDirectionVertical(getHeight()));
     }
 
     @Override
@@ -60,7 +60,7 @@ public abstract class AbstractHUD implements HUDInterface {
 
         modifyXY();
 
-        setXY(baseX + totalXOffset, baseY + totalYOffset);
+        setXY(baseX + totalXOffset - getGrowthDirectionHorizontal(getWidth()), baseY + totalYOffset - getGrowthDirectionVertical(getHeight()));
         return true;
     }
 
@@ -94,8 +94,8 @@ public abstract class AbstractHUD implements HUDInterface {
             }
         }
 
-        totalXOffset = xOffset - getGrowthDirectionHorizontal(getWidth());
-        totalYOffset = yOffset - getGrowthDirectionVertical(getHeight());
+        totalXOffset = xOffset;
+        totalYOffset = yOffset;
     }
 
     public boolean isScaled() {

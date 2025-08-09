@@ -127,6 +127,7 @@ public class EditHUDScreen extends Screen {
                             p.getId(),
                             p.groupSettings.gap,
                             p.groupSettings.alignVertical,
+                            p.groupSettings.childAlignment,
                             p.groupSettings.boxColor,
                             p.groupSettings.hudIds
                     )
@@ -355,7 +356,7 @@ public class EditHUDScreen extends Screen {
 
         // special case: grouped hud buttons
 
-        int yBottomGroup = yBottom - GAP - SQUARE_WIDGET_LENGTH;
+        int yBottomGroup = CENTER_Y;
         int xGroupUngroupButton = CENTER_X - (terminatorWidth / 2);
 
         groupUngroupButton = ButtonWidget.builder(
@@ -374,7 +375,7 @@ public class EditHUDScreen extends Screen {
 
         int gapFieldWidth = terminatorWidth / 2;
         int xGapField = CENTER_X - (gapFieldWidth / 2);
-        int yGapField = yBottomGroup - GAP - SQUARE_WIDGET_LENGTH;
+        int yGapField = yBottomGroup + PADDING;
         gapField = new TextFieldWidget(
                 CLIENT.textRenderer,
                 xGapField, yGapField,
@@ -402,7 +403,10 @@ public class EditHUDScreen extends Screen {
 
                     button.setMessage(Text.of(hud.groupSettings.childAlignment.name()));
                 }
-        ).dimensions(xChildAlignmentButton, yChildAlignmentButton, terminatorWidth, SQUARE_WIDGET_LENGTH).build();
+        )
+                .dimensions(xChildAlignmentButton, yChildAlignmentButton, terminatorWidth, SQUARE_WIDGET_LENGTH)
+                .tooltip(Tooltip.of(Text.of("Child Alignment")))
+                .build();
 
         int xGroupAlignmentButton = xGroupUngroupButton + terminatorWidth + GAP;
         groupAlignmentButton = ButtonWidget.builder(
@@ -1232,7 +1236,7 @@ public class EditHUDScreen extends Screen {
 
         for (GroupedHUDSettings current : groupedHUDs) {
             GroupedHUDSettings original = oldGroupedHUDSettings.get(current.id);
-            if (original == null || !current.isEqual(original)) {
+            if (!current.isEqual(original)) {
                 return true;
             }
         }

@@ -35,11 +35,12 @@ public class GroupedHUDSettings {
         this.id = HUDComponent.getInstance().generateNextGroupId();
     }
 
-    public GroupedHUDSettings(BaseHUDSettings base, String id, int gap, boolean alignVertical, int boxColor, List<String> hudIds) {
+    public GroupedHUDSettings(BaseHUDSettings base, String id, int gap, boolean alignVertical, ChildAlignment childAlignment, int boxColor, List<String> hudIds) {
         this.base = base;
         this.id = id;
         this.gap = gap;
         this.alignVertical = alignVertical;
+        this.childAlignment = childAlignment;
         this.boxColor = boxColor;
         this.hudIds = hudIds;
     }
