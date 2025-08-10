@@ -178,4 +178,19 @@ public abstract class AbstractHUD implements HUDInterface {
     public void setBoundingBox(int x, int y, int width, int height) {
         this.boundingBox.setBoundingBox(x, y, width, height);
     }
+
+    public boolean isHovered(int mouseX, int mouseY) {
+
+        int x = getX();
+        int y = getY();
+        int width = getWidth();
+        int height = getHeight();
+        float hudScale = getSettings().scale;
+
+        float scale = hudScale == 0 ? 1 : (float) MinecraftClient.getInstance().getWindow().getScaleFactor() / hudScale;
+        int scaledMouseX = (int) (mouseX * scale);
+        int scaledMouseY = (int) (mouseY * scale);
+        return scaledMouseX >= x && scaledMouseX <= x + width &&
+                scaledMouseY >= y && scaledMouseY <= y + height;
+    }
 }

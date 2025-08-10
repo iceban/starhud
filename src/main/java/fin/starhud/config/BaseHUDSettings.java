@@ -34,15 +34,19 @@ public class BaseHUDSettings implements ConfigData {
 
     @Comment("Which way should the HUD goes when the length increases horizontally? (Recommended to go the opposite way from Alignment)")
     @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
+    @ConfigEntry.Gui.Excluded
     public GrowthDirectionX growthDirectionX;
 
     @Comment("Which way should the HUD goes when the length increases vertically? (Recommended to go the opposite way from Alignment)")
     @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
+    @ConfigEntry.Gui.Excluded
     public GrowthDirectionY growthDirectionY;
 
     @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
+    @ConfigEntry.Gui.Excluded
     public HUDDisplayMode displayMode = HUDDisplayMode.BOTH;
 
+    @ConfigEntry.Gui.Excluded
     public boolean drawBackground = true;
 
     @Comment("Set to 0 or below for default GUI Scale")

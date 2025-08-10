@@ -539,8 +539,8 @@ public class EditHUDScreen extends Screen {
             groupAlignmentButton.visible = false;
             childAlignmentButton.visible = false;
 
-            canSelectedHUDUngroup =  (selectedHUDs.size() == 1 && firstHUD instanceof GroupedHUD);
-            canSelectedHUDsGroup = (selectedHUDs.size() > 1);
+            canSelectedHUDUngroup =  (selectedHUDs.size() == 1 && firstHUD instanceof GroupedHUD && !firstHUD.isInGroup());
+            canSelectedHUDsGroup = (selectedHUDs.size() > 1 && selectedHUDs.stream().noneMatch(AbstractHUD::isInGroup));
 
             if (canSelectedHUDsGroup) {
                 groupUngroupButton.setMessage(Text.of("Group"));
@@ -666,6 +666,19 @@ public class EditHUDScreen extends Screen {
                 renderBoundingBox(context, hud, mouseX, mouseY);
             }
         }
+
+        for (AbstractHUD hud : selectedHUDs) {
+
+            Box box = hud.getBoundingBox();
+
+            int x = box.getX();
+            int y = box.getY();
+            int width = box.getWidth();
+            int height = box.getHeight();
+            int color = box.getColor();
+
+            context.drawBorder(x, y, width, height, color);
+        }
     }
 
     private void renderBoundingBox(DrawContext context, AbstractHUD hud, int mouseX, int mouseY) {
@@ -676,20 +689,11 @@ public class EditHUDScreen extends Screen {
         int width = boundingBox.getWidth();
         int height = boundingBox.getHeight();
         int color = boundingBox.getColor();
-        float scale = hud.getSettings().getScale();
-        int selectedColor = SETTINGS.selectedBoxColor;
-        int selectedGroupColor = SETTINGS.selectedGroupBoxColor;
 
         if (SETTINGS.drawBorder)
             context.drawBorder(x, y, width, height, color);
-        if (isHovered(x, y, width, height, mouseX, mouseY, scale)) {
+        if (hud.isHovered(mouseX, mouseY)) {
             context.fill(x, y, x + width, y + height, (color & 0x00FFFFFF) | 0x80000000);
-        }
-        if (selectedHUDs.contains(hud)) {
-            if (hud instanceof GroupedHUD)
-                context.fill(x, y, x + width, y + height, selectedGroupColor);
-            else
-                context.fill(x, y, x + width, y + height, selectedColor);
         }
     }
 
@@ -790,14 +794,9 @@ public class EditHUDScreen extends Screen {
         if (boundingBox.isEmpty()) return false;
 
         float scale = hud.getSettings().getScale();
-        return isHovered(
-                boundingBox.getX(),
-                boundingBox.getY(),
-                boundingBox.getWidth(),
-                boundingBox.getHeight(),
+        return hud.isHovered(
                 (int) mouseX,
-                (int) mouseY,
-                scale
+                (int) mouseY
         );
     }
 
@@ -1196,14 +1195,6 @@ public class EditHUDScreen extends Screen {
         }
 
         return handled;
-    }
-
-    public boolean isHovered(int x, int y, int width, int height, int mouseX, int mouseY, float HUDScale) {
-        float scale = HUDScale == 0 ? 1 : (float) CLIENT.getWindow().getScaleFactor() / HUDScale;
-        int scaledMouseX = (int) (mouseX * scale);
-        int scaledMouseY = (int) (mouseY * scale);
-        return scaledMouseX >= x && scaledMouseX <= x + width &&
-                scaledMouseY >= y && scaledMouseY <= y + height;
     }
 
     private boolean intersectsBox(int x1, int y1, int x2, int y2, AbstractHUD hud) {
