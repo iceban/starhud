@@ -201,7 +201,8 @@ public class BaseHUDSettings implements ConfigData {
 
 
     public boolean isEqual(BaseHUDSettings other) {
-        return (this.x == other.x)
+        return (this.shouldRender == other.shouldRender)
+                && (this.x == other.x)
                 && (this.y == other.y)
                 && (this.originX == other.originX)
                 && (this.originY == other.originY)
@@ -224,6 +225,7 @@ public class BaseHUDSettings implements ConfigData {
     }
 
     public void copySettings(BaseHUDSettings src) {
+        this.shouldRender = src.shouldRender;
         this.x = src.x;
         this.y = src.y;
         this.originX = src.originX;

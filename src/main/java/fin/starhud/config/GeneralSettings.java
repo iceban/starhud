@@ -18,13 +18,15 @@ public class GeneralSettings {
 
         public boolean drawBorder = true;
 
-        public boolean drawGrid = true;
-
         @ConfigEntry.ColorPicker(allowAlpha = true)
         public int selectedBoxColor = 0x8087ceeb;
 
         @ConfigEntry.ColorPicker(allowAlpha = true)
         public int selectedGroupBoxColor = 0x80Fc7871;
+
+        public int borderPadding = 0;
+
+        public boolean drawGrid = true;
 
         @ConfigEntry.ColorPicker(allowAlpha = true)
         public int gridColor = 0x20A8E6E6;

@@ -6,6 +6,7 @@ import fin.starhud.helper.ScreenAlignmentX;
 import fin.starhud.helper.ScreenAlignmentY;
 import fin.starhud.hud.HUDComponent;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
+import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,17 +15,20 @@ public class GroupedHUDSettings {
     @ConfigEntry.Gui.TransitiveObject
     public BaseHUDSettings base;
 
+    @ConfigEntry.Gui.Excluded
     public int gap = 0;
 
+    @ConfigEntry.Gui.Excluded
     public boolean alignVertical = false;
 
     @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
+    @ConfigEntry.Gui.Excluded
     public ChildAlignment childAlignment = ChildAlignment.THIS;
 
     @ConfigEntry.ColorPicker
     public int boxColor = 0xFFFFFF;
 
-    @ConfigEntry.Gui.Excluded
+    @Comment("DO NOT BY ANY MEANS CHANGE THIS DIRECTLY FROM THE CONFIG SCREEN. THIS IS FOR DISPLAY ONLY!")
     public List<String> hudIds = new ArrayList<>();
 
     @ConfigEntry.Gui.Excluded
@@ -76,6 +80,7 @@ public class GroupedHUDSettings {
         this.base.copySettings(other.base);
         this.gap = other.gap;
         this.alignVertical = other.alignVertical;
+        this.childAlignment = other.childAlignment;
         this.hudIds = new ArrayList<>(other.hudIds);
         this.id = other.id;
     }
