@@ -142,12 +142,12 @@ public class EditHUDScreen extends Screen {
     protected void init() {
 
         final int CENTER_X = this.width / 2;
-        final int CENTER_Y = this.height / 2 + (PADDING / 2);
+        final int CENTER_Y = (this.height - WIDGET_HEIGHT) / 2;
 
         HUDComponent.getInstance().updateAll();
 
         int xFieldX = CENTER_X - TEXT_FIELD_WIDTH - (SQUARE_WIDGET_LENGTH / 2) - GAP;
-        int xFieldY = CENTER_Y - PADDING;
+        int xFieldY = CENTER_Y;
         xField = new TextFieldWidget(
                 CLIENT.textRenderer,
                 xFieldX, xFieldY,
@@ -311,7 +311,7 @@ public class EditHUDScreen extends Screen {
                         }
                 )
                 .tooltip(Tooltip.of(Text.of("Open Configuration Screen")))
-                .dimensions(xConfigScreenButton, CENTER_Y - PADDING, configScreenLength, configScreenLength)
+                .dimensions(xConfigScreenButton, CENTER_Y, configScreenLength, configScreenLength)
                 .build();
 
         int xHelpButton = CENTER_X - (GAP/2) - SQUARE_WIDGET_LENGTH;
@@ -356,7 +356,7 @@ public class EditHUDScreen extends Screen {
 
         // special case: grouped hud buttons
 
-        int yBottomGroup = CENTER_Y;
+        int yBottomGroup = CENTER_Y + PADDING;
         int xGroupUngroupButton = CENTER_X - (terminatorWidth / 2);
 
         groupUngroupButton = ButtonWidget.builder(
@@ -592,9 +592,20 @@ public class EditHUDScreen extends Screen {
         }
     }
 
-    // Enhanced render method - add this to your existing render method
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+
+        // draw basic grid for convenience
+        if (SETTINGS.drawGrid) {
+            final int CENTER_X = this.width / 2;
+            final int CENTER_Y = this.height / 2;
+            int gridEdgePadding = Math.max(SETTINGS.gridEdgePadding, 0);
+            if (gridEdgePadding > 0)
+                context.drawBorder(gridEdgePadding, gridEdgePadding, this.width - (gridEdgePadding * 2), this.height - (gridEdgePadding * 2), SETTINGS.gridColor);
+            context.drawHorizontalLine((gridEdgePadding + 1), this.width - (gridEdgePadding + 2), CENTER_Y, SETTINGS.gridColor);
+            context.drawVerticalLine(CENTER_X, (gridEdgePadding), this.height - (gridEdgePadding + 1), SETTINGS.gridColor);
+        }
+
         super.render(context, mouseX, mouseY, delta);
 
         // draw help

@@ -15,7 +15,7 @@ import net.minecraft.world.World;
 
 public class PingHUD extends AbstractHUD {
 
-    private static final PingSettings PING_SETTINGS = Main.settings.pingSettings;
+    private static final PingSettings SETTINGS = Main.settings.pingSettings;
 
     private static final Identifier PING_TEXTURE = Identifier.of("starhud", "hud/ping.png");
 
@@ -31,7 +31,7 @@ public class PingHUD extends AbstractHUD {
     private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
 
     public PingHUD() {
-        super(PING_SETTINGS.base);
+        super(SETTINGS.base);
     }
 
     @Override
@@ -68,7 +68,7 @@ public class PingHUD extends AbstractHUD {
 
         // update pingLog every n seconds. Because this is quite expensive.
         long currentTimeMillis = System.currentTimeMillis();
-        if (currentTimeMillis - LAST_PING_UPDATE >= 1000 * PING_SETTINGS.updateInterval) {
+        if (currentTimeMillis - LAST_PING_UPDATE >= 1000 * SETTINGS.updateInterval) {
             LAST_PING_UPDATE = currentTimeMillis;
             cachedPingMeasurer.ping();
 
@@ -76,14 +76,14 @@ public class PingHUD extends AbstractHUD {
             int pingLogLen = pingLog.getLength();
             if (pingLogLen > 0) {
                 long currentPing = pingLog.get(pingLogLen - 1);
-                pingStr = currentPing + " ms";
+                pingStr = currentPing + SETTINGS.additionalString;
                 strWidth = CLIENT.textRenderer.getWidth(pingStr) - 1;
 
                 step = Math.min((int) currentPing / 150, 3);
             }
         }
 
-        color = getPingColor(step) | 0xFF000000;
+        color = (SETTINGS.useDynamicColor ? AbstractDurabilityHUD.getItemBarColor(3 - step, 3) : SETTINGS.color) | 0xFF000000;
         width = displayMode.calculateWidth(ICON_WIDTH, strWidth);
         height = ICON_HEIGHT;
         setWidthHeightColor(width, height, color);
@@ -112,16 +112,6 @@ public class PingHUD extends AbstractHUD {
         );
 
         return true;
-    }
-
-    public static int getPingColor(int step) {
-        return switch (step) {
-            case 0 -> PING_SETTINGS.pingColor.first;
-            case 1 -> PING_SETTINGS.pingColor.second;
-            case 2 -> PING_SETTINGS.pingColor.third;
-            case 3 -> PING_SETTINGS.pingColor.fourth;
-            default -> 0xFFFFFFFF;
-        };
     }
 
 }

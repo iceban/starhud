@@ -38,7 +38,7 @@ public class SpeedHUD extends AbstractHUD {
 
         double horizontalSpeed = (double) Math.round(vel.horizontalLength() * 20.0 * 10) / 10;
 
-        str = horizontalSpeed + " BPS";
+        str = horizontalSpeed + SETTINGS.additionalString;
 
         int strWidth = CLIENT.textRenderer.getWidth(str) - 1;
 

@@ -16,15 +16,20 @@ public class BaseHUDSettings implements ConfigData {
     @Comment("Toggle HUD")
     public boolean shouldRender;
 
+    @ConfigEntry.Gui.Excluded
     public int x;
+
+    @ConfigEntry.Gui.Excluded
     public int y;
 
     @Comment("HUD default Horizontal location")
     @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
+    @ConfigEntry.Gui.Excluded
     public ScreenAlignmentX originX;
 
     @Comment("HUD default Vertical location")
     @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
+    @ConfigEntry.Gui.Excluded
     public ScreenAlignmentY originY;
 
     @Comment("Which way should the HUD goes when the length increases horizontally? (Recommended to go the opposite way from Alignment)")
@@ -41,6 +46,7 @@ public class BaseHUDSettings implements ConfigData {
     public boolean drawBackground = true;
 
     @Comment("Set to 0 or below for default GUI Scale")
+    @ConfigEntry.Gui.Excluded
     public float scale = 0;
 
     @Comment("Modify HUD Based on Conditions.")

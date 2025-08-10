@@ -45,7 +45,7 @@ public class FPSHUD extends AbstractHUD {
 
     @Override
     public boolean collectHUDInformation() {
-        fpsStr = CLIENT.getCurrentFps() + " FPS";
+        fpsStr = CLIENT.getCurrentFps() + FPS_SETTINGS.additionalString;
         int strWidth = CLIENT.textRenderer.getWidth(fpsStr) - 1;
 
         displayMode = getSettings().getDisplayMode();

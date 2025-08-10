@@ -40,7 +40,7 @@ public class TPSHUD extends AbstractHUD {
         double tps = TPSTracker.getTPS();
 
         step = getStep(tps);
-        str = tps + " TPS";
+        str = tps + SETTINGS.additionalString;
         int strWidth = CLIENT.textRenderer.getWidth(str) - 1;
 
         displayMode = getSettings().getDisplayMode();
