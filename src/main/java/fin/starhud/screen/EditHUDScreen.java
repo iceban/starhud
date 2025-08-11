@@ -681,12 +681,10 @@ public class EditHUDScreen extends Screen {
     private void renderSelectedBox(DrawContext context, AbstractHUD hud) {
         Box box = hud.getBoundingBox();
 
-        int borderPadding = SETTINGS.borderPadding;
-
-        int x = box.getX() - borderPadding;
-        int y = box.getY() - borderPadding;
-        int width = box.getWidth() + (borderPadding * 2);
-        int height = box.getHeight() + (borderPadding * 2);
+        int x = box.getX();
+        int y = box.getY();
+        int width = box.getWidth();
+        int height = box.getHeight();
         int color = (hud instanceof GroupedHUD ? SETTINGS.selectedGroupBoxColor : SETTINGS.selectedBoxColor);
 
         if (hud.isInGroup()) {
@@ -699,12 +697,10 @@ public class EditHUDScreen extends Screen {
     private void renderBoundingBox(DrawContext context, AbstractHUD hud, int mouseX, int mouseY) {
         Box boundingBox = hud.getBoundingBox();
 
-        int borderPadding = SETTINGS.borderPadding;
-
-        int x = boundingBox.getX() - borderPadding;
-        int y = boundingBox.getY() - borderPadding;
-        int width = boundingBox.getWidth() + (borderPadding * 2);
-        int height = boundingBox.getHeight() + (borderPadding * 2);
+        int x = boundingBox.getX();
+        int y = boundingBox.getY();
+        int width = boundingBox.getWidth();
+        int height = boundingBox.getHeight();
         int color = boundingBox.getColor();
 
         if (SETTINGS.drawBorder)
@@ -1364,9 +1360,7 @@ public class EditHUDScreen extends Screen {
             scaleField.visible = true;
             shouldRenderButton.visible = true;
 
-            if (canSelectedHUDUngroup) {
-                GroupedHUD hud = (GroupedHUD) selectedHUDs.getFirst();
-
+            if (!selectedHUDs.isEmpty() && selectedHUDs.getFirst() instanceof GroupedHUD hud) {
                 gapField.visible = true;
                 groupAlignmentButton.visible = true;
                 childAlignmentButton.visible = true;

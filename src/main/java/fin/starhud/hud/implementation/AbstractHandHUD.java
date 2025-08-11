@@ -95,7 +95,7 @@ public abstract class AbstractHandHUD extends AbstractDurabilityHUD {
 
     public boolean renderHandHUD(DrawContext context, int x, int y, boolean drawBackground) {
         // either draw the durability or the amount of item in the inventory.
-        if (showDurability && item.isDamageable()) {
+        if (showDurability) {
             renderDurabilityHUD(
                     context,
                     ICON_TEXTURE,

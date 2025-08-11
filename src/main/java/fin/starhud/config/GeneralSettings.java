@@ -24,8 +24,6 @@ public class GeneralSettings {
         @ConfigEntry.ColorPicker(allowAlpha = true)
         public int selectedGroupBoxColor = 0x80Fc7871;
 
-        public int borderPadding = 0;
-
         public boolean drawGrid = true;
 
         @ConfigEntry.ColorPicker(allowAlpha = true)
