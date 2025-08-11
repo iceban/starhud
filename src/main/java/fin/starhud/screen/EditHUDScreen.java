@@ -658,7 +658,7 @@ public class EditHUDScreen extends Screen {
         for (AbstractHUD hud : HUDComponent.getInstance().getRenderedHUDs()) {
             if (hud.isScaled()) {
                 context.getMatrices().pushMatrix();
-                hud.setHUDScale(context);
+                hud.scaleHUD(context);
                 renderBoundingBox(context, hud, mouseX, mouseY);
                 context.getMatrices().popMatrix();
             } else {
@@ -669,7 +669,7 @@ public class EditHUDScreen extends Screen {
         for (AbstractHUD hud : selectedHUDs) {
             if (hud.isScaled()) {
                 context.getMatrices().pushMatrix();
-                hud.setHUDScale(context);
+                hud.scaleHUD(context);
                 renderSelectedBox(context, hud);
                 context.getMatrices().popMatrix();
             } else {

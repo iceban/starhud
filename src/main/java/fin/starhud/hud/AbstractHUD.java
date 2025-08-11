@@ -34,17 +34,19 @@ public abstract class AbstractHUD implements HUDInterface {
     public void update() {
         baseX = getSettings().getCalculatedPosX();
         baseY = getSettings().getCalculatedPosY();
-        setXY(baseX + totalXOffset - getGrowthDirectionHorizontal(getWidth()), baseY + totalYOffset - getGrowthDirectionVertical(getHeight()));
     }
 
     @Override
     public boolean render(DrawContext context) {
+        setXY(baseX + totalXOffset - getGrowthDirectionHorizontal(getWidth()), baseY + totalYOffset - getGrowthDirectionVertical(getHeight()));
+        setScale(getSettings().getScale());
+
         if (!isScaled())
             return renderHUD(context, getX(), getY(), shouldDrawBackground());
 
         // this is so we can change the scale for one hud but not the others.
         context.getMatrices().pushMatrix();
-        setHUDScale(context);
+        scaleHUD(context);
 
         try {
             return renderHUD(context, getX(), getY(), shouldDrawBackground());
@@ -59,8 +61,6 @@ public abstract class AbstractHUD implements HUDInterface {
             return false;
 
         modifyXY();
-
-        setXY(baseX + totalXOffset - getGrowthDirectionHorizontal(getWidth()), baseY + totalYOffset - getGrowthDirectionVertical(getHeight()));
         return true;
     }
 
@@ -78,8 +78,8 @@ public abstract class AbstractHUD implements HUDInterface {
 
     public abstract String getName();
 
-    public void setHUDScale(DrawContext context) {
-        float scaleFactor = getSettings().getScale() / (float) MinecraftClient.getInstance().getWindow().getScaleFactor();
+    public void scaleHUD(DrawContext context) {
+        float scaleFactor = getScale()  / (float) MinecraftClient.getInstance().getWindow().getScaleFactor();
         context.getMatrices().scale(scaleFactor, scaleFactor);
     }
 
@@ -99,7 +99,7 @@ public abstract class AbstractHUD implements HUDInterface {
     }
 
     public boolean isScaled() {
-        return this.getSettings().getScale() != 0 && (this.getSettings().getScale() != MinecraftClient.getInstance().getWindow().getScaleFactor());
+        return getScale() != 0 && (getScale() != MinecraftClient.getInstance().getWindow().getScaleFactor());
     }
 
     public boolean isInGroup() {
@@ -146,6 +146,10 @@ public abstract class AbstractHUD implements HUDInterface {
         this.boundingBox.setY(y);
     }
 
+    public void setScale(float scale) {
+        this.boundingBox.setScale(scale);
+    }
+
     public int getX() {
         return getBoundingBox().getX();
     }
@@ -160,6 +164,10 @@ public abstract class AbstractHUD implements HUDInterface {
 
     public int getHeight() {
         return getBoundingBox().getHeight();
+    }
+
+    public float getScale() {
+        return getBoundingBox().getScale();
     }
 
     public Box getBoundingBox() {
@@ -185,9 +193,8 @@ public abstract class AbstractHUD implements HUDInterface {
         int y = getY();
         int width = getWidth();
         int height = getHeight();
-        float hudScale = getSettings().scale;
+        float scale = getScale() == 0 ? 1 : (float) MinecraftClient.getInstance().getWindow().getScaleFactor() / getScale();
 
-        float scale = hudScale == 0 ? 1 : (float) MinecraftClient.getInstance().getWindow().getScaleFactor() / hudScale;
         int scaledMouseX = (int) (mouseX * scale);
         int scaledMouseY = (int) (mouseY * scale);
         return scaledMouseX >= x && scaledMouseX <= x + width &&

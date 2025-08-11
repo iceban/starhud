@@ -147,6 +147,7 @@ public class GroupedHUD extends AbstractHUD {
             boolean childShouldDrawBackground = !thisDrewBackground && hud.shouldDrawBackground();
 
             hud.setXY(x + xOffset, y + yOffset);
+            hud.setScale(getScale());
 
             if (hud instanceof GroupedHUD group) {
                 group.renderHUD(context, hud.getX(), hud.getY(), childShouldDrawBackground, thisDrewBackground);
