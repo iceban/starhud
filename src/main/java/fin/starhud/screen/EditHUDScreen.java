@@ -307,6 +307,7 @@ public class EditHUDScreen extends Screen {
                         button -> {
                             isHelpActivated = false;
                             isMoreOptionActivated = false;
+                            selectedHUDs.clear();
                             this.client.setScreen(AutoConfig.getConfigScreen(Settings.class, this).get());
                         }
                 )

@@ -56,6 +56,8 @@ public abstract class AbstractHandHUD extends AbstractDurabilityHUD {
     private boolean showCount;
     private boolean drawItem;
 
+    private boolean isItemDamagable;
+
     private HUDDisplayMode displayMode;
 
     @Override
@@ -69,7 +71,9 @@ public abstract class AbstractHandHUD extends AbstractDurabilityHUD {
         drawItem = handSettings.durabilitySettings.drawItem;
         displayMode = getSettings().getDisplayMode();
 
-        if (showDurability && item.isDamageable()) {
+        isItemDamagable = item.isDamageable();
+
+        if (showDurability && isItemDamagable) {
             return super.collectHUDInformation();
         }
 
@@ -95,7 +99,7 @@ public abstract class AbstractHandHUD extends AbstractDurabilityHUD {
 
     public boolean renderHandHUD(DrawContext context, int x, int y, boolean drawBackground) {
         // either draw the durability or the amount of item in the inventory.
-        if (showDurability) {
+        if (showDurability && isItemDamagable) {
             renderDurabilityHUD(
                     context,
                     ICON_TEXTURE,
