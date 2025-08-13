@@ -1,7 +1,6 @@
 package fin.starhud.mixin;
 
 import fin.starhud.Main;
-import fin.starhud.helper.Box;
 import fin.starhud.helper.condition.HeldItemTooltip;
 import fin.starhud.helper.condition.ScoreboardHUD;
 import fin.starhud.hud.HUDComponent;
@@ -12,16 +11,13 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.client.render.RenderTickCounter;
-import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(value = InGameHud.class, priority = 500)
 public class MixinInGameHUD {
