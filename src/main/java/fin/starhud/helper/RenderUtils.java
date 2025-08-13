@@ -94,29 +94,49 @@ public class RenderUtils {
     }
 
     public static void fillRoundedRightSide(DrawContext context, int x1, int y1, int x2, int y2, int color) {
-        context.fill(x1, y1, x2 - 1, y2, color);
-        context.fill(x2 - 1, y1 + 1, x2, y2 - 1, color);
+        if (HUD_SETTINGS.drawBackgroundRounded) {
+            context.fill(x1, y1, x2 - 1, y2, color);
+            context.fill(x2 - 1, y1 + 1, x2, y2 - 1, color);
+        } else {
+            context.fill(x1, y1, x2, y2, color);
+        }
     }
 
     public static void fillRoundedLeftSide(DrawContext context, int x1, int y1, int x2, int y2, int color) {
-        context.fill(x1, y1 + 1, x1 + 1, y2 - 1, color);
-        context.fill(x1 + 1, y1, x2, y2, color);
+        if (HUD_SETTINGS.drawBackgroundRounded) {
+            context.fill(x1, y1 + 1, x1 + 1, y2 - 1, color);
+            context.fill(x1 + 1, y1, x2, y2, color);
+        } else {
+            context.fill(x1, y1, x2, y2, color);
+        }
     }
 
     public static void fillRoundedUpperSide(DrawContext context, int x1, int y1, int x2, int y2, int color) {
-        context.fill(x1 + 1, y1, x2 - 1, y1 + 1, color);
-        context.fill(x1, y1 + 1, x2, y2, color);
+        if (HUD_SETTINGS.drawBackgroundRounded) {
+            context.fill(x1 + 1, y1, x2 - 1, y1 + 1, color);
+            context.fill(x1, y1 + 1, x2, y2, color);
+        } else {
+            context.fill(x1, y1, x2, y2, color);
+        }
     }
 
     public static void fillRoundedBottomSide(DrawContext context, int x1, int y1, int x2, int y2, int color) {
-        context.fill(x1, y1, x2, y2 - 1, color);
-        context.fill(x1 + 1, y2 - 1, x2 - 1, y2, color);
+        if (HUD_SETTINGS.drawBackgroundRounded) {
+            context.fill(x1, y1, x2, y2 - 1, color);
+            context.fill(x1 + 1, y2 - 1, x2 - 1, y2, color);
+        } else {
+            context.fill(x1, y1, x2, y2, color);
+        }
     }
 
     public static void fillRounded(DrawContext context, int x1, int y1, int x2, int y2, int color) {
-        context.fill(x1, y1 + 1, x1 + 1, y2 - 1, color);
-        context.fill(x1 + 1, y1, x2 - 1, y2, color);
-        context.fill(x2 - 1, y1 + 1, x2, y2 - 1, color);
+        if (HUD_SETTINGS.drawBackgroundRounded) {
+            context.fill(x1, y1 + 1, x1 + 1, y2 - 1, color);
+            context.fill(x1 + 1, y1, x2 - 1, y2, color);
+            context.fill(x2 - 1, y1 + 1, x2, y2 - 1, color);
+        } else {
+            context.fill(x1, y1, x2, y2, color);
+        }
     }
 
     public static void drawBorderedFill(DrawContext context, int x1, int y1, int x2, int y2, int fillColor, int borderColor) {
