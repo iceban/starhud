@@ -44,9 +44,6 @@ public abstract class AbstractHUD implements HUDInterface {
 
     @Override
     public boolean render(DrawContext context) {
-        setXY(baseX + totalXOffset - getGrowthDirectionHorizontal(getWidth()), baseY + totalYOffset - getGrowthDirectionVertical(getHeight()));
-        setScale(getSettings().getScale());
-
         if (!isScaled())
             return renderHUD(context, getX(), getY(), shouldDrawBackground());
 
@@ -67,6 +64,9 @@ public abstract class AbstractHUD implements HUDInterface {
             return false;
 
         modifyXY();
+
+        setXY(baseX + totalXOffset - getGrowthDirectionHorizontal(getWidth()), baseY + totalYOffset - getGrowthDirectionVertical(getHeight()));
+        setScale(getSettings().getScale());
         return true;
     }
 
