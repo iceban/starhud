@@ -153,6 +153,8 @@ public class HUDComponent {
 
     private long lastCollect = -1;
 
+    private final List<AbstractHUD> invalidHUDs = new ArrayList<>();
+
     public void renderAll(DrawContext context) {
 
         long now = System.nanoTime();
@@ -163,8 +165,16 @@ public class HUDComponent {
             lastCollect = now;
         }
 
-        for (HUDInterface hud : renderedHUDs)
-            hud.render(context);
+        invalidHUDs.clear();
+        for (AbstractHUD hud : renderedHUDs) {
+            if (!hud.render(context)) {
+                LOGGER.warn("{} is collected but still failed! Removing from rendered hud.", hud.getName());
+                invalidHUDs.add(hud);
+            }
+        }
+
+        if (!invalidHUDs.isEmpty())
+            renderedHUDs.removeAll(invalidHUDs);
     }
 
     public void collectAll() {

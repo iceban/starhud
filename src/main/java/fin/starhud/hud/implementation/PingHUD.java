@@ -46,8 +46,6 @@ public class PingHUD extends AbstractHUD {
 
     private String pingStr;
     private int strWidth;
-    private int width;
-    private int height;
     private int color;
     private int step;
 
@@ -84,9 +82,8 @@ public class PingHUD extends AbstractHUD {
         }
 
         color = (SETTINGS.useDynamicColor ? AbstractDurabilityHUD.getItemBarColor(3 - step, 3) : SETTINGS.color) | 0xFF000000;
-        width = displayMode.calculateWidth(ICON_WIDTH, strWidth);
-        height = ICON_HEIGHT;
-        setWidthHeightColor(width, height, color);
+        int width = displayMode.calculateWidth(ICON_WIDTH, strWidth);
+        setWidthHeightColor(width, ICON_HEIGHT, color);
 
         return pingStr != null;
     }
@@ -97,7 +94,7 @@ public class PingHUD extends AbstractHUD {
         int w = getWidth();
         int h = getHeight();
 
-        RenderUtils.drawSmallHUD(
+        return RenderUtils.drawSmallHUD(
                 context,
                 pingStr,
                 x, y,
@@ -110,8 +107,6 @@ public class PingHUD extends AbstractHUD {
                 displayMode,
                 drawBackground
         );
-
-        return true;
     }
 
 }

@@ -105,7 +105,7 @@ public class GroupedHUDSettings {
                 '}';
     }
 
-    public static enum ChildAlignment {
+    public enum ChildAlignment {
         GROUP,
         CHILD,
         START,
