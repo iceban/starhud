@@ -134,7 +134,6 @@ public class HUDComponent {
 
         List<GroupedHUDSettings> groupSettings = Main.settings.hudList.groupedHuds;
         for (GroupedHUDSettings setting : groupSettings) {
-            System.out.println(setting.id);
             if (id.equals(setting.id)) {
                 hud = new GroupedHUD(setting);
                 groupedHUDs.put(id, (GroupedHUD) hud);
@@ -165,7 +164,6 @@ public class HUDComponent {
             lastCollect = now;
         }
 
-        invalidHUDs.clear();
         for (AbstractHUD hud : renderedHUDs) {
             if (!hud.render(context)) {
                 LOGGER.warn("{} is collected but still failed! Removing from rendered hud.", hud.getName());
@@ -173,8 +171,10 @@ public class HUDComponent {
             }
         }
 
-        if (!invalidHUDs.isEmpty())
+        if (!invalidHUDs.isEmpty()) {
             renderedHUDs.removeAll(invalidHUDs);
+            invalidHUDs.clear();
+        }
     }
 
     public void collectAll() {
