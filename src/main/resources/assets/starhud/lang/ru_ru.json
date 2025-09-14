@@ -72,7 +72,7 @@
   "starhud.screen.label.gap": "ИНТЕРВАЛ:",
 
   "starhud.screen.dialog.discard_title": "Отменить изменения?",
-  "starhud.screen.dialog.discard_message": "У вас есть несохраненные изменения. Вы хотите отменить от них?",
+  "starhud.screen.dialog.discard_message": "У вас есть несохраненные изменения. Вы хотите отменить их?",
 
   "starhud.option.growthDirectionX.left": "Лево",
   "starhud.option.growthDirectionX.center": "Центр",
@@ -334,3 +334,4 @@
   "text.autoconfig.starhud.option.speedSettings.additionalString": "Дополнительная этикетка"
 
 }
+
