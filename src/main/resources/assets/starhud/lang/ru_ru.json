@@ -96,7 +96,7 @@
 
   "starhud.option.childAlignment.group": "Группа",
   "starhud.option.childAlignment.child": "Ребёнок",
-  "starhud.option.childAlignment.start": "Старт",
+  "starhud.option.childAlignment.start": "Начало",
   "starhud.option.childAlignment.center": "Центр",
   "starhud.option.childAlignment.end": "Конец",
 
@@ -334,5 +334,6 @@
   "text.autoconfig.starhud.option.speedSettings.additionalString": "Дополнительная этикетка"
 
 }
+
 
 
