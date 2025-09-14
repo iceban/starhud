@@ -100,7 +100,7 @@
   "starhud.option.childAlignment.center": "Центр",
   "starhud.option.childAlignment.end": "Конец",
 
-  "text.autoconfig.starhud.category.general": "Главные",
+  "text.autoconfig.starhud.category.general": "Главное",
 
   "text.autoconfig.starhud.option.generalSettings.screenSettings" : "Настройки экрана",
   "text.autoconfig.starhud.option.generalSettings.screenSettings.shouldBatchHUDWithImmediatelyFast" : "Связывать HUD с ImmediatelyFast",
@@ -332,4 +332,5 @@
   "text.autoconfig.starhud.option.speedSettings.color": "Цвет",
   "text.autoconfig.starhud.option.speedSettings.useFullSpeed": "Использовать полную скорость",
   "text.autoconfig.starhud.option.speedSettings.additionalString": "Дополнительная этикетка"
+
 }
