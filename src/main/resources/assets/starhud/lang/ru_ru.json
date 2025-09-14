@@ -123,7 +123,7 @@
   "text.autoconfig.starhud.option.generalSettings.hudSettings.iconInfoGap" : "Интервал между значком и информацией",
   "text.autoconfig.starhud.option.generalSettings.hudSettings.drawBackgroundRounded" : "Закруглять фон",
 
-  "text.autoconfig.starhud.category.hudList" : "Группа",
+  "text.autoconfig.starhud.category.hudList" : "Группы",
   "text.autoconfig.starhud.option.hudList.groupedHuds" : "Список сгруппированных HUD'ов",
   "text.autoconfig.starhud.option.GroupedHUDSettings" : "Настройки",
   "text.autoconfig.starhud.option.GroupedHUDSettings.base.shouldRender": "Отображать HUD",
@@ -333,6 +333,7 @@
   "text.autoconfig.starhud.option.speedSettings.useFullSpeed": "Использовать полную скорость",
   "text.autoconfig.starhud.option.speedSettings.additionalString": "Дополнительная этикетка"
 }
+
 
 
 
